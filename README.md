@@ -69,10 +69,20 @@ import 'pakcage:m_widget/m_widget.dart';
   int number = 10000;
   number.toThousandFormat() // 10,000
   ```
-  Tr on double
+  Or on double
   ```dart
   double number = 10000.05
   number.toThousandFormat() // 10,000.05
+  ```
+- ## TextEditingControllerThousandFormat
+  Extends TextEditingController, and used for a thousand format on TextEditingController
+  ### Usage
+  ```dart
+  final TextEditingControllerThousandFormat _textController = TextEditingController();
+
+  TextField(
+    controller: _textController,
+  );
   ```
 - ## NavigationHelper
   Go to another page without context
