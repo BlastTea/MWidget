@@ -55,6 +55,56 @@ class Business {
   double? latitude;
   double? longitude;
 
+  bool get isOpeningNow {
+    final now = TimeOfDay.now();
+
+    final today = DateTime.now().weekday;
+
+    TimeOfDay? openingHour;
+    TimeOfDay? closingHour;
+
+    switch (today) {
+      case DateTime.sunday:
+        openingHour = sundayOpeningHour;
+        closingHour = sundayClosingHour;
+        break;
+      case DateTime.monday:
+        openingHour = mondayOpeningHour;
+        closingHour = mondayClosingHour;
+        break;
+      case DateTime.tuesday:
+        openingHour = tuesdayOpeningHour;
+        closingHour = tuesdayClosingHour;
+        break;
+      case DateTime.wednesday:
+        openingHour = wednesdayOpeningHour;
+        closingHour = wednesdayClosingHour;
+        break;
+      case DateTime.thursday:
+        openingHour = thursdayOpeningHour;
+        closingHour = thursdayClosingHour;
+        break;
+      case DateTime.friday:
+        openingHour = fridayOpeningHour;
+        closingHour = fridayClosingHour;
+        break;
+      case DateTime.saturday:
+        openingHour = saturdayOpeningHour;
+        closingHour = saturdayClosingHour;
+        break;
+    }
+
+    if (openingHour != null && closingHour != null) {
+      final currentTime = now.hour * 60 + now.minute;
+      final openingTime = openingHour.hour * 60 + openingHour.minute;
+      final closingTime = closingHour.hour * 60 + closingHour.minute;
+
+      return currentTime >= openingTime && currentTime <= closingTime;
+    }
+
+    return false;
+  }
+
   factory Business.fromMap(Map<String, dynamic> map) => Business(
         name: map[columnBusinessName],
         address: map[columnBusinessAddress],
