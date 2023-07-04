@@ -6,6 +6,7 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
     this.title,
     this.labelTextSearch,
     this.hintTextSearch,
+    this.useFullScreenFab = false,
     this.alwaysFullScreen = false,
     this.alwaysDialog = false,
     this.hideSearchBar = false,
@@ -16,6 +17,7 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
   final Widget? title;
   final String? labelTextSearch;
   final String? hintTextSearch;
+  final bool useFullScreenFab;
   final bool alwaysFullScreen;
   final bool alwaysDialog;
   final bool hideSearchBar;
@@ -65,6 +67,12 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
         builder: (context, language, child) => AdaptiveFullScreenDialog(
           alwaysFullScreen: widget.alwaysFullScreen,
           alwaysDialog: widget.alwaysDialog,
+          fullScreenFab: widget.useFullScreenFab
+              ? FloatingActionButton(
+                  onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value)),
+                  child: const Icon(Icons.done),
+                )
+              : null,
           title: widget.title,
           body: _body,
           dialogBody: SizedBox(
@@ -72,7 +80,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
             height: kCompactSize,
             child: _body,
           ),
-          actions: widget.multiple
+          actions: widget.multiple && !widget.useFullScreenFab
               ? [
                   TextButton(
                     onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value)),

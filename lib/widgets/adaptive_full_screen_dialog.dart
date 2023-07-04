@@ -5,6 +5,7 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
     super.key,
     this.alwaysFullScreen = false,
     this.alwaysDialog = false,
+    this.fullScreenFab,
     this.title,
     this.body,
     this.dialogBody,
@@ -14,6 +15,7 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
 
   final bool alwaysFullScreen;
   final bool alwaysDialog;
+  final Widget? fullScreenFab;
   final Widget? title;
   final Widget? body;
   final Widget? dialogBody;
@@ -34,6 +36,7 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
   }
 
   Widget _scaffold(BuildContext context) => Scaffold(
+        floatingActionButton: fullScreenFab,
         appBar: AppBar(
           leading: IconButton(
             onPressed: () => NavigationHelper.back(),
