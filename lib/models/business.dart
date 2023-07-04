@@ -37,7 +37,7 @@ class Business {
   double? tax;
   bool isOpen;
   MImage? logo;
-  Set<String>? types;
+  Set<BusinessType>? types;
   TimeOfDay? sundayOpeningHour;
   TimeOfDay? sundayClosingHour;
   TimeOfDay? mondayOpeningHour;
@@ -61,7 +61,7 @@ class Business {
         description: map[columnBusinessDescription],
         tax: map[columnBusinessTax],
         isOpen: map[columnBusinessIsOpen],
-        types: Set.from(map[columnBusinessTypes]),
+        types: Set.from(map[columnBusinessTypes].map((e) => BusinessType.fromValue(e))),
         sundayOpeningHour: TimeOfDayFromFormattedString.fromFormattedString(map[columnBusinessSundayOpeningHour]),
         sundayClosingHour: TimeOfDayFromFormattedString.fromFormattedString(map[columnBusinessSundayClosingHour]),
         mondayOpeningHour: TimeOfDayFromFormattedString.fromFormattedString(map[columnBusinessMondayOpeningHour]),
@@ -88,7 +88,7 @@ class Business {
         columnBusinessOwner: owner!.uid,
         if (tax != null) columnBusinessTax: tax,
         columnBusinessIsOpen: isOpen,
-        if (types != null) columnBusinessTypes: types!.toList(),
+        if (types != null) columnBusinessTypes: types!.map((e) => e.value).toList(),
         if (sundayOpeningHour != null) columnBusinessSundayOpeningHour: sundayOpeningHour!.toFormattedString(),
         if (sundayClosingHour != null) columnBusinessSundayClosingHour: sundayClosingHour!.toFormattedString(),
         if (mondayOpeningHour != null) columnBusinessMondayOpeningHour: mondayOpeningHour!.toFormattedString(),
@@ -123,7 +123,7 @@ class Business {
     double? tax,
     bool? isOpen,
     MImage? logo,
-    Set<String>? types,
+    Set<BusinessType>? types,
     TimeOfDay? sundayOpeningHour,
     TimeOfDay? sundayClosingHour,
     TimeOfDay? mondayOpeningHour,
