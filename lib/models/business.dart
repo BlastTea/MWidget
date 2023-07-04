@@ -56,6 +56,10 @@ class Business {
   double? longitude;
 
   bool get isOpeningNow {
+    if (!isOpen) {
+      return false;
+    }
+
     final now = TimeOfDay.now();
 
     final today = DateTime.now().weekday;
