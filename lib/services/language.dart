@@ -92,5 +92,13 @@ class Language {
       LanguageType.english: 'Saturday',
       LanguageType.indonesian: 'Sabtu',
     },
+    'Ok': {
+      LanguageType.english: 'Ok',
+      LanguageType.indonesian: 'Ok',
+    },
+    'Cancel': {
+      LanguageType.english: 'Cancel',
+      LanguageType.indonesian: 'Batal',
+    },
   };
 }
