@@ -11,6 +11,9 @@ class Business {
     this.isOpen = true,
     this.logo,
     this.types,
+    this.isOpeningEveryday = false,
+    this.everydayOpeningHour,
+    this.everydayClosingHour,
     this.sundayOpeningHour,
     this.sundayClosingHour,
     this.mondayOpeningHour,
@@ -38,6 +41,9 @@ class Business {
   bool isOpen;
   MImage? logo;
   Set<BusinessType>? types;
+  bool isOpeningEveryday;
+  TimeOfDay? everydayOpeningHour;
+  TimeOfDay? everydayClosingHour;
   TimeOfDay? sundayOpeningHour;
   TimeOfDay? sundayClosingHour;
   TimeOfDay? mondayOpeningHour;
@@ -67,35 +73,40 @@ class Business {
     TimeOfDay? openingHour;
     TimeOfDay? closingHour;
 
-    switch (today) {
-      case DateTime.sunday:
-        openingHour = sundayOpeningHour;
-        closingHour = sundayClosingHour;
-        break;
-      case DateTime.monday:
-        openingHour = mondayOpeningHour;
-        closingHour = mondayClosingHour;
-        break;
-      case DateTime.tuesday:
-        openingHour = tuesdayOpeningHour;
-        closingHour = tuesdayClosingHour;
-        break;
-      case DateTime.wednesday:
-        openingHour = wednesdayOpeningHour;
-        closingHour = wednesdayClosingHour;
-        break;
-      case DateTime.thursday:
-        openingHour = thursdayOpeningHour;
-        closingHour = thursdayClosingHour;
-        break;
-      case DateTime.friday:
-        openingHour = fridayOpeningHour;
-        closingHour = fridayClosingHour;
-        break;
-      case DateTime.saturday:
-        openingHour = saturdayOpeningHour;
-        closingHour = saturdayClosingHour;
-        break;
+    if (!isOpeningEveryday) {
+      switch (today) {
+        case DateTime.sunday:
+          openingHour = sundayOpeningHour;
+          closingHour = sundayClosingHour;
+          break;
+        case DateTime.monday:
+          openingHour = mondayOpeningHour;
+          closingHour = mondayClosingHour;
+          break;
+        case DateTime.tuesday:
+          openingHour = tuesdayOpeningHour;
+          closingHour = tuesdayClosingHour;
+          break;
+        case DateTime.wednesday:
+          openingHour = wednesdayOpeningHour;
+          closingHour = wednesdayClosingHour;
+          break;
+        case DateTime.thursday:
+          openingHour = thursdayOpeningHour;
+          closingHour = thursdayClosingHour;
+          break;
+        case DateTime.friday:
+          openingHour = fridayOpeningHour;
+          closingHour = fridayClosingHour;
+          break;
+        case DateTime.saturday:
+          openingHour = saturdayOpeningHour;
+          closingHour = saturdayClosingHour;
+          break;
+      }
+    } else {
+      openingHour = everydayOpeningHour;
+      closingHour = everydayClosingHour;
     }
 
     if (openingHour != null && closingHour != null) {
@@ -116,6 +127,9 @@ class Business {
         tax: map[columnBusinessTax],
         isOpen: map[columnBusinessIsOpen],
         types: Set.from(map[columnBusinessTypes].map((e) => BusinessType.fromValue(e))),
+        isOpeningEveryday: map[columnBusinessIsOpeningEveryday],
+        everydayOpeningHour: TimeOfDayFromFormattedString.fromFormattedString(map[columnBusinessEverydayOpeningHour]),
+        everydayClosingHour: TimeOfDayFromFormattedString.fromFormattedString(map[columnBusinessEverydayClosingHour]),
         sundayOpeningHour: TimeOfDayFromFormattedString.fromFormattedString(map[columnBusinessSundayOpeningHour]),
         sundayClosingHour: TimeOfDayFromFormattedString.fromFormattedString(map[columnBusinessSundayClosingHour]),
         mondayOpeningHour: TimeOfDayFromFormattedString.fromFormattedString(map[columnBusinessMondayOpeningHour]),
@@ -143,6 +157,9 @@ class Business {
         if (tax != null) columnBusinessTax: tax,
         columnBusinessIsOpen: isOpen,
         if (types != null) columnBusinessTypes: types!.map((e) => e.value).toList(),
+        columnBusinessIsOpeningEveryday: isOpeningEveryday,
+        if (everydayOpeningHour != null) columnBusinessEverydayOpeningHour: everydayOpeningHour!.toFormattedString(),
+        if (everydayClosingHour != null) columnBusinessEverydayClosingHour: everydayClosingHour!.toFormattedString(),
         if (sundayOpeningHour != null) columnBusinessSundayOpeningHour: sundayOpeningHour!.toFormattedString(),
         if (sundayClosingHour != null) columnBusinessSundayClosingHour: sundayClosingHour!.toFormattedString(),
         if (mondayOpeningHour != null) columnBusinessMondayOpeningHour: mondayOpeningHour!.toFormattedString(),
@@ -178,6 +195,9 @@ class Business {
     bool? isOpen,
     MImage? logo,
     Set<BusinessType>? types,
+    bool? isOpeningEveryday,
+    TimeOfDay? everydayOpeningHour,
+    TimeOfDay? everydayClosingHour,
     TimeOfDay? sundayOpeningHour,
     TimeOfDay? sundayClosingHour,
     TimeOfDay? mondayOpeningHour,
@@ -205,6 +225,9 @@ class Business {
         isOpen: isOpen ?? this.isOpen,
         logo: logo ?? this.logo,
         types: types ?? this.types,
+        isOpeningEveryday: isOpeningEveryday ?? this.isOpeningEveryday,
+        everydayOpeningHour: everydayOpeningHour ?? this.everydayOpeningHour,
+        everydayClosingHour: everydayClosingHour ?? this.everydayClosingHour,
         sundayOpeningHour: sundayOpeningHour ?? this.sundayOpeningHour,
         sundayClosingHour: sundayClosingHour ?? this.sundayClosingHour,
         mondayOpeningHour: mondayOpeningHour ?? this.mondayOpeningHour,
