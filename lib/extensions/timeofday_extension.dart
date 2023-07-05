@@ -14,12 +14,12 @@ extension TimeOfDayFromFormattedString on TimeOfDay {
 extension TimeOfDayToFormattedString on TimeOfDay {
   String toFormattedString({bool isPeriod = false}) {
     if (!isPeriod) {
-      return '$hour:$minute';
+      return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
     }
 
     String period = (hour < 12) ? 'AM' : 'PM';
     int hour12 = (hour > 12) ? hour - 12 : hour;
 
-    return '$hour12:$minute $period';
+    return '${hour12.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $period';
   }
 }
