@@ -69,7 +69,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
           alwaysDialog: widget.alwaysDialog,
           fullScreenFab: widget.useFullScreenFab
               ? FloatingActionButton(
-                  onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value)),
+                  onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
                   child: const Icon(Icons.done),
                 )
               : null,
@@ -83,7 +83,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
           actions: widget.multiple && !widget.useFullScreenFab
               ? [
                   TextButton(
-                    onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value)),
+                    onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
                     child: Text(language['Ok']!),
                   ),
                 ]
@@ -95,7 +95,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
                     child: Text(language['Cancel']!),
                   ),
                   TextButton(
-                    onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value)),
+                    onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
                     child: Text(language['Ok']!),
                   ),
                 ]
