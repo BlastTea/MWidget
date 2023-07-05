@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:m_widget/m_widget.dart';
 
 part 'material_utils.dart';
+part 'firestore_auto_id_generator.dart';
 
 const String keyTransactionFee = 'transaction_fee';
 
