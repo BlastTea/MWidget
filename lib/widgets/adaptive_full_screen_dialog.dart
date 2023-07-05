@@ -29,10 +29,10 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
     } else if (alwaysDialog) {
       return _alertDialog(context);
     } else if (MediaQuery.sizeOf(context).width < kCompactSize) {
-      return _alertDialog(context);
+      return _scaffold(context);
     }
 
-    return _scaffold(context);
+    return _alertDialog(context);
   }
 
   Widget _scaffold(BuildContext context) => Scaffold(
