@@ -296,5 +296,17 @@ class Language {
       LanguageType.english: 'Business Consulting Service',
       LanguageType.indonesian: 'Layanan Konsultasi Bisnis',
     },
+    'Gallery': {
+      LanguageType.english: 'Gallery',
+      LanguageType.indonesian: 'Galeri',
+    },
+    'Camera': {
+      LanguageType.english: 'Camera',
+      LanguageType.indonesian: 'Kamera',
+    },
+    'Delete': {
+      LanguageType.english: 'Delete',
+      LanguageType.indonesian: 'Hapus',
+    },
   };
 }
