@@ -85,6 +85,7 @@ class _MNumberPickerState extends State<MNumberPicker> {
         ),
         onChanged: (value) => setState(() {
           _value = (int.tryParse(value) ?? widget.minValue).clamp(widget.minValue, widget.maxValue);
+          _textController.text = _value.toString();
           widget.onChanged(_value);
         }),
       );
