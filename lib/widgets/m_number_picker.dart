@@ -41,24 +41,25 @@ class _MNumberPickerState extends State<MNumberPicker> {
 
   @override
   Widget build(BuildContext context) => TextField(
-        controller: TextEditingControllerThousandFormat(
-          number: _value,
+        controller: TextEditingController(
+          text: _value.toString(),
         ),
         keyboardType: TextInputType.number,
         textAlign: TextAlign.center,
         inputFormatters: [textFormatterDigitsOnly],
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).unselectedWidgetColor,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).unselectedWidgetColor,
-            ),
-          ),
+          // focusedBorder: OutlineInputBorder(
+          //   borderSide: BorderSide(
+          //     color: Theme.of(context).unselectedWidgetColor,
+          //   ),
+          // ),
+          // enabledBorder: OutlineInputBorder(
+          //   borderSide: BorderSide(
+          //     color: Theme.of(context).unselectedWidgetColor,
+          //   ),
+          // ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
           prefixIcon: IconButton(
             icon: const Icon(Icons.remove),
             onPressed: _value != widget.minValue ? _decrementValue : null,
