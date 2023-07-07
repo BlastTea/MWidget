@@ -42,27 +42,25 @@ class _MNumberPickerState extends State<MNumberPicker> {
 
   void _decrementValue() => setState(() {
         _value = (_value - widget.step).clamp(widget.minValue, widget.maxValue);
-        _textController.text = _value.toString();
-        if (_focusNodeTextField.hasFocus) {
-          _textController.selection = TextSelection.collapsed(
-            offset: _value.toString().length,
-            affinity: TextAffinity.upstream,
-          );
-        }
+        _text = _value.toString();
         widget.onChanged(_value);
       });
 
   void _incrementValue() => setState(() {
         _value = (_value + widget.step).clamp(widget.minValue, widget.maxValue);
-        _textController.text = _value.toString();
-        if (_focusNodeTextField.hasFocus) {
-          _textController.selection = TextSelection.collapsed(
-            offset: _value.toString().length,
-            affinity: TextAffinity.upstream,
-          );
-        }
+        _text = _value.toString();
         widget.onChanged(_value);
       });
+
+  set _text(String value) {
+    _textController.text = value.toString();
+    if (_focusNodeTextField.hasFocus) {
+      _textController.selection = TextSelection.collapsed(
+        offset: value.toString().length,
+        affinity: TextAffinity.upstream,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) => TextField(
@@ -85,7 +83,7 @@ class _MNumberPickerState extends State<MNumberPicker> {
         ),
         onChanged: (value) => setState(() {
           _value = (int.tryParse(value) ?? widget.minValue).clamp(widget.minValue, widget.maxValue);
-          _textController.text = _value.toString();
+          _text = _value.toString();
           widget.onChanged(_value);
         }),
       );
