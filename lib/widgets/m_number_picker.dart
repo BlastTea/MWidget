@@ -21,44 +21,58 @@ class MNumberPicker extends StatefulWidget {
 }
 
 class _MNumberPickerState extends State<MNumberPicker> {
+  final FocusNode _focusNodeTextField = FocusNode();
+
+  late TextEditingController _textController;
+
   late int _value;
 
   @override
   void initState() {
     super.initState();
     _value = widget.initialValue;
+    _textController = TextEditingController(text: _value.toString());
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
   }
 
   void _decrementValue() => setState(() {
         _value = (_value - widget.step).clamp(widget.minValue, widget.maxValue);
+        _textController.text = _value.toString();
+        if (_focusNodeTextField.hasFocus) {
+          _textController.selection = TextSelection.collapsed(
+            offset: _value.toString().length,
+            affinity: TextAffinity.upstream,
+          );
+        }
         widget.onChanged(_value);
       });
 
   void _incrementValue() => setState(() {
         _value = (_value + widget.step).clamp(widget.minValue, widget.maxValue);
+        _textController.text = _value.toString();
+        if (_focusNodeTextField.hasFocus) {
+          _textController.selection = TextSelection.collapsed(
+            offset: _value.toString().length,
+            affinity: TextAffinity.upstream,
+          );
+        }
         widget.onChanged(_value);
       });
 
   @override
   Widget build(BuildContext context) => TextField(
-        controller: TextEditingController(
-          text: _value.toString(),
-        ),
+        focusNode: _focusNodeTextField,
+        controller: _textController,
         keyboardType: TextInputType.number,
         textAlign: TextAlign.center,
         inputFormatters: [textFormatterDigitsOnly],
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
-          // focusedBorder: OutlineInputBorder(
-          //   borderSide: BorderSide(
-          //     color: Theme.of(context).unselectedWidgetColor,
-          //   ),
-          // ),
-          // enabledBorder: OutlineInputBorder(
-          //   borderSide: BorderSide(
-          //     color: Theme.of(context).unselectedWidgetColor,
-          //   ),
-          // ),
           contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
           prefixIcon: IconButton(
             icon: const Icon(Icons.remove),

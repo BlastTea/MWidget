@@ -1,9 +1,9 @@
 part of 'services.dart';
 
 class Language {
-  static material.ValueNotifier<LanguageType> languageTypeListenable = material.ValueNotifier(LanguageType.english)..addListener(() => languageListenable.value = _setValue());
+  static ValueNotifier<LanguageType> languageTypeListenable = ValueNotifier(LanguageType.english)..addListener(() => languageListenable.value = _setValue());
 
-  static material.ValueNotifier<Map<String, String>> languageListenable = material.ValueNotifier(_setValue());
+  static ValueNotifier<Map<String, String>> languageListenable = ValueNotifier(_setValue());
 
   static Map<String, String> _setValue() => _data.map((key, value) => MapEntry(key, value[languageTypeListenable.value]!));
 

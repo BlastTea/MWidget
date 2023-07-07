@@ -1,16 +1,20 @@
 part of 'services.dart';
 
-class TextEditingControllerThousandFormat extends material.TextEditingController {
+class TextEditingControllerThousandFormat extends TextEditingController {
   TextEditingControllerThousandFormat({num? number}) {
+    bool ignoreChanges = false;
+
     addListener(() {
+      if (ignoreChanges) return;
+
       if (text.trim().isEmpty) {
-        value = const material.TextEditingValue(
+        value = const TextEditingValue(
           text: '',
-          selection: material.TextSelection.collapsed(
+          selection: TextSelection.collapsed(
             offset: ''.length,
-            affinity: material.TextAffinity.upstream,
+            affinity: TextAffinity.upstream,
           ),
-          composing: material.TextRange.empty,
+          composing: TextRange.empty,
         );
         return;
       }
@@ -34,19 +38,22 @@ class TextEditingControllerThousandFormat extends material.TextEditingController
 
       formattedString += decimalPart;
 
-      if (previousText != formattedString) {
-        final newSelection = material.TextSelection.collapsed(
+      if (_previousText != formattedString) {
+        ignoreChanges = true;
+
+        final newSelection = TextSelection.collapsed(
           offset: formattedString.length,
-          affinity: material.TextAffinity.upstream,
+          affinity: TextAffinity.upstream,
         );
 
-        value = material.TextEditingValue(
+        value = TextEditingValue(
           text: formattedString,
           selection: newSelection,
-          composing: material.TextRange.empty,
+          composing: TextRange.empty,
         );
 
-        previousText = formattedString;
+        _previousText = formattedString;
+        ignoreChanges = false;
       }
     });
 
@@ -55,5 +62,5 @@ class TextEditingControllerThousandFormat extends material.TextEditingController
     }
   }
 
-  String previousText = '';
+  String _previousText = '';
 }
