@@ -3,14 +3,14 @@ part of 'models.dart';
 class UserAccount {
   UserAccount({
     required this.uid,
-    required this.username,
+    this.username,
     required this.email,
     this.password,
     this.photoUrl,
   });
 
   String uid;
-  String username;
+  String? username;
   String email;
   String? password;
   String? photoUrl;
@@ -24,9 +24,10 @@ class UserAccount {
 
   Map<String, dynamic> toMap() => {
         columnUserAccountUid: uid,
-        columnUserAccountUsername: username,
+        if (username != null) columnUserAccountUsername: username,
         columnUserAccountEmail: email,
-        columnUserAccountPhotoUrl: photoUrl,
+        if (password != null) columnUserAccountPassword: password,
+        if (photoUrl != null) columnUserAccountPhotoUrl: photoUrl,
       };
 
   Map<String, dynamic> toFirestoreMap() => toMap()
