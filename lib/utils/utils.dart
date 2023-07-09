@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:m_widget/m_widget.dart';
 
 part 'material_utils.dart';
 part 'firestore_auto_id_generator.dart';
@@ -60,8 +59,6 @@ TextInputFormatter textFormatterDigitsOnly = FilteringTextInputFormatter.digitsO
 TextInputFormatter textFormatterSingleLine = FilteringTextInputFormatter.singleLineFormatter;
 TextInputFormatter textFormatterLetterOnly = FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'));
 TextInputFormatter textFormatterLetterDigitsOnly = FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]'));
-
-UserAccount? currentUserAccount;
 
 ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
 
