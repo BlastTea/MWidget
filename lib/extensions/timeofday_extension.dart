@@ -1,6 +1,6 @@
 part of 'extensions.dart';
 
-extension TimeOfDayFromFormattedString on TimeOfDay {
+extension TimeOfDayExtension on TimeOfDay {
   static TimeOfDay fromFormattedString(String formattedString) {
     List<String> formattedTexts = formattedString.split(':');
 
@@ -9,9 +9,7 @@ extension TimeOfDayFromFormattedString on TimeOfDay {
 
     return TimeOfDay(hour: hour, minute: minute);
   }
-}
 
-extension TimeOfDayToFormattedString on TimeOfDay {
   String toFormattedString({bool isPeriod = false}) {
     if (!isPeriod) {
       return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
