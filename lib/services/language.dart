@@ -104,9 +104,9 @@ class Language {
       LanguageType.english: 'Restaurant',
       LanguageType.indonesian: 'Restoran',
     },
-    'Cafe and Coffee': {
-      LanguageType.english: 'Cafe and Coffee',
-      LanguageType.indonesian: 'Kafe dan Kopi',
+    'Cafe': {
+      LanguageType.english: 'Cafe',
+      LanguageType.indonesian: 'Kafe',
     },
     'Clothing Store': {
       LanguageType.english: 'Clothing Store',
@@ -295,6 +295,18 @@ class Language {
     'Business Consulting Service': {
       LanguageType.english: 'Business Consulting Service',
       LanguageType.indonesian: 'Layanan Konsultasi Bisnis',
+    },
+    'Basic Necessities Store': {
+      LanguageType.english: 'Basic Necessities Store',
+      LanguageType.indonesian: 'Toko Sembako',
+    },
+    'Car Wash': {
+      LanguageType.english: 'Car Wash',
+      LanguageType.indonesian: 'Tempat Cuci Mobil',
+    },
+    'Motorcycle Wash': {
+      LanguageType.english: 'Motorcycle Wash',
+      LanguageType.indonesian: 'Tempat Cuci Motor',
     },
     'Gallery': {
       LanguageType.english: 'Gallery',

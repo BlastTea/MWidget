@@ -2,7 +2,7 @@ part of 'enums.dart';
 
 enum BusinessType {
   restaurant('Restaurant', true),
-  cafeAndCoffe('Cafe and Coffee', true),
+  cafe('Cafe', true),
   clothingStore('Clothing Store', false),
   bookStore('Book Store', false),
   electronicsStore('Electronics Store', false),
@@ -49,7 +49,10 @@ enum BusinessType {
   onlineFitnessService('Online Fitness Service', false),
   petShop('Pet Shop', false),
   cateringService('Catering Service', true),
-  businessConsultingService('Business Consulting Service', false);
+  businessConsultingService('Business Consulting Service', false),
+  basicNecessitiesStore('Basic Necessities Store', false),
+  carWash('Car Wash', false),
+  motorcycleWash('Motorcycle Wash', false);
 
   const BusinessType(this.value, this.isFood);
   final String value;
@@ -59,8 +62,8 @@ enum BusinessType {
     switch (value) {
       case 'Restaurant':
         return restaurant;
-      case 'Cafe and Coffee':
-        return cafeAndCoffe;
+      case 'Cafe':
+        return cafe;
       case 'Clothing Store':
         return clothingStore;
       case 'Book Store':
@@ -155,6 +158,12 @@ enum BusinessType {
         return cateringService;
       case 'Business Consulting Service':
         return businessConsultingService;
+      case 'Basic Necessities Store':
+        return basicNecessitiesStore;
+      case 'Car Wash':
+        return carWash;
+      case 'Motorcycle Wash':
+        return motorcycleWash;
       default:
         return restaurant;
     }
