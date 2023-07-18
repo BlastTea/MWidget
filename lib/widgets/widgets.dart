@@ -5,3 +5,4 @@ part 'm_number_picker.dart';
 part 'adaptive_full_screen_dialog.dart';
 part 'choose_dialog.dart';
 part 'sheet_image_source.dart';
+part 'draggable_scrollable_switcher.dart';

@@ -8,7 +8,7 @@ dependencies:
   m_widget:
     git:
       url: https://github.com/BlastTea/MWidget.git
-      ref: #last commit
+      ref: #last_commit_hash
 ```
 then, import it
 ```dart
@@ -45,7 +45,7 @@ import 'pakcage:m_widget/m_widget.dart';
   Language.languageTypeListenable.value = LanguageType.indonesian;
   ```
   #### add additional language
-  To add the text into it use
+  To add the translation into it, use
   ```dart
   Language.addData({
     'Hello': {
@@ -61,6 +61,18 @@ import 'pakcage:m_widget/m_widget.dart';
   ```dart
   DateTime now = DateTime.now();
   now.toFormattedDate(withWeekday: true, withMonthName: true); // Tuesday, July 04, 2023
+  ```
+- ## Timeofday extension
+  Extension for converting string into TimeOfDay or vice versa
+  ### Usage
+  #### String to TimeOfDay
+  ```dart
+  TimeOfDay timeOfDay = TimeOfDayExtension.fromFormattedString('10:00');
+  ```
+  #### TimeOfDay to String
+  ```dart
+  TimeOfDay(hour: 10, minute: 0).toFormattedString(); // 10:00
+  TimeOfDay(hour: 10, minute: 0).toFormattedString(isPeriod = true); // 10:00 AM
   ```
 - ## Thousand Separator on number
   Extension for converting Num class into thousand format
@@ -107,12 +119,7 @@ import 'pakcage:m_widget/m_widget.dart';
   NavigationHelper.showDialog((context) => AlertDialog());
   ```
 - ## AdaptiveRouteDialog
-  Same as MaterialPageRoute, but its for Dialog.
-  Because when use
-  ```dart
-  showDialog();
-  ```
-  the transition is not look like a MaterialPageRoute
+  Same as MaterialPageRoute, but this route will be adaptive.
   ### Usage
   ```dart
   NavigationHelper.to(
@@ -165,4 +172,82 @@ import 'pakcage:m_widget/m_widget.dart';
       ),
     ),
   ).then((value) => print(value));
+  ```
+- ## DraggableScrollableSwitcher
+  A DraggableScrollableSheet with transition
+  ### Usage
+  ```dart
+  DraggableScrollableSwitcher(
+    minChildSize: 90 / MediaQuery.sizeOf(context), // the minimum child size will be 90 pixel
+    children: [
+      DraggableScrollableTransition(
+        startTransition: 0.0,
+        endTransition: 0.3,
+        visibility: DraggableScrollableTransitionVisibility.start,
+        children: [
+          FilledButton(
+            onPressed: () {},
+            child: Text('Start'),
+          ),
+        ]
+      ),
+      DraggableScrollableTransition(
+        startTransition: 0.4,
+        endTransition: 0.6,
+        visibility: DraggableScrollableTransitionVisibility.mid, // in mid, I still working on it, so better not to use it
+        children: [
+          FilledButton(
+            onPressed: () {},
+            child: Text('Mid'),
+          ),
+        ]
+      ),
+      DraggableScrollableTransition(
+        startTransition: 0.7,
+        endTransition: 1.0,
+        visibility: DraggableScrollableTransitionVisibility.end,
+        children: [
+          FilledButton(
+            onPressed: () {},
+            child: Text('End'),
+          ),
+        ]
+      ),
+    ],
+    transitionBuilder: (context, animation, child) => FadeTransition(
+      opacity: animation,
+      child: child,
+    ),
+    builder: (context, scrollController, children, animation) => Container(
+      child: ListView( // You can use ListView or CustomScrollView
+        controller: scrollController
+        children: [
+          Align(
+            child: Container(
+              width: 32.0,
+              height: 4.0,
+              margin: const EdgeInsets.only(top: 8.0, bottom: 22.0),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4), 
+                borderRadius: BorderRadius.circular(2.0),
+              ),
+            ),
+          ),
+          ...children,
+        ]
+      )
+    ),
+  );
+  ```
+- ## MNumberPicker
+  It just a number picker
+  ### Usage
+  ```dart
+  MNumberPicker(
+    initialValue: 0,
+    minValue: 0,
+    maxValue: 10,
+    onChanged: (value) {},
+    step: 2,
+  );
   ```

@@ -1,10 +1,12 @@
 import 'dart:math';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 part 'material_utils.dart';
 part 'firestore_auto_id_generator.dart';
+part 'custom_scroll_behavior.dart';
 
 const String keyTransactionFee = 'transaction_fee';
 
