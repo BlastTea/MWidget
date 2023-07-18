@@ -5,6 +5,7 @@ class DraggableScrollableSwitcher extends StatefulWidget {
     super.key,
     this.controller,
     required this.minChildSize,
+    this.initialChildSize,
     this.maxChildSize,
     this.expand = true,
     this.snap = false,
@@ -17,6 +18,7 @@ class DraggableScrollableSwitcher extends StatefulWidget {
 
   final DraggableScrollableController? controller;
   final double minChildSize;
+  final double? initialChildSize;
   final double? maxChildSize;
   final bool expand;
   final bool snap;
@@ -81,7 +83,7 @@ class _DraggableScrollableSwitcherState extends State<DraggableScrollableSwitche
           controller: widget.controller,
           maxChildSize: widget.maxChildSize ?? 1.0,
           minChildSize: widget.minChildSize,
-          initialChildSize: widget.minChildSize,
+          initialChildSize: widget.initialChildSize ?? widget.minChildSize,
           expand: widget.expand,
           snap: widget.snap,
           snapAnimationDuration: widget.snapAnimationDuration,
