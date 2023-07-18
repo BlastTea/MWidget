@@ -49,8 +49,8 @@ class _DraggableScrollableSwitcherState extends State<DraggableScrollableSwitche
       curve: Interval(widget.minChildSize, 1.0),
     );
 
+    snapSizes = [];
     if (widget.snapSizes != null) {
-      snapSizes = [];
       for (double snapSize in widget.snapSizes!) {
         snapSizes!.add(widget.minChildSize + snapSize);
       }
