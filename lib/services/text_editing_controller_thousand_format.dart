@@ -34,7 +34,7 @@ class TextEditingControllerThousandFormat extends TextEditingController {
         }
       }
 
-      formattedString = (double.tryParse(numString) ?? 0).toThousandFormat();
+      formattedString = (double.tryParse(numString) ?? 0).toThousandFormat(includeDecimalPart: int.tryParse(decimalPart.replaceAll('.', '')) != 0);
 
       formattedString += decimalPart;
 
