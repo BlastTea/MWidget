@@ -1,7 +1,7 @@
 part of 'extensions.dart';
 
 extension NumExtension on num {
-  String toThousandFormat() {
+  String toThousandFormat({bool includeDecimalPart = true}) {
     String numString = toString();
     String formattedString = '';
     String decimalPart = '';
@@ -25,6 +25,10 @@ extension NumExtension on num {
       if (count % 3 == 0 && i != 0) {
         formattedString = ',$formattedString';
       }
+    }
+
+    if (!includeDecimalPart && int.tryParse(decimalPart.replaceAll('.', '')) == 0) {
+      return formattedString;
     }
 
     return formattedString + decimalPart;
