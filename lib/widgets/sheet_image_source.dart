@@ -1,6 +1,37 @@
 part of 'widgets.dart';
 
+/// A widget that displays image source options in a bottom sheet.
+///
+/// The `SheetImageSource` widget provides a user interface to select image sources, such as the gallery or camera.
+/// It is typically used to allow users to choose from where they want to pick an image.
+///
+/// The widget supports both the gallery and camera options by default. Additionally, you can enable the delete option
+/// by setting [showDelete] to `true`, which allows users to delete an existing image.
+///
+/// The [title] parameter is optional and can be used to display a title above the image source options.
+///
+/// Example usage:
+/// ```dart
+/// SheetImageSource(
+///   showDelete: true,
+///   title: Text('Select Image Source'),
+/// )
+/// ```
 class SheetImageSource extends StatelessWidget {
+  /// Creates a widget to display image source options in a bottom sheet.
+  ///
+  /// The [showDelete] parameter determines whether to show the delete option in addition to the gallery and camera options.
+  /// Set [showDelete] to `true` to enable the delete option, or `false` to display only the gallery and camera options.
+  ///
+  /// The [title] parameter is optional and can be used to display a title above the image source options.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// SheetImageSource(
+  ///   showDelete: true,
+  ///   title: Text('Select Image Source'),
+  /// )
+  /// ```
   const SheetImageSource({
     super.key,
     this.showDelete = false,

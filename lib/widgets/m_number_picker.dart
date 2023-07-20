@@ -1,6 +1,54 @@
 part of 'widgets.dart';
 
+/// A customizable number picker widget that allows users to input a numeric value within a specific range.
+///
+/// The `MNumberPicker` widget provides a text input field with increment and decrement buttons
+/// to adjust the numeric value within the specified [minValue] and [maxValue] range.
+///
+/// The initial value is set using [initialValue], and the user can adjust the value using the increment and decrement buttons
+/// or by directly typing a numeric value in the text input field. The value is clamped to the specified [minValue] and [maxValue].
+///
+/// The [step] parameter determines the amount to increment or decrement the value when using the buttons (default is 1).
+///
+/// When the numeric value changes, the [onChanged] callback is called with the updated value.
+///
+/// Example usage:
+/// ```dart
+/// MNumberPicker(
+///   initialValue: 10,
+///   minValue: 0,
+///   maxValue: 100,
+///   step: 5,
+///   onChanged: (value) {
+///     // Handle the updated value
+///     print('New value: $value');
+///   },
+/// )
+/// ```
 class MNumberPicker extends StatefulWidget {
+  /// Creates a customizable number picker widget.
+  ///
+  /// The [initialValue] parameter sets the initial numeric value of the picker.
+  ///
+  /// The [minValue] and [maxValue] parameters define the range within which the numeric value can be adjusted.
+  ///
+  /// The [onChanged] callback is called when the numeric value changes and provides the updated value.
+  ///
+  /// The [step] parameter determines the amount to increment or decrement the value when using the buttons (default is 1).
+  ///
+  /// Example usage:
+  /// ```dart
+  /// MNumberPicker(
+  ///   initialValue: 10,
+  ///   minValue: 0,
+  ///   maxValue: 100,
+  ///   step: 5,
+  ///   onChanged: (value) {
+  ///     // Handle the updated value
+  ///     print('New value: $value');
+  ///   },
+  /// )
+  /// ```
   const MNumberPicker({
     super.key,
     required this.initialValue,

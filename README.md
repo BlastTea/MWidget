@@ -1,4 +1,4 @@
-Package for flutter project
+Package for Flutter project
 # Getting started
 
 Go to pubspec.yaml file, and add this dependencies:
@@ -17,10 +17,10 @@ import 'pakcage:m_widget/m_widget.dart';
 
 # Features
 - ## Language
-  A template for adding multiple language into your App.
+  A template for adding multiple languages to your App.
   ### Supported Languages:
   - English
-  - Indonesia
+  - Indonesian
   ### Usage
   Use ValueListenableBuilder to get the value
   ```dart
@@ -54,16 +54,16 @@ import 'pakcage:m_widget/m_widget.dart';
     }
   };
   ```
-- ## DateTime Format
-  Extension for converting DateTime class into formatted date and depend on language
+- ## DateTime Extension
+  Extension for converting DateTime class into a formatted date and depends on language.
   ### Usage
-  To convert DateTime into formatted one, use
+  To convert DateTime into a formatted one, use
   ```dart
   DateTime now = DateTime.now();
   now.toFormattedDate(withWeekday: true, withMonthName: true); // Tuesday, July 04, 2023
   ```
-- ## Timeofday extension
-  Extension for converting string into TimeOfDay or vice versa
+- ## TimeOfDay extension
+  Extension for converting a string into TimeOfDay or vice versa.
   ### Usage
   #### String to TimeOfDay
   ```dart
@@ -74,8 +74,21 @@ import 'pakcage:m_widget/m_widget.dart';
   TimeOfDay(hour: 10, minute: 0).toFormattedString(); // 10:00
   TimeOfDay(hour: 10, minute: 0).toFormattedString(isPeriod = true); // 10:00 AM
   ```
+- ## String Extension
+  An extension for additional string manipulation methods.
+  ### Usage
+  ```dart
+  String value = '0...';
+  value.count('.'); // 3
+
+  String input = '034sasdf';
+  input.extractNumberString(); // 034
+
+  String input = '034asdf';
+  input.extractNumber(); // 34
+  ```
 - ## Thousand Separator on number
-  Extension for converting Num class into thousand format
+  Extension for converting the Num class into a thousand format.
   ### Usage
   ```dart
   int number = 10000;
@@ -87,19 +100,18 @@ import 'pakcage:m_widget/m_widget.dart';
   number.toThousandFormat() // 10,000.05
   ```
 - ## TextEditingControllerThousandFormat
-  Extends TextEditingController, and used for a thousand format on TextEditingController
+  Extends TextEditingController and used for a thousand format on TextEditingController.
   ### Usage
   ```dart
   final TextEditingControllerThousandFormat _textController = TextEditingController();
-
-  TextField(
+    TextField(
     controller: _textController,
   );
   ```
 - ## NavigationHelper
-  Go to another page without context
+  Go to another page without context.
   ### Usage
-  first, add the key in MaterialApp
+  First, add the key in MaterialApp
   ```dart
   MaterialApp(
     navigatorKey: navigatorKey,
@@ -152,7 +164,7 @@ import 'pakcage:m_widget/m_widget.dart';
   );
   ```
 - ## ChooseDialog
-  A dialog to choose multiple or single list
+  A dialog to choose multiple or single list.
   ### Usage
   ```dart
   NavigationHelper.to(
@@ -174,7 +186,7 @@ import 'pakcage:m_widget/m_widget.dart';
   ).then((value) => print(value));
   ```
 - ## DraggableScrollableSwitcher
-  A DraggableScrollableSheet with transition
+  A DraggableScrollableSheet with transition.
   ### Usage
   ```dart
   DraggableScrollableSwitcher(
@@ -240,7 +252,7 @@ import 'pakcage:m_widget/m_widget.dart';
   );
   ```
 - ## MNumberPicker
-  It just a number picker
+  It's just a number picker.
   ### Usage
   ```dart
   MNumberPicker(
@@ -250,4 +262,30 @@ import 'pakcage:m_widget/m_widget.dart';
     onChanged: (value) {},
     step: 2,
   );
+  ```
+- ## SheetImageSource
+  A modal bottom sheet to select an image from the camera or gallery.
+  ### Usage
+  ```dart
+  NavigationHelper.showModalBottomSheet(
+    builder: (context) => SheetImageSource(
+      showDelete: true,
+      title: Text('Select Image Source'),
+    ),
+  );
+  ```
+- ## FirestoreAutoIdGenerator
+  A utility class for generating Firestore document IDs automatically.
+  ### Usage
+  ```dart
+  String autoId = FirestoreAutoIdGenerator.autoId();
+  ```
+- ## CustomScrollBehavior
+  A custom scroll behavior that allows defining specific pointer devices for dragging.
+  ### Usage
+  ```dart
+  SingleChildScrollView(
+    scrollBehavior: CustomScrollBehavior(pointerDeviceKinds: {PointerDeviceKind.touch, PointerDeviceKind.mouse}),
+    // Other properties and children of SingleChildScrollView
+  )
   ```

@@ -1,6 +1,58 @@
 part of 'widgets.dart';
 
+/// A dialog for selecting items from a list of data.
+///
+/// The `ChooseDialog` widget provides a dialog that allows users to select items from a list of data.
+/// It includes an optional search bar to filter the items, and supports both single and multiple selection modes.
+///
+/// Example usage:
+/// ```dart
+/// ChooseDialog<String>(
+///   title: Text('Select Item'),
+///   labelTextSearch: 'Search',
+///   hintTextSearch: 'Type to search...',
+///   useFullScreenFab: true,
+///   data: [
+///     ChooseData(value: 'item1', searchValue: 'item one', title: Text('Item 1')),
+///     ChooseData(value: 'item2', searchValue: 'item two', title: Text('Item 2')),
+///     // Add more ChooseData objects for other items
+///   ],
+/// )
+/// ```
 class ChooseDialog<T extends Object?> extends StatefulWidget {
+  /// Creates a dialog for selecting items from a list of data.
+  ///
+  /// The [title] parameter sets the title of the dialog.
+  ///
+  /// The [labelTextSearch] parameter sets the label for the search bar.
+  ///
+  /// The [hintTextSearch] parameter sets the hint text for the search bar.
+  ///
+  /// The [useFullScreenFab] parameter determines whether to use a full-screen floating action button for multiple selection mode.
+  ///
+  /// The [alwaysFullScreen] parameter forces the dialog to be displayed in full-screen mode regardless of the screen size.
+  ///
+  /// The [alwaysDialog] parameter forces the dialog to be displayed as a dialog regardless of the screen size.
+  ///
+  /// The [hideSearchBar] parameter hides the search bar when set to `true`.
+  ///
+  /// The [multiple] parameter allows multiple selection when set to `true`, otherwise, it allows single selection (default is `false`).
+  ///
+  /// The [data] parameter is a list of [ChooseData] objects representing the items to be displayed and selected.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// ChooseDialog<String>(
+  ///   title: Text('Select Item'),
+  ///   labelTextSearch: 'Search',
+  ///   hintTextSearch: 'Type to search...',
+  ///   useFullScreenFab: true,
+  ///   data: [
+  ///     ChooseData(value: 'item1', searchValue: 'item one', title: Text('Item 1')),
+  ///     // Add more ChooseData objects for other items
+  ///   ],
+  /// )
+  /// ```
   ChooseDialog({
     super.key,
     this.title,
@@ -134,7 +186,31 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
       );
 }
 
+/// Represents data for an item in the `ChooseDialog` widget.
+///
+/// The [value] parameter represents the value of the item.
+///
+/// The [searchValue] parameter is used for filtering the item in the search bar.
+///
+/// The [leading], [title], [subtitle], and [trailing] parameters represent the widgets to be displayed
+/// as leading, title, subtitle, and trailing content of the item, respectively.
+///
+/// The [isThreeLine] parameter sets whether the item displays three lines (default is `false`).
+///
+/// The [isSelected] parameter indicates whether the item is selected (only applicable in multiple selection mode).
 class ChooseData<T extends Object?> {
+  /// Creates data for an item in the `ChooseDialog` widget.
+  ///
+  /// The [value] parameter represents the value of the item.
+  ///
+  /// The [searchValue] parameter is used for filtering the item in the search bar.
+  ///
+  /// The [leading], [title], [subtitle], and [trailing] parameters represent the widgets to be displayed
+  /// as leading, title, subtitle, and trailing content of the item, respectively.
+  ///
+  /// The [isThreeLine] parameter sets whether the item displays three lines (default is `false`).
+  ///
+  /// The [isSelected] parameter indicates whether the item is selected (only applicable in multiple selection mode).
   ChooseData({
     this.value,
     this.searchValue,
