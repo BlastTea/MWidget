@@ -62,7 +62,7 @@ extension NumExtension on num {
       }
     }
 
-    if (!includeDecimalPart && int.tryParse(decimalPart.replaceAll('.', '')) == null) {
+    if (!includeDecimalPart && int.tryParse(decimalPart.replaceAll('.', '')) == 0) {
       return (isNegative ? '-' : '') + formattedString;
     }
 
