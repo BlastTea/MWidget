@@ -74,12 +74,10 @@ class TextEditingControllerThousandFormat extends TextEditingController {
         formattedString = prefix;
       }
 
-      if (_previousText.trim().isNotEmpty) {
-        if (decimalPart.count('.') == 1 && afterDot.isEmpty && includeDouble) {
-          formattedString += decimalPart;
-        } else if (afterDot.isNotEmpty) {
-          formattedString += '.${afterDot.extractNumberString() ?? ''}';
-        }
+      if (decimalPart.count('.') == 1 && afterDot.isEmpty && includeDouble) {
+        formattedString += decimalPart;
+      } else if (afterDot.isNotEmpty) {
+        formattedString += '.${afterDot.extractNumberString() ?? ''}';
       }
 
       if (_previousText != formattedString || text != formattedString || text.contains('.')) {
@@ -102,7 +100,7 @@ class TextEditingControllerThousandFormat extends TextEditingController {
     });
 
     if (number != null) {
-      text = number.toString();
+      text = number.toThousandFormat(includeDecimalPart: false);
     }
   }
 
