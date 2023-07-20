@@ -1,32 +1,51 @@
 part of 'services.dart';
 
 /// A custom [TextEditingController] that automatically formats the text input as a thousand-formatted number.
+///
+/// The [TextEditingControllerThousandFormat] formats the text input by adding commas as thousand separators.
+/// It allows for easy input and display of large numbers with commas.
+///
+/// By default, the formatting includes only positive numbers without decimal parts.
+/// You can customize the behavior by specifying the [includeNegative] and [includeDouble] flags:
+/// - [includeNegative]: If set to `true`, negative numbers will include a negative sign at the beginning.
+/// - [includeDouble]: If set to `true`, numbers with decimal parts will display the decimal point and digits after it.
+///
+/// Usage:
+/// ```dart
+/// TextEditingControllerThousandFormat controller = TextEditingControllerThousandFormat(
+///   includeNegative: true,
+///   includeDouble: true,
+///   number: 1234567.89,
+/// );
+///
+/// // Assuming the user inputs '-1234567.89'
+/// print(controller.text); // Output: '-1,234,567.89'
+/// ```
 class TextEditingControllerThousandFormat extends TextEditingController {
-  /// A custom [TextEditingController] that automatically formats the text input as a thousand-formatted number.
+  /// Creates a [TextEditingControllerThousandFormat].
   ///
-  /// The [TextEditingControllerThousandFormat] formats the text input by adding commas as thousand separators.
-  /// It allows for easy input and display of large numbers with commas.
+  /// The [includeNegative] and [includeDouble] flags control the formatting behavior.
+  /// If [number] is provided, it will be formatted and set as the initial value.
   ///
-  /// By default, the formatting includes only positive numbers without decimal parts.
-  /// You can customize the behavior by specifying the [includeNegative] and [includeDouble] flags:
+  /// By default, [includeNegative] is set to `false` and [includeDouble] is set to `false`.
   /// - [includeNegative]: If set to `true`, negative numbers will include a negative sign at the beginning.
   /// - [includeDouble]: If set to `true`, numbers with decimal parts will display the decimal point and digits after it.
   ///
-  /// Usage:
+  /// If [includeDoubleAtFirstTime] is set to `true`, it will include decimal points even on the first input.
+  ///
+  /// Example usage:
   /// ```dart
   /// TextEditingControllerThousandFormat controller = TextEditingControllerThousandFormat(
   ///   includeNegative: true,
   ///   includeDouble: true,
   ///   number: 1234567.89,
   /// );
-  ///
-  /// // Assuming the user inputs '-1234567.89'
-  /// print(controller.text); // Output: '-1,234,567.89'
   /// ```
   TextEditingControllerThousandFormat({
     num? number,
     this.includeNegative = false,
     this.includeDouble = false,
+    this.includeDoubleAtFirstTime = false,
   }) {
     bool ignoreChanges = false;
 
@@ -36,7 +55,10 @@ class TextEditingControllerThousandFormat extends TextEditingController {
       if (text.trim().isEmpty) {
         value = const TextEditingValue(
           text: '',
-          selection: TextSelection.collapsed(offset: ''.length, affinity: TextAffinity.upstream),
+          selection: TextSelection.collapsed(
+            offset: ''.length,
+            affinity: TextAffinity.upstream,
+          ),
           composing: TextRange.empty,
         );
         return;
@@ -80,6 +102,10 @@ class TextEditingControllerThousandFormat extends TextEditingController {
         formattedString += '.${afterDot.extractNumberString() ?? ''}';
       }
 
+      if (formattedString.contains('.') && _isFirstTime && !includeDoubleAtFirstTime) {
+        formattedString = formattedString.substring(0, formattedString.indexOf('.'));
+      }
+
       if (_previousText != formattedString || text != formattedString || text.contains('.')) {
         ignoreChanges = true;
 
@@ -97,6 +123,7 @@ class TextEditingControllerThousandFormat extends TextEditingController {
         _previousText = formattedString;
         ignoreChanges = false;
       }
+      _isFirstTime = false;
     });
 
     if (number != null) {
@@ -104,7 +131,22 @@ class TextEditingControllerThousandFormat extends TextEditingController {
     }
   }
 
+  /// If `true`, negative numbers will include a negative sign at the beginning.
   final bool includeNegative;
+
+  /// If `true`, numbers with decimal parts will display the decimal point and digits after it.
   final bool includeDouble;
+
+  /// If `true`, it will include decimal points even on the first input.
+  final bool includeDoubleAtFirstTime;
+
+  bool _isFirstTime = false;
+
   String _previousText = '';
+
+  @override
+  set text(String newText) {
+    _isFirstTime = true;
+    super.text = newText;
+  }
 }
