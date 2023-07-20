@@ -251,7 +251,7 @@ class _DraggableScrollableSwitcherState extends State<DraggableScrollableSwitche
                 context,
                 scrollController,
                 transition.children.map((e) => widget.transitionBuilder(context, animation, e)).toList(),
-                animation,
+                _animation,
               );
             },
           ),
