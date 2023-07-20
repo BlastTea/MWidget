@@ -74,10 +74,12 @@ class TextEditingControllerThousandFormat extends TextEditingController {
         formattedString = prefix;
       }
 
-      if (decimalPart.count('.') == 1 && afterDot.isEmpty && includeDouble) {
-        formattedString += decimalPart;
-      } else if (afterDot.isNotEmpty) {
-        formattedString += '.${afterDot.extractNumberString() ?? ''}';
+      if (_previousText.trim().isNotEmpty) {
+        if (decimalPart.count('.') == 1 && afterDot.isEmpty && includeDouble) {
+          formattedString += decimalPart;
+        } else if (afterDot.isNotEmpty) {
+          formattedString += '.${afterDot.extractNumberString() ?? ''}';
+        }
       }
 
       if (_previousText != formattedString || text != formattedString || text.contains('.')) {

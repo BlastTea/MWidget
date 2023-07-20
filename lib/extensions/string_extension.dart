@@ -32,7 +32,7 @@ extension StringExtension on String {
   /// input.extractNumberString(); // null
   ///
   /// String input = '-034asdf';
-  /// input.extractNumberString() // -034
+  /// input.extractNumberString(); // -034
   /// ```
   String? extractNumberString() {
     RegExpMatch? match = RegExp(r'^-?\d+').firstMatch(this);
