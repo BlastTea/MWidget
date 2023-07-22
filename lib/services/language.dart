@@ -4,7 +4,7 @@ part of 'services.dart';
 /// It allows switching between different languages and getting localized strings based on the selected language.
 ///
 /// The class contains static methods and properties to handle language switching and localization.
-class Language {
+abstract class Language {
   /// A [ValueNotifier] that holds the currently selected [LanguageType].
   /// Listeners are notified whenever the language is changed.
   static ValueNotifier<LanguageType> languageTypeListenable = ValueNotifier(LanguageType.english)..addListener(() => languageListenable.value = _setValue());

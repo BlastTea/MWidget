@@ -130,8 +130,10 @@ import 'pakcage:m_widget/m_widget.dart';
   ```dart
   NavigationHelper.showDialog((context) => AlertDialog());
   ```
-- ## AdaptiveRouteDialog
-  Same as MaterialPageRoute, but this route will be adaptive.
+- ## AdaptiveDialogRoute
+  A custom PageRoute that implements a dialog-style route with adaptive behavior.\
+  This route is designed to be used as a dialog, appearing on top of the current screen.
+  It is intended to work seamlessly across different platforms with adaptive transitions.
   ### Usage
   ```dart
   NavigationHelper.to(
@@ -185,69 +187,120 @@ import 'pakcage:m_widget/m_widget.dart';
     ),
   ).then((value) => print(value));
   ```
-- ## DraggableScrollableSwitcher
-  A DraggableScrollableSheet with transition.
+- ## AnimatedDraggableScrollableSheet
+  A class representing a draggable scrollable sheet with animated transitions.
   ### Usage
   ```dart
-  DraggableScrollableSwitcher(
-    minChildSize: 90 / MediaQuery.sizeOf(context), // the minimum child size will be 90 pixel
-    children: [
-      DraggableScrollableTransition(
-        startTransition: 0.0,
-        endTransition: 0.3,
-        visibility: DraggableScrollableTransitionVisibility.start,
-        children: [
-          FilledButton(
-            onPressed: () {},
-            child: Text('Start'),
-          ),
-        ]
-      ),
-      DraggableScrollableTransition(
-        startTransition: 0.4,
-        endTransition: 0.6,
-        visibility: DraggableScrollableTransitionVisibility.mid, // in mid, I still working on it, so better not to use it
-        children: [
-          FilledButton(
-            onPressed: () {},
-            child: Text('Mid'),
-          ),
-        ]
-      ),
-      DraggableScrollableTransition(
+  AnimatedDraggableScrollableSheet(
+    minChildSize: 90 / MediaQuery.sizeOf(context).height,
+    snap: true,
+    snapAnimationDuration: const Duration(milliseconds: 150),
+    transitions: [
+      SingleChildSheetDraggableTransition(
+        tag: 'top',
         startTransition: 0.7,
         endTransition: 1.0,
-        visibility: DraggableScrollableTransitionVisibility.end,
-        children: [
-          FilledButton(
-            onPressed: () {},
-            child: Text('End'),
-          ),
-        ]
-      ),
-    ],
-    transitionBuilder: (context, animation, child) => FadeTransition(
-      opacity: animation,
-      child: child,
-    ),
-    builder: (context, scrollController, children, animation) => Container(
-      child: ListView( // You can use ListView or CustomScrollView
-        controller: scrollController
-        children: [
-          Align(
-            child: Container(
-              width: 32.0,
-              height: 4.0,
-              margin: const EdgeInsets.only(top: 8.0, bottom: 22.0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4), 
-                borderRadius: BorderRadius.circular(2.0),
-              ),
+        transitionCurve: SheetDraggableTransitionCurves.end,
+        child: Text(
+          'Hello',
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
+        transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
+          opacity: curvedAnimation,
+          child: Align(
+            child: SizedBox(
+              height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
+              child: child,
             ),
           ),
-          ...children,
-        ]
-      )
+        ),
+      ),
+      SingleChildSheetDraggableTransition(
+        tag: 'bottom',
+        startTransition: 0.7,
+        endTransition: 1.0,
+        transitionCurve: SheetDraggableTransitionCurves.end,
+        child: Text(
+          'World',
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
+        transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
+          opacity: curvedAnimation,
+          child: Align(
+            child: SizedBox(
+              height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
+              child: child,
+            ),
+          ),
+        ),
+      ),
+      SingleChildSheetDraggableTransition(
+        tag: 'beside image',
+        startTransition: 0.0,
+        endTransition: 0.3,
+        transitionCurve: SheetDraggableTransitionCurves.start,
+        child: Text(
+          'Hello There',
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
+        transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
+          opacity: curvedAnimation,
+          child: Positioned(
+            left: 32.0 + 48.0,
+            child: child,
+          ),
+        ),
+      ),
+    ],
+    builder: (context, scrollController, animation, children) => Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.lerp(
+          BorderRadius.zero,
+          const BorderRadius.vertical(
+            top: Radius.circular(kShapeExtraLarge),
+          ),
+          animation.value,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: ScrollConfiguration(
+          behavior: CustomScrollBehavior.all,
+          child: Stack(
+            children: [
+              ListView(
+                controller: scrollController,
+                children: [
+                  Align(
+                    child: Container(
+                      width: 32.0,
+                      height: 4.0,
+                      margin: const EdgeInsets.only(top: 8.0, bottom: 22.0),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(2.0),
+                      ),
+                    ),
+                  ),
+                  ...children?.where((element) => element.tag == 'top').map((e) => e.child) ?? [],
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      width: Tween(begin: 48.0, end: MediaQuery.sizeOf(context).width).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
+                      height: Tween(begin: 48.0, end: imageHeight).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
+                      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                      color: Colors.blue[50],
+                      child: const FlutterLogo(),
+                    ),
+                  ),
+                  ...children?.where((element) => element.tag == 'bottom').map((e) => e.child) ?? [],
+                ],
+              ),
+              ...children?.where((element) => element.tag == 'beside image').map((e) => e.child) ?? [],
+            ],
+          ),
+        ),
+      ),
     ),
   );
   ```

@@ -8,7 +8,7 @@ final material.GlobalKey<material.ScaffoldMessengerState> scaffoldMessengerKey =
 /// without requiring access to the `BuildContext` directly. It centralizes the handling of
 /// navigation-related functionalities within the Flutter app, making it easier to manage
 /// and reuse navigation and UI interactions across different parts of the application.
-class NavigationHelper {
+abstract class NavigationHelper {
   /// Navigates to a new route and returns a result when the route is popped.
   ///
   /// The `route` parameter specifies the route to navigate to, and the method

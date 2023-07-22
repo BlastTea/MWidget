@@ -31,8 +31,6 @@ class TextEditingControllerThousandFormat extends TextEditingController {
   /// - [includeNegative]: If set to `true`, negative numbers will include a negative sign at the beginning.
   /// - [includeDouble]: If set to `true`, numbers with decimal parts will display the decimal point and digits after it.
   ///
-  /// If [includeDoubleAtFirstTime] is set to `true`, it will include decimal points even on the first input.
-  ///
   /// Example usage:
   /// ```dart
   /// TextEditingControllerThousandFormat controller = TextEditingControllerThousandFormat(
@@ -45,9 +43,9 @@ class TextEditingControllerThousandFormat extends TextEditingController {
     num? number,
     this.includeNegative = false,
     this.includeDouble = false,
-    this.includeDoubleAtFirstTime = false,
   }) {
     bool ignoreChanges = false;
+    _isFirstTime = true;
 
     addListener(() {
       if (ignoreChanges) return;
@@ -102,7 +100,7 @@ class TextEditingControllerThousandFormat extends TextEditingController {
         formattedString += '.${afterDot.extractNumberString() ?? ''}';
       }
 
-      if (formattedString.contains('.') && _isFirstTime && !includeDoubleAtFirstTime) {
+      if (formattedString.contains('.') && _isFirstTime && afterDot.extractNumber() == 0) {
         formattedString = formattedString.substring(0, formattedString.indexOf('.'));
       }
 
@@ -136,9 +134,6 @@ class TextEditingControllerThousandFormat extends TextEditingController {
 
   /// If `true`, numbers with decimal parts will display the decimal point and digits after it.
   final bool includeDouble;
-
-  /// If `true`, it will include decimal points even on the first input.
-  final bool includeDoubleAtFirstTime;
 
   bool _isFirstTime = false;
 
