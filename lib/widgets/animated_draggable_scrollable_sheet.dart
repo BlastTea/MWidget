@@ -156,7 +156,7 @@ class _AnimatedDraggableScrollableSheetState extends State<AnimatedDraggableScro
                       }
                   }
 
-                  if ((transition.alwaysVisible && _animation.value >= transition.startTransition && _animation.value <= transition.endTransition) || (!transition.alwaysVisible)) {
+                  if ((!transition.alwaysVisible && _animation.value >= transition.startTransition && _animation.value <= transition.endTransition) || (transition.alwaysVisible)) {
                     animatedDraggables.addAll(
                       switch (transition) {
                         SheetDraggableTransitionWithChildren() => transition.transitionBuilder != null

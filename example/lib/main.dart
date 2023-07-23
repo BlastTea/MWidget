@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     // style: Theme.of(context).textTheme.headlineLarge,
                   ),
                   transitionBuilder: (context, animation, curvedAnimation, child) {
-                    // return child;
+                    return child;
                     return FadeTransition(
                       opacity: curvedAnimation,
                       child: Align(
@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     );
                   },
-                  alwaysVisible: true,
+                  alwaysVisible: false,
                 ),
                 SingleChildSheetDraggableTransition(
                   tag: 'top',
@@ -99,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     // style: Theme.of(context).textTheme.headlineLarge,
                   ),
                   transitionBuilder: (context, animation, curvedAnimation, child) {
-                    // return child;
+                    return child;
                     return FadeTransition(
                       opacity: curvedAnimation,
                       child: Align(
@@ -110,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     );
                   },
-                  alwaysVisible: true,
+                  alwaysVisible: false,
                 ),
                 // SingleChildSheetDraggableTransition(
                 //   tag: 'bottom',
