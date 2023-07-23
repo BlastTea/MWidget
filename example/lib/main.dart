@@ -33,126 +33,166 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final double imageHeight = 400.0;
 
+  final SubmitFocusNode _submitFocusNode = SubmitFocusNode();
+
   @override
-  Widget build(BuildContext context) => Stack(
-        children: [
-          Scaffold(
-            appBar: AppBar(
-              title: const Text('Example App'),
+  Widget build(BuildContext context) => SizedBox(
+        width: MediaQuery.sizeOf(context).width,
+        height: MediaQuery.sizeOf(context).height,
+        child: Stack(
+          children: [
+            Scaffold(
+              appBar: AppBar(
+                title: const Text('Example App'),
+              ),
+              body: ConstrainedBox(
+                constraints: BoxConstraints.tightFor(
+                  width: double.infinity,
+                  height: imageHeight,
+                ),
+                child: TextField(
+                  focusNode: _submitFocusNode,
+                  expands: true,
+                  maxLines: null,
+                  decoration: const InputDecoration(border: OutlineInputBorder()),
+                  onSubmitted: (value) {
+                    debugPrint('submitted $value');
+                  },
+                ),
+              ),
             ),
-          ),
-          AnimatedDraggableScrollableSheet(
-            minChildSize: 90 / MediaQuery.sizeOf(context).height,
-            snap: true,
-            snapAnimationDuration: const Duration(milliseconds: 150),
-            transitions: [
-              SingleChildSheetDraggableTransition(
-                tag: 'top',
-                startTransition: 0.7,
-                endTransition: 1.0,
-                transitionCurve: SheetDraggableTransitionCurves.end,
-                child: Text(
-                  'Hello',
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
-                transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
-                  opacity: curvedAnimation,
-                  child: Align(
-                    child: SizedBox(
-                      height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
-                      child: child,
+            AnimatedDraggableScrollableSheet(
+              minChildSize: 90 / MediaQuery.sizeOf(context).height,
+              snap: true,
+              snapAnimationDuration: const Duration(milliseconds: 150),
+              transitions: [
+                SingleChildSheetDraggableTransition(
+                  tag: 'top',
+                  startTransition: 0.7,
+                  endTransition: 1.0,
+                  transitionCurve: SheetDraggableTransitionCurves.end,
+                  child: Text(
+                    'Hello',
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                  transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
+                    opacity: curvedAnimation,
+                    child: Align(
+                      child: SizedBox(
+                        height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
+                        child: child,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SingleChildSheetDraggableTransition(
-                tag: 'bottom',
-                startTransition: 0.7,
-                endTransition: 1.0,
-                transitionCurve: SheetDraggableTransitionCurves.end,
-                child: Text(
-                  'World',
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
-                transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
-                  opacity: curvedAnimation,
-                  child: Align(
-                    child: SizedBox(
-                      height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
-                      child: child,
+                SingleChildSheetDraggableTransition(
+                  tag: 'top',
+                  startTransition: 0.0,
+                  endTransition: 0.3,
+                  transitionCurve: SheetDraggableTransitionCurves.start,
+                  child: Text(
+                    'World',
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                  transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
+                    opacity: curvedAnimation,
+                    child: Align(
+                      child: SizedBox(
+                        height: (MediaQuery.sizeOf(context).height) * animation.value,
+                        child: child,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SingleChildSheetDraggableTransition(
-                tag: 'beside image',
-                startTransition: 0.0,
-                endTransition: 0.3,
-                transitionCurve: SheetDraggableTransitionCurves.start,
-                child: Text(
-                  'Hello There',
-                  style: Theme.of(context).textTheme.headlineLarge,
+                SingleChildSheetDraggableTransition(
+                  tag: 'bottom',
+                  startTransition: 0.7,
+                  endTransition: 1.0,
+                  transitionCurve: SheetDraggableTransitionCurves.end,
+                  child: Text(
+                    'World',
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                  transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
+                    opacity: curvedAnimation,
+                    child: Align(
+                      child: SizedBox(
+                        height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
+                        child: child,
+                      ),
+                    ),
+                  ),
                 ),
-                transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
-                  opacity: curvedAnimation,
-                  child: Positioned(
+                SingleChildSheetDraggableTransition(
+                  tag: 'beside image',
+                  startTransition: 0.0,
+                  endTransition: 0.3,
+                  transitionCurve: SheetDraggableTransitionCurves.start,
+                  child: Text(
+                    'Hello There',
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                  transitionBuilder: (context, animation, curvedAnimation, child) => Positioned(
                     left: 32.0 + 48.0,
-                    child: child,
+                    child: FadeTransition(
+                      opacity: curvedAnimation,
+                      child: child,
+                    ),
                   ),
                 ),
-              ),
-            ],
-            builder: (context, scrollController, animation, children) => Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.lerp(
-                  BorderRadius.zero,
-                  const BorderRadius.vertical(
-                    top: Radius.circular(kShapeExtraLarge),
+              ],
+              builder: (context, scrollController, animation, children) => Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.lerp(
+                    BorderRadius.zero,
+                    const BorderRadius.vertical(
+                      top: Radius.circular(kShapeExtraLarge),
+                    ),
+                    animation.value,
                   ),
-                  animation.value,
                 ),
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: ScrollConfiguration(
-                  behavior: CustomScrollBehavior.all,
-                  child: Stack(
-                    children: [
-                      ListView(
-                        controller: scrollController,
-                        children: [
-                          Align(
-                            child: Container(
-                              width: 32.0,
-                              height: 4.0,
-                              margin: const EdgeInsets.only(top: 8.0, bottom: 22.0),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
-                                borderRadius: BorderRadius.circular(2.0),
+                child: Material(
+                  color: Colors.transparent,
+                  child: ScrollConfiguration(
+                    behavior: CustomScrollBehavior.all,
+                    child: Stack(
+                      children: [
+                        ListView(
+                          controller: scrollController,
+                          children: [
+                            Align(
+                              child: Container(
+                                width: 32.0,
+                                height: 4.0,
+                                margin: const EdgeInsets.only(top: 8.0, bottom: 22.0),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
+                                  borderRadius: BorderRadius.circular(2.0),
+                                ),
                               ),
                             ),
-                          ),
-                          ...children?.where((element) => element.tag == 'top').map((e) => e.child) ?? [],
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              width: Tween(begin: 48.0, end: MediaQuery.sizeOf(context).width).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
-                              height: Tween(begin: 48.0, end: imageHeight).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
-                              margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                              color: Colors.blue[50],
-                              child: const FlutterLogo(),
+                            ...children?.where((element) => element.tag == 'top').map((e) => e.child) ?? [],
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                width: Tween(begin: 48.0, end: MediaQuery.sizeOf(context).width).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
+                                height: Tween(begin: 48.0, end: imageHeight).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
+                                margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                                color: Colors.blue[50],
+                                child: const FlutterLogo(),
+                              ),
                             ),
-                          ),
-                          ...children?.where((element) => element.tag == 'bottom').map((e) => e.child) ?? [],
-                        ],
-                      ),
-                      ...children?.where((element) => element.tag == 'beside image').map((e) => e.child) ?? [],
-                    ],
+                            ...children?.where((element) => element.tag == 'bottom').map((e) => e.child) ?? [],
+                          ],
+                        ),
+                        ...children?.where((element) => element.tag == 'beside image').map((e) => e.child) ?? [],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
 }

@@ -1,4 +1,4 @@
-part of 'services.dart';
+part of 'utils.dart';
 
 /// A custom [PageRoute] that implements a dialog-style route with adaptive behavior.
 ///

@@ -307,7 +307,7 @@ class SheetAnimatedDraggable {
   /// Creates a [SheetAnimatedDraggable].
   ///
   /// - [tag] is a unique identifier for the animated draggable widget.
-  /// - [child] is the child widget to animate.
+  /// - [child] is the child widget that has been animated.
   SheetAnimatedDraggable({
     required this.tag,
     required this.child,

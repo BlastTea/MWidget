@@ -1,4 +1,4 @@
-part of 'services.dart';
+part of 'utils.dart';
 
 /// A custom [TextEditingController] that automatically formats the text input as a thousand-formatted number.
 ///

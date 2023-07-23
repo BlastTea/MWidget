@@ -3,10 +3,14 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:m_widget/m_widget.dart';
 
 part 'material_utils.dart';
 part 'firestore_auto_id_generator.dart';
 part 'custom_scroll_behavior.dart';
+part 'adaptive_dialog_route.dart';
+part 'text_editing_controller_thousand_format.dart';
+part 'submit_focus_node.dart';
 
 const String keyTransactionFee = 'transaction_fee';
 
