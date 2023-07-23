@@ -73,17 +73,21 @@ class _MyHomePageState extends State<MyHomePage> {
                   transitionCurve: SheetDraggableTransitionCurves.end,
                   child: Text(
                     'Hello',
-                    style: Theme.of(context).textTheme.headlineLarge,
+                    // style: Theme.of(context).textTheme.headlineLarge,
                   ),
-                  transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
-                    opacity: curvedAnimation,
-                    child: Align(
-                      child: SizedBox(
-                        height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
-                        child: child,
+                  transitionBuilder: (context, animation, curvedAnimation, child) {
+                    // return child;
+                    return FadeTransition(
+                      opacity: curvedAnimation,
+                      child: Align(
+                        child: SizedBox(
+                          // height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
+                          child: child,
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
+                  alwaysVisible: true,
                 ),
                 SingleChildSheetDraggableTransition(
                   tag: 'top',
@@ -92,57 +96,62 @@ class _MyHomePageState extends State<MyHomePage> {
                   transitionCurve: SheetDraggableTransitionCurves.start,
                   child: Text(
                     'World',
-                    style: Theme.of(context).textTheme.headlineLarge,
+                    // style: Theme.of(context).textTheme.headlineLarge,
                   ),
-                  transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
-                    opacity: curvedAnimation,
-                    child: Align(
-                      child: SizedBox(
-                        height: (MediaQuery.sizeOf(context).height) * animation.value,
-                        child: child,
-                      ),
-                    ),
-                  ),
-                ),
-                SingleChildSheetDraggableTransition(
-                  tag: 'bottom',
-                  startTransition: 0.7,
-                  endTransition: 1.0,
-                  transitionCurve: SheetDraggableTransitionCurves.end,
-                  child: Text(
-                    'World',
-                    style: Theme.of(context).textTheme.headlineLarge,
-                  ),
-                  transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
-                    opacity: curvedAnimation,
-                    child: Align(
-                      child: SizedBox(
-                        height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
-                        child: child,
-                      ),
-                    ),
-                  ),
-                ),
-                SingleChildSheetDraggableTransition(
-                  tag: 'beside image',
-                  startTransition: 0.0,
-                  endTransition: 0.3,
-                  transitionCurve: SheetDraggableTransitionCurves.start,
-                  child: Text(
-                    'Hello There',
-                    style: Theme.of(context).textTheme.headlineLarge,
-                  ),
-                  transitionBuilder: (context, animation, curvedAnimation, child) => Positioned(
-                    left: 32.0 + 48.0,
-                    child: FadeTransition(
+                  transitionBuilder: (context, animation, curvedAnimation, child) {
+                    // return child;
+                    return FadeTransition(
                       opacity: curvedAnimation,
-                      child: child,
-                    ),
-                  ),
+                      child: Align(
+                        child: SizedBox(
+                          // height: (MediaQuery.sizeOf(context).height) * animation.value,
+                          child: child,
+                        ),
+                      ),
+                    );
+                  },
+                  alwaysVisible: true,
                 ),
+                // SingleChildSheetDraggableTransition(
+                //   tag: 'bottom',
+                //   startTransition: 0.7,
+                //   endTransition: 1.0,
+                //   transitionCurve: SheetDraggableTransitionCurves.end,
+                //   child: Text(
+                //     'World',
+                //     style: Theme.of(context).textTheme.headlineLarge,
+                //   ),
+                //   transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
+                //     opacity: curvedAnimation,
+                //     child: Align(
+                //       child: SizedBox(
+                //         height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
+                //         child: child,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // SingleChildSheetDraggableTransition(
+                //   tag: 'beside image',
+                //   startTransition: 0.0,
+                //   endTransition: 0.3,
+                //   transitionCurve: SheetDraggableTransitionCurves.start,
+                //   child: Text(
+                //     'Hello There',
+                //     style: Theme.of(context).textTheme.headlineLarge,
+                //   ),
+                //   transitionBuilder: (context, animation, curvedAnimation, child) => Positioned(
+                //     left: 32.0 + 48.0,
+                //     child: FadeTransition(
+                //       opacity: curvedAnimation,
+                //       child: child,
+                //     ),
+                //   ),
+                // ),
               ],
               builder: (context, scrollController, animation, children) => Container(
                 decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondaryContainer,
                   borderRadius: BorderRadius.lerp(
                     BorderRadius.zero,
                     const BorderRadius.vertical(
@@ -164,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Container(
                                 width: 32.0,
                                 height: 4.0,
-                                margin: const EdgeInsets.only(top: 8.0, bottom: 22.0),
+                                margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
                                   borderRadius: BorderRadius.circular(2.0),
@@ -172,16 +181,16 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                             ...children?.where((element) => element.tag == 'top').map((e) => e.child) ?? [],
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Container(
-                                width: Tween(begin: 48.0, end: MediaQuery.sizeOf(context).width).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
-                                height: Tween(begin: 48.0, end: imageHeight).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
-                                margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                                color: Colors.blue[50],
-                                child: const FlutterLogo(),
-                              ),
-                            ),
+                            // Align(
+                            //   alignment: Alignment.centerLeft,
+                            //   child: Container(
+                            //     width: Tween(begin: 48.0, end: MediaQuery.sizeOf(context).width).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
+                            //     height: Tween(begin: 48.0, end: imageHeight).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
+                            //     margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                            //     color: Colors.blue[50],
+                            //     child: const FlutterLogo(),
+                            //   ),
+                            // ),
                             ...children?.where((element) => element.tag == 'bottom').map((e) => e.child) ?? [],
                           ],
                         ),

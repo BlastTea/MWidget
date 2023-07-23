@@ -156,48 +156,50 @@ class _AnimatedDraggableScrollableSheetState extends State<AnimatedDraggableScro
                       }
                   }
 
-                  animatedDraggables.addAll(
-                    switch (transition) {
-                      SheetDraggableTransitionWithChildren() => transition.transitionBuilder != null
-                          ? transition.children
-                              .map(
-                                (e) => transition.transitionBuilder!.call(
-                                  context,
-                                  CurvedAnimation(parent: _animation, curve: widget.curve),
-                                  CurvedAnimation(parent: curvedAnimation, curve: transition.curve),
-                                  e,
-                                ),
-                              )
-                              .map(
-                                (e) => SheetAnimatedDraggable(
-                                  tag: transition.tag,
-                                  child: e,
-                                ),
-                              )
-                              .toList()
-                          : transition.children
-                              .map(
-                                (e) => SheetAnimatedDraggable(
-                                  tag: transition.tag,
-                                  child: e,
-                                ),
-                              )
-                              .toList(),
-                      SingleChildSheetDraggableTransition() => [
-                          SheetAnimatedDraggable(
-                            tag: transition.tag,
-                            child: transition.transitionBuilder != null
-                                ? transition.transitionBuilder!.call(
+                  if ((transition.alwaysVisible && _animation.value >= transition.startTransition && _animation.value <= transition.endTransition) || (!transition.alwaysVisible)) {
+                    animatedDraggables.addAll(
+                      switch (transition) {
+                        SheetDraggableTransitionWithChildren() => transition.transitionBuilder != null
+                            ? transition.children
+                                .map(
+                                  (e) => transition.transitionBuilder!.call(
                                     context,
                                     CurvedAnimation(parent: _animation, curve: widget.curve),
                                     CurvedAnimation(parent: curvedAnimation, curve: transition.curve),
-                                    transition.child,
-                                  )
-                                : transition.child,
-                          )
-                        ],
-                    },
-                  );
+                                    e,
+                                  ),
+                                )
+                                .map(
+                                  (e) => SheetAnimatedDraggable(
+                                    tag: transition.tag,
+                                    child: e,
+                                  ),
+                                )
+                                .toList()
+                            : transition.children
+                                .map(
+                                  (e) => SheetAnimatedDraggable(
+                                    tag: transition.tag,
+                                    child: e,
+                                  ),
+                                )
+                                .toList(),
+                        SingleChildSheetDraggableTransition() => [
+                            SheetAnimatedDraggable(
+                              tag: transition.tag,
+                              child: transition.transitionBuilder != null
+                                  ? transition.transitionBuilder!.call(
+                                      context,
+                                      CurvedAnimation(parent: _animation, curve: widget.curve),
+                                      CurvedAnimation(parent: curvedAnimation, curve: transition.curve),
+                                      transition.child,
+                                    )
+                                  : transition.child,
+                            )
+                          ],
+                      },
+                    );
+                  }
                 }
               }
 
@@ -224,6 +226,7 @@ sealed class SheetDraggableTransition {
   /// - [endTransition] is the ending point of the transition.
   /// - [transitionCurve] defines the curve of the transition.
   /// - [curve] is the animation curve for this transition.
+  /// - If [alwaysVisible] is true, the widget will be returned even the animation value is not between [startTransition] and [endTransition]
   SheetDraggableTransition({
     required this.tag,
     required this.startTransition,
@@ -231,6 +234,7 @@ sealed class SheetDraggableTransition {
     required this.transitionCurve,
     this.curve = Curves.linear,
     this.transitionBuilder,
+    this.alwaysVisible = false,
   });
 
   /// A unique identifier for this transition.
@@ -250,6 +254,9 @@ sealed class SheetDraggableTransition {
 
   /// A function to build custom transitions for the sheet.
   final DraggableTransitionBuilder? transitionBuilder;
+
+  /// If true, the widget will be returned even the animation value is not between [startTransition] and [endTransition]
+  final bool alwaysVisible;
 }
 
 /// A class representing a draggable transition with multiple children.
@@ -263,6 +270,7 @@ class SheetDraggableTransitionWithChildren extends SheetDraggableTransition {
   /// - [curve] is the animation curve for this transition.
   /// - [children] is the list of children widgets that participate in the transition.
   /// - [transitionBuilder] a function to build custom transitions for the sheet.
+  /// - If [alwaysVisible] is true, the widget will be returned even the animation value is not between [startTransition] and [endTransition]
   SheetDraggableTransitionWithChildren({
     required super.tag,
     required super.startTransition,
@@ -271,6 +279,7 @@ class SheetDraggableTransitionWithChildren extends SheetDraggableTransition {
     super.curve = Curves.linear,
     required this.children,
     super.transitionBuilder,
+    super.alwaysVisible,
   });
 
   /// The list of children widgets that participate in the transition.
@@ -288,6 +297,7 @@ class SingleChildSheetDraggableTransition extends SheetDraggableTransition {
   /// - [curve] is the animation curve for this transition.
   /// - [child] is the child widget that participates in the transition.
   /// - [transitionBuilder] a function to build custom transitions for the sheet.
+  /// - If [alwaysVisible] is true, the widget will be returned even the animation value is not between [startTransition] and [endTransition]
   SingleChildSheetDraggableTransition({
     required super.tag,
     required super.startTransition,
@@ -296,6 +306,7 @@ class SingleChildSheetDraggableTransition extends SheetDraggableTransition {
     super.curve = Curves.linear,
     required this.child,
     super.transitionBuilder,
+    super.alwaysVisible,
   });
 
   /// The child widget that participates in the transition.
