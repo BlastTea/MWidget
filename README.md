@@ -16,43 +16,38 @@ import 'pakcage:m_widget/m_widget.dart';
 ```
 
 # Features
-- ## Language
-  A template for adding multiple languages to your App.
-  ### Supported Languages:
-  - English
-  - Indonesian
+  ## Language
+  The `Language` class provides localization support for different languages in the application.
+  
   ### Usage
-  Use ValueListenableBuilder to get the value
+  Use `ValueListenableBuilder` to get the value
+  
   ```dart
   @override
   Widget build(BuildContext context) => ValueListenableBuilder(
-      valueListenable: Language.languageListenable,
-      builder: (context, language, child) => Scaffold(
-          body: Center(
-              child: Text(language['January']!),
-          ),
+    valueListenable: Language.languageNotifier,
+    builder: (context, language, child) => Scaffold(
+      body: Center(
+        child: Text(language['January']!),
       ),
+    ),
   );
   ```
-  Or
-  ```dart
-  Language.getValue('January');
-  ```
-  to get the value directly.
+  Or use `Language.getValue('January')` to get the value directly.
   #### Change the language
-  To change into another language, use
+  To change to another language, use
   ```dart
-  Language.languageTypeListenable.value = LanguageType.indonesian;
+  Language.language = LanguageType.indonesiaIndonesian;
   ```
-  #### add additional language
-  To add the translation into it, use
+  #### Add additional language
+  To add a translation, use
   ```dart
   Language.addData({
     'Hello': {
-      LanguageType.english: 'Hello',
-      LanguageType.indonesian: 'Halo',
-    }
-  };
+      LanguageType.unitedStatesEnglish: 'Hello',
+      LanguageType.indonesiaIndonesian: 'Halo',
+    },
+  });
   ```
 - ## DateTime Extension
   Extension for converting DateTime class into a formatted date and depends on language.
@@ -305,16 +300,19 @@ import 'pakcage:m_widget/m_widget.dart';
   );
   ```
 - ## MNumberPicker
-  It's just a number picker.
+  A customizable number picker widget that allows users to input a numeric value within a specific range.
   ### Usage
   ```dart
   MNumberPicker(
-    initialValue: 0,
+    controller: MNumberPickerController(initialValue: 10),
     minValue: 0,
-    maxValue: 10,
-    onChanged: (value) {},
-    step: 2,
-  );
+    maxValue: 100,
+    step: 5,
+    onChanged: (value) {
+      // Handle the updated value
+      print('New value: $value');
+    },
+  )
   ```
 - ## SheetImageSource
   A modal bottom sheet to select an image from the camera or gallery.

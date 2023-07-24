@@ -7,25 +7,58 @@ part of 'services.dart';
 abstract class Language {
   /// A [ValueNotifier] that holds the currently selected [LanguageType].
   /// Listeners are notified whenever the language is changed.
-  static ValueNotifier<LanguageType> languageTypeListenable = ValueNotifier(LanguageType.english)..addListener(() => languageListenable.value = _setValue());
+  static ValueNotifier<LanguageType> languageTypeNotifier = ValueNotifier(LanguageType.unitedStatesEnglish)..addListener(() => languageNotifier.value = _getValue());
+
+  /// Returns the currently selected [LanguageType].
+  static LanguageType get language => languageTypeNotifier.value;
+
+  /// Sets the selected [LanguageType].
+  static set language(LanguageType value) => languageTypeNotifier.value = value;
 
   /// A [ValueNotifier] that holds a map of localized strings based on the selected [LanguageType].
   /// Listeners are notified whenever the language is changed or new data is added.
-  static ValueNotifier<Map<String, String>> languageListenable = ValueNotifier(_setValue());
+  static ValueNotifier<Map<String, String?>> languageNotifier = ValueNotifier(_getValue());
 
   /// A private method that generates a map of localized strings based on the selected language.
-  static Map<String, String> _setValue() => _data.map((key, value) => MapEntry(key, value[languageTypeListenable.value]!));
+  static Map<String, String?> _getValue() => _data.map((key, value) => MapEntry(key, _formatValue(value[languageTypeNotifier.value])));
 
-  /// Returns the currently selected [LanguageType].
-  static LanguageType get language => languageTypeListenable.value;
-
-  /// Sets the selected [LanguageType].
-  static set language(LanguageType value) => languageTypeListenable.value = value;
+  /// A private method that formats the [value] with the provided [arguments].
+  ///
+  /// The [arguments] parameter should be a list of dynamic values that replace placeholders
+  /// `{0}`, `{1}`, etc., in the [value].
+  ///
+  /// Returns the formatted string, or `null` if the [value] is `null`.
+  static String? _formatValue(String? value, [List<dynamic> arguments = const []]) {
+    if (value == null) {
+      return null;
+    }
+    var formattedValue = value;
+    for (var i = 0; i < arguments.length; i++) {
+      formattedValue = formattedValue.replaceAll('{$i}', '${arguments[i]}');
+    }
+    return formattedValue;
+  }
 
   /// Retrieves the localized string for the given [key] based on the selected language.
   ///
+  /// If [arguments] are provided, the localized string is formatted using the provided arguments.
+  /// The [arguments] parameter should be a list of dynamic values that replace placeholders
+  /// `{0}`, `{1}`, etc., in the localized string.
+  ///
   /// Returns the localized string associated with the [key], or `null` if the [key] is not found.
-  static String? getValue(String key) => _setValue()[key];
+  ///
+  /// Example:
+  /// ```
+  /// String? greeting = Language.getValue('greeting', ['John']);
+  /// print(greeting); // Output: 'Hello, John!'
+  /// ```
+  static String? getValue(String key, [List<dynamic>? arguments]) {
+    final localizedValue = _getValue()[key];
+    if (localizedValue != null && arguments != null) {
+      return _formatValue(localizedValue, arguments);
+    }
+    return localizedValue;
+  }
 
   /// Adds new localization data to the language map.
   ///
@@ -39,100 +72,100 @@ abstract class Language {
   /// The nested maps associate each [LanguageType] with its localized string for that key.
   static final Map<String, Map<LanguageType, String>> _data = {
     'January': {
-      LanguageType.english: 'January',
-      LanguageType.indonesian: 'Januari',
+      LanguageType.unitedStatesEnglish: 'January',
+      LanguageType.indonesiaIndonesian: 'Januari',
     },
     'February': {
-      LanguageType.english: 'February',
-      LanguageType.indonesian: 'Februari',
+      LanguageType.unitedStatesEnglish: 'February',
+      LanguageType.indonesiaIndonesian: 'Februari',
     },
     'March': {
-      LanguageType.english: 'March',
-      LanguageType.indonesian: 'Maret',
+      LanguageType.unitedStatesEnglish: 'March',
+      LanguageType.indonesiaIndonesian: 'Maret',
     },
     'April': {
-      LanguageType.english: 'April',
-      LanguageType.indonesian: 'April',
+      LanguageType.unitedStatesEnglish: 'April',
+      LanguageType.indonesiaIndonesian: 'April',
     },
     'May': {
-      LanguageType.english: 'May',
-      LanguageType.indonesian: 'Mei',
+      LanguageType.unitedStatesEnglish: 'May',
+      LanguageType.indonesiaIndonesian: 'Mei',
     },
     'June': {
-      LanguageType.english: 'June',
-      LanguageType.indonesian: 'Juni',
+      LanguageType.unitedStatesEnglish: 'June',
+      LanguageType.indonesiaIndonesian: 'Juni',
     },
     'July': {
-      LanguageType.english: 'July',
-      LanguageType.indonesian: 'Juli',
+      LanguageType.unitedStatesEnglish: 'July',
+      LanguageType.indonesiaIndonesian: 'Juli',
     },
     'August': {
-      LanguageType.english: 'August',
-      LanguageType.indonesian: 'Agustus',
+      LanguageType.unitedStatesEnglish: 'August',
+      LanguageType.indonesiaIndonesian: 'Agustus',
     },
     'September': {
-      LanguageType.english: 'September',
-      LanguageType.indonesian: 'September',
+      LanguageType.unitedStatesEnglish: 'September',
+      LanguageType.indonesiaIndonesian: 'September',
     },
     'October': {
-      LanguageType.english: 'October',
-      LanguageType.indonesian: 'Oktober',
+      LanguageType.unitedStatesEnglish: 'October',
+      LanguageType.indonesiaIndonesian: 'Oktober',
     },
     'November': {
-      LanguageType.english: 'November',
-      LanguageType.indonesian: 'November',
+      LanguageType.unitedStatesEnglish: 'November',
+      LanguageType.indonesiaIndonesian: 'November',
     },
     'December': {
-      LanguageType.english: 'December',
-      LanguageType.indonesian: 'Desember',
+      LanguageType.unitedStatesEnglish: 'December',
+      LanguageType.indonesiaIndonesian: 'Desember',
     },
     'Sunday': {
-      LanguageType.english: 'Sunday',
-      LanguageType.indonesian: 'Minggu',
+      LanguageType.unitedStatesEnglish: 'Sunday',
+      LanguageType.indonesiaIndonesian: 'Minggu',
     },
     'Monday': {
-      LanguageType.english: 'Monday',
-      LanguageType.indonesian: 'Senin',
+      LanguageType.unitedStatesEnglish: 'Monday',
+      LanguageType.indonesiaIndonesian: 'Senin',
     },
     'Tuesday': {
-      LanguageType.english: 'Tuesday',
-      LanguageType.indonesian: 'Selasa',
+      LanguageType.unitedStatesEnglish: 'Tuesday',
+      LanguageType.indonesiaIndonesian: 'Selasa',
     },
     'Wednesday': {
-      LanguageType.english: 'Wednesday',
-      LanguageType.indonesian: 'Rabu',
+      LanguageType.unitedStatesEnglish: 'Wednesday',
+      LanguageType.indonesiaIndonesian: 'Rabu',
     },
     'Thursday': {
-      LanguageType.english: 'Thursday',
-      LanguageType.indonesian: 'Kamis',
+      LanguageType.unitedStatesEnglish: 'Thursday',
+      LanguageType.indonesiaIndonesian: 'Kamis',
     },
     'Friday': {
-      LanguageType.english: 'Friday',
-      LanguageType.indonesian: 'Jum\'at',
+      LanguageType.unitedStatesEnglish: 'Friday',
+      LanguageType.indonesiaIndonesian: 'Jum\'at',
     },
     'Saturday': {
-      LanguageType.english: 'Saturday',
-      LanguageType.indonesian: 'Sabtu',
+      LanguageType.unitedStatesEnglish: 'Saturday',
+      LanguageType.indonesiaIndonesian: 'Sabtu',
     },
     'Ok': {
-      LanguageType.english: 'Ok',
-      LanguageType.indonesian: 'Ok',
+      LanguageType.unitedStatesEnglish: 'Ok',
+      LanguageType.indonesiaIndonesian: 'Ok',
     },
     'Cancel': {
-      LanguageType.english: 'Cancel',
-      LanguageType.indonesian: 'Batal',
+      LanguageType.unitedStatesEnglish: 'Cancel',
+      LanguageType.indonesiaIndonesian: 'Batal',
     },
     'Gallery': {
-      LanguageType.english: 'Gallery',
-      LanguageType.indonesian: 'Galeri',
+      LanguageType.unitedStatesEnglish: 'Gallery',
+      LanguageType.indonesiaIndonesian: 'Galeri',
     },
     'Camera': {
-      LanguageType.english: 'Camera',
-      LanguageType.indonesian: 'Kamera',
+      LanguageType.unitedStatesEnglish: 'Camera',
+      LanguageType.indonesiaIndonesian: 'Kamera',
     },
     'Delete': {
-      LanguageType.english: 'Delete',
-      LanguageType.indonesian: 'Hapus',
+      LanguageType.unitedStatesEnglish: 'Delete',
+      LanguageType.indonesiaIndonesian: 'Hapus',
     },
   };
 }

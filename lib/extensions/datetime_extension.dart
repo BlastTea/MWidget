@@ -18,13 +18,13 @@ extension DateTimeExtension on DateTime {
   ///   - `toFormattedDate()`: '08/03/2022'
   String toFormattedDate({bool withWeekday = false, bool withMonthName = false, bool withHour = false}) {
     switch (Language.language) {
-      case LanguageType.english:
+      case LanguageType.indonesiaIndonesian:
+        return '${withWeekday ? '${getWeekday()}, ' : ''}${day.toString().padLeft(2, '0')} ${withMonthName ? getMonthName() : month.toString().padLeft(2, '0')} $year${withHour ? ', ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')}' : ''}';
+      default:
         String period = (hour < 12) ? 'AM' : 'PM';
         int hour12 = (hour > 12) ? hour - 12 : hour;
 
         return '${withWeekday ? '${getWeekday()}, ' : ''}${withMonthName ? getMonthName() : month.toString().padLeft(2, '0')} ${day.toString().padLeft(2, '0')}, $year${withHour ? ', ${hour12.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')} $period' : ''}';
-      default:
-        return '${withWeekday ? '${getWeekday()}, ' : ''}${day.toString().padLeft(2, '0')} ${withMonthName ? getMonthName() : month.toString().padLeft(2, '0')} $year${withHour ? ', ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')}' : ''}';
     }
   }
 

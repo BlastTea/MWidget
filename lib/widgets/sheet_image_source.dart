@@ -43,7 +43,7 @@ class SheetImageSource extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder(
-        valueListenable: Language.languageListenable,
+        valueListenable: Language.languageNotifier,
         builder: (context, language, child) => Container(
           padding: const EdgeInsets.all(16.0),
           child: Column(
