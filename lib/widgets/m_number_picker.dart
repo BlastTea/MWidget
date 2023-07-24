@@ -91,6 +91,14 @@ class _MNumberPickerState extends State<MNumberPicker> {
   void initState() {
     super.initState();
     _controller = widget.controller ?? MNumberPickerController();
+    _controller.addListener(() {
+      if (mounted) {
+        setState(() {
+          _text = _controller.value.toString();
+          widget.onChanged(_controller.value);
+        });
+      }
+    });
     _textController = TextEditingController(text: _controller.value.toString());
   }
 
@@ -122,36 +130,29 @@ class _MNumberPickerState extends State<MNumberPicker> {
   }
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder(
-      valueListenable: _controller,
-      builder: (context, value, child) {
-        _text = _controller.value.toString();
-        widget.onChanged(_controller.value);
-
-        return TextField(
-          focusNode: _focusNodeTextField,
-          controller: _textController,
-          keyboardType: TextInputType.number,
-          textAlign: TextAlign.center,
-          inputFormatters: [textFormatterDigitsOnly],
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
-            prefixIcon: IconButton(
-              icon: const Icon(Icons.remove),
-              onPressed: _controller.value != widget.minValue ? _decrementValue : null,
-            ),
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: _controller.value != widget.maxValue ? _incrementValue : null,
-            ),
+  Widget build(BuildContext context) => TextField(
+        focusNode: _focusNodeTextField,
+        controller: _textController,
+        keyboardType: TextInputType.number,
+        textAlign: TextAlign.center,
+        inputFormatters: [textFormatterDigitsOnly],
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
+          prefixIcon: IconButton(
+            icon: const Icon(Icons.remove),
+            onPressed: _controller.value != widget.minValue ? _decrementValue : null,
           ),
-          onChanged: (value) => setState(() {
-            _controller.value = (int.tryParse(value) ?? widget.minValue).clamp(widget.minValue, widget.maxValue);
-            widget.onChanged(_controller.value);
-          }),
-        );
-      });
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: _controller.value != widget.maxValue ? _incrementValue : null,
+          ),
+        ),
+        onChanged: (value) => setState(() {
+          _controller.value = (int.tryParse(value) ?? widget.minValue).clamp(widget.minValue, widget.maxValue);
+          widget.onChanged(_controller.value);
+        }),
+      );
 }
 
 /// A controller class for managing the numeric value of the [MNumberPicker] widget.
@@ -172,13 +173,25 @@ class _MNumberPickerState extends State<MNumberPicker> {
 /// // Change the value and notify listeners
 /// controller.value = 20;
 /// ```
-class MNumberPickerController extends ValueNotifier<int> {
+class MNumberPickerController extends ChangeNotifier {
   MNumberPickerController({
     this.tag,
-    int initialValue = 0,
-  }) : super(initialValue);
+    int? initialValue,
+  }) : _value = initialValue ?? 0;
 
   /// An optional tag or identifier associated with this controller.
   /// It can be used to distinguish different controllers if managing multiple number pickers.
   Object? tag;
+
+  /// The internal value managed by this controller.
+  int _value;
+
+  /// Retrieves the current numeric value from the controller.
+  int get value => _value;
+
+  /// Sets the numeric [value] for the controller and notifies listeners about the change.
+  set value(int value) {
+    _value = value;
+    notifyListeners();
+  }
 }
