@@ -5,7 +5,7 @@ part of 'widgets.dart';
 /// The `MNumberPicker` widget provides a text input field with increment and decrement buttons
 /// to adjust the numeric value within the specified [minValue] and [maxValue] range.
 ///
-/// The initial value is set using [initialValue], and the user can adjust the value using the increment and decrement buttons
+/// The user can adjust the value using the increment and decrement buttons
 /// or by directly typing a numeric value in the text input field. The value is clamped to the specified [minValue] and [maxValue].
 ///
 /// The [step] parameter determines the amount to increment or decrement the value when using the buttons (default is 1).
@@ -15,7 +15,6 @@ part of 'widgets.dart';
 /// Example usage:
 /// ```dart
 /// MNumberPicker(
-///   initialValue: 10,
 ///   minValue: 0,
 ///   maxValue: 100,
 ///   step: 5,
@@ -28,7 +27,7 @@ part of 'widgets.dart';
 class MNumberPicker extends StatefulWidget {
   /// Creates a customizable number picker widget.
   ///
-  /// The [initialValue] parameter sets the initial numeric value of the picker.
+  /// The [controller] parameter can be used to control the numeric value of the picker externally.
   ///
   /// The [minValue] and [maxValue] parameters define the range within which the numeric value can be adjusted.
   ///
@@ -39,7 +38,6 @@ class MNumberPicker extends StatefulWidget {
   /// Example usage:
   /// ```dart
   /// MNumberPicker(
-  ///   initialValue: 10,
   ///   minValue: 0,
   ///   maxValue: 100,
   ///   step: 5,
@@ -58,10 +56,24 @@ class MNumberPicker extends StatefulWidget {
     this.step = 1,
   });
 
+  /// The controller for the number picker.
+  ///
+  /// The controller can be used to manipulate the numeric value externally and listen to value changes.
+  /// If no controller is provided, a default controller will be created and used internally.
   final MNumberPickerController? controller;
+
+  /// The minimum value that the number picker can take.
   final int minValue;
+
+  /// The maximum value that the number picker can take.
   final int maxValue;
+
+  /// The amount to increment or decrement the value when using the buttons (default is 1).
   final int step;
+
+  /// Callback that is called when the numeric value changes.
+  ///
+  /// This function will be called with the updated numeric [value].
   final ValueChanged<int> onChanged;
 
   @override
@@ -146,13 +158,41 @@ class _MNumberPickerState extends State<MNumberPicker> {
       );
 }
 
+/// A controller class for managing the numeric value of the [MNumberPicker] widget.
+///
+/// The [tag] parameter can be used to associate a tag or identifier with this controller.
+/// It can be helpful when managing multiple number pickers with different controllers.
+///
+/// The [initialValue] parameter sets the initial numeric value of the controller.
+/// If not provided, the default initial value is 0.
+///
+/// Example usage:
+/// ```dart
+/// MNumberPickerController controller = MNumberPickerController(initialValue: 10);
+///
+/// // Retrieve the current value
+/// int currentValue = controller.value;
+///
+/// // Change the value and notify listeners
+/// controller.value = 20;
+/// ```
 class MNumberPickerController extends ChangeNotifier {
-  MNumberPickerController({int? initialValue}) : _value = initialValue ?? 0;
+  MNumberPickerController({
+    this.tag,
+    int? initialValue,
+  }) : _value = initialValue ?? 0;
 
+  /// An optional tag or identifier associated with this controller.
+  /// It can be used to distinguish different controllers if managing multiple number pickers.
+  Object? tag;
+
+  /// The internal value managed by this controller.
   int _value;
 
+  /// Retrieves the current numeric value from the controller.
   int get value => _value;
 
+  /// Sets the numeric [value] for the controller and notifies listeners about the change.
   set value(int value) {
     _value = value;
     notifyListeners();
