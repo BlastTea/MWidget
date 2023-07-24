@@ -74,7 +74,7 @@ class MNumberPicker extends StatefulWidget {
   /// Callback that is called when the numeric value changes.
   ///
   /// This function will be called with the updated numeric [value].
-  final ValueChanged<int> onChanged;
+  final void Function(MNumberPickerController controller) onChanged;
 
   @override
   State<MNumberPicker> createState() => _MNumberPickerState();
@@ -85,7 +85,7 @@ class _MNumberPickerState extends State<MNumberPicker> {
 
   late TextEditingController _textController;
 
-  late MNumberPickerController _controller;
+  late final MNumberPickerController _controller;
 
   @override
   void initState() {
@@ -95,7 +95,7 @@ class _MNumberPickerState extends State<MNumberPicker> {
       if (mounted) {
         setState(() {
           _text = _controller.value.toString();
-          widget.onChanged(_controller.value);
+          widget.onChanged(_controller);
         });
       }
     });
@@ -111,12 +111,12 @@ class _MNumberPickerState extends State<MNumberPicker> {
 
   void _decrementValue() => setState(() {
         _controller.value = (_controller.value - widget.step).clamp(widget.minValue, widget.maxValue);
-        widget.onChanged(_controller.value);
+        widget.onChanged(_controller);
       });
 
   void _incrementValue() => setState(() {
         _controller.value = (_controller.value + widget.step).clamp(widget.minValue, widget.maxValue);
-        widget.onChanged(_controller.value);
+        widget.onChanged(_controller);
       });
 
   set _text(String value) {
@@ -150,7 +150,7 @@ class _MNumberPickerState extends State<MNumberPicker> {
         ),
         onChanged: (value) => setState(() {
           _controller.value = (int.tryParse(value) ?? widget.minValue).clamp(widget.minValue, widget.maxValue);
-          widget.onChanged(_controller.value);
+          widget.onChanged(_controller);
         }),
       );
 }
