@@ -99,7 +99,7 @@ class _MNumberPickerState extends State<MNumberPicker> {
         });
       }
     });
-    _textController = TextEditingController(text: widget.controller?.value.toString());
+    _textController = TextEditingController(text: _controller.value.toString());
   }
 
   @override
