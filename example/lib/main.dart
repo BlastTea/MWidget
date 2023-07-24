@@ -65,7 +65,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   MNumberPicker(
-                    controller: _controller,
                     minValue: 0,
                     maxValue: 99999,
                     onChanged: (value) {},
