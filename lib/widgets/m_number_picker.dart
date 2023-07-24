@@ -51,14 +51,14 @@ class MNumberPicker extends StatefulWidget {
   /// ```
   const MNumberPicker({
     super.key,
-    required this.initialValue,
+    this.controller,
     required this.minValue,
     required this.maxValue,
     required this.onChanged,
     this.step = 1,
   });
 
-  final int initialValue;
+  final MNumberPickerController? controller;
   final int minValue;
   final int maxValue;
   final int step;
@@ -73,31 +73,40 @@ class _MNumberPickerState extends State<MNumberPicker> {
 
   late TextEditingController _textController;
 
-  late int _value;
+  late MNumberPickerController _controller;
 
   @override
   void initState() {
     super.initState();
-    _value = widget.initialValue;
-    _textController = TextEditingController(text: _value.toString());
+    _controller = widget.controller ?? MNumberPickerController();
+    _controller.addListener(() {
+      if (mounted) {
+        setState(() {
+          _text = _controller.value.toString();
+          widget.onChanged(_controller.value);
+        });
+      }
+    });
+    _textController = TextEditingController(text: widget.controller?.value.toString());
   }
 
   @override
   void dispose() {
     _textController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   void _decrementValue() => setState(() {
-        _value = (_value - widget.step).clamp(widget.minValue, widget.maxValue);
-        _text = _value.toString();
-        widget.onChanged(_value);
+        _controller.value = (_controller.value - widget.step).clamp(widget.minValue, widget.maxValue);
+        _text = _controller.value.toString();
+        widget.onChanged(_controller.value);
       });
 
   void _incrementValue() => setState(() {
-        _value = (_value + widget.step).clamp(widget.minValue, widget.maxValue);
-        _text = _value.toString();
-        widget.onChanged(_value);
+        _controller.value = (_controller.value + widget.step).clamp(widget.minValue, widget.maxValue);
+        _text = _controller.value.toString();
+        widget.onChanged(_controller.value);
       });
 
   set _text(String value) {
@@ -122,17 +131,30 @@ class _MNumberPickerState extends State<MNumberPicker> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
           prefixIcon: IconButton(
             icon: const Icon(Icons.remove),
-            onPressed: _value != widget.minValue ? _decrementValue : null,
+            onPressed: _controller.value != widget.minValue ? _decrementValue : null,
           ),
           suffixIcon: IconButton(
             icon: const Icon(Icons.add),
-            onPressed: _value != widget.maxValue ? _incrementValue : null,
+            onPressed: _controller.value != widget.maxValue ? _incrementValue : null,
           ),
         ),
         onChanged: (value) => setState(() {
-          _value = (int.tryParse(value) ?? widget.minValue).clamp(widget.minValue, widget.maxValue);
-          _text = _value.toString();
-          widget.onChanged(_value);
+          _controller.value = (int.tryParse(value) ?? widget.minValue).clamp(widget.minValue, widget.maxValue);
+          _text = _controller.value.toString();
+          widget.onChanged(_controller.value);
         }),
       );
+}
+
+class MNumberPickerController extends ChangeNotifier {
+  MNumberPickerController({int? initialValue}) : _value = initialValue ?? 0;
+
+  int _value;
+
+  int get value => _value;
+
+  set value(int value) {
+    _value = value;
+    notifyListeners();
+  }
 }

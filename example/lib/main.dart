@@ -35,6 +35,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final SubmitFocusNode _submitFocusNode = SubmitFocusNode();
 
+  final MNumberPickerController _controller = MNumberPickerController();
+
   @override
   Widget build(BuildContext context) => SizedBox(
         width: MediaQuery.sizeOf(context).width,
@@ -45,20 +47,54 @@ class _MyHomePageState extends State<MyHomePage> {
               appBar: AppBar(
                 title: const Text('Example App'),
               ),
-              body: ConstrainedBox(
-                constraints: BoxConstraints.tightFor(
-                  width: double.infinity,
-                  height: imageHeight,
-                ),
-                child: TextField(
-                  focusNode: _submitFocusNode,
-                  expands: true,
-                  maxLines: null,
-                  decoration: const InputDecoration(border: OutlineInputBorder()),
-                  onSubmitted: (value) {
-                    debugPrint('submitted $value');
-                  },
-                ),
+              body: ListView(
+                children: [
+                  ConstrainedBox(
+                    constraints: const BoxConstraints.tightFor(
+                      width: double.infinity,
+                      height: 200.0,
+                    ),
+                    child: TextField(
+                      focusNode: _submitFocusNode,
+                      expands: true,
+                      maxLines: null,
+                      decoration: const InputDecoration(border: OutlineInputBorder()),
+                      onSubmitted: (value) {
+                        debugPrint('submitted $value');
+                      },
+                    ),
+                  ),
+                  MNumberPicker(
+                    controller: _controller,
+                    minValue: 0,
+                    maxValue: 99999,
+                    onChanged: (value) {},
+                  ),
+                  MNumberPicker(
+                    controller: _controller,
+                    minValue: 0,
+                    maxValue: 99999,
+                    onChanged: (value) {},
+                  ),
+                  MNumberPicker(
+                    controller: _controller,
+                    minValue: 0,
+                    maxValue: 99999,
+                    onChanged: (value) {},
+                  ),
+                  MNumberPicker(
+                    controller: _controller,
+                    minValue: 0,
+                    maxValue: 99999,
+                    onChanged: (value) {},
+                  ),
+                  MNumberPicker(
+                    controller: _controller,
+                    minValue: 0,
+                    maxValue: 99999,
+                    onChanged: (value) {},
+                  ),
+                ],
               ),
             ),
             AnimatedDraggableScrollableSheet(
@@ -71,12 +107,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   startTransition: 0.7,
                   endTransition: 1.0,
                   transitionCurve: SheetDraggableTransitionCurves.end,
-                  child: Text(
+                  child: const Text(
                     'Hello',
                     // style: Theme.of(context).textTheme.headlineLarge,
                   ),
                   transitionBuilder: (context, animation, curvedAnimation, child) {
-                    return child;
                     return FadeTransition(
                       opacity: curvedAnimation,
                       child: Align(
@@ -94,12 +129,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   startTransition: 0.0,
                   endTransition: 0.3,
                   transitionCurve: SheetDraggableTransitionCurves.start,
-                  child: Text(
+                  child: const Text(
                     'World',
                     // style: Theme.of(context).textTheme.headlineLarge,
                   ),
                   transitionBuilder: (context, animation, curvedAnimation, child) {
-                    return child;
                     return FadeTransition(
                       opacity: curvedAnimation,
                       child: Align(
