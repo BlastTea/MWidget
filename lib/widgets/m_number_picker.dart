@@ -12,18 +12,9 @@ part of 'widgets.dart';
 ///
 /// When the numeric value changes, the [onChanged] callback is called with the updated value.
 ///
-/// To control the numeric value of the picker externally, you can provide a [controller].
-/// The [controller] can be used to manipulate the numeric value and listen to value changes.
-/// If no controller is provided, a default controller will be created and used internally.
-///
 /// Example usage:
 /// ```dart
-/// // Create a controller with an initial value of 10
-/// MNumberPickerController controller = MNumberPickerController(initialValue: 10);
-///
-/// // Use the MNumberPicker widget with the custom controller
 /// MNumberPicker(
-///   controller: controller,
 ///   minValue: 0,
 ///   maxValue: 100,
 ///   step: 5,
@@ -39,6 +30,7 @@ class MNumberPicker extends StatefulWidget {
   /// The [controller] parameter can be used to control the numeric value of the picker externally.
   ///
   /// The [minValue] and [maxValue] parameters define the range within which the numeric value can be adjusted.
+  /// If [maxValue] is null, the value is clamped to [double.maxFinite] for positive values and [-double.maxFinite] for negative values.
   ///
   /// The [onChanged] callback is called when the numeric value changes and provides the updated value.
   ///
@@ -46,12 +38,7 @@ class MNumberPicker extends StatefulWidget {
   ///
   /// Example usage:
   /// ```dart
-  /// // Create a controller with an initial value of 10
-  /// MNumberPickerController controller = MNumberPickerController(initialValue: 10);
-  ///
-  /// // Use the MNumberPicker widget with the custom controller
   /// MNumberPicker(
-  ///   controller: controller,
   ///   minValue: 0,
   ///   maxValue: 100,
   ///   step: 5,
@@ -62,13 +49,13 @@ class MNumberPicker extends StatefulWidget {
   /// )
   /// ```
   const MNumberPicker({
-    super.key,
+    Key? key,
     this.controller,
-    required this.minValue,
-    required this.maxValue,
-    required this.onChanged,
+    this.minValue,
+    this.maxValue,
+    this.onChanged,
     this.step = 1,
-  });
+  }) : super(key: key);
 
   /// The controller for the number picker.
   ///
@@ -77,10 +64,11 @@ class MNumberPicker extends StatefulWidget {
   final MNumberPickerController? controller;
 
   /// The minimum value that the number picker can take.
-  final int minValue;
+  final int? minValue;
 
   /// The maximum value that the number picker can take.
-  final int maxValue;
+  /// If this is null, the value is clamped to [double.maxFinite] for positive values and [-double.maxFinite] for negative values.
+  final int? maxValue;
 
   /// The amount to increment or decrement the value when using the buttons (default is 1).
   final int step;
@@ -88,7 +76,7 @@ class MNumberPicker extends StatefulWidget {
   /// Callback that is called when the numeric value changes.
   ///
   /// This function will be called with the updated numeric [value].
-  final void Function(int value) onChanged;
+  final void Function(int value)? onChanged;
 
   @override
   State<MNumberPicker> createState() => _MNumberPickerState();
@@ -97,85 +85,76 @@ class MNumberPicker extends StatefulWidget {
 class _MNumberPickerState extends State<MNumberPicker> {
   final FocusNode _focusNodeTextField = FocusNode();
   late TextEditingController _textController;
+  late MNumberPickerController _controller;
   late int _previousValue;
+  bool ignoreChanges = false;
 
   @override
   void initState() {
     super.initState();
-    _previousValue = widget.controller?.value ?? widget.minValue;
-    final initialValue = widget.controller?.value ?? widget.minValue;
-    _textController = TextEditingController(text: initialValue.toString());
+    _controller = widget.controller ?? MNumberPickerController(initialValue: widget.minValue);
+    _previousValue = _controller.value;
+    _controller.addListener(_handleControllerChange);
+    _textController = TextEditingController(text: _controller.value.toString());
     _textController.addListener(_handleTextChange);
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_handleControllerChange);
     _textController.dispose();
     super.dispose();
   }
 
-  void _handleTextChange() {
-    final selection = _textController.selection;
-    final value = int.tryParse(_textController.text) ?? widget.minValue;
-    final clampedValue = value.clamp(widget.minValue, widget.maxValue);
-    if (widget.controller != null) {
-      widget.controller!.value = clampedValue;
-      widget.onChanged(widget.controller!.value);
+  void _handleControllerChange() {
+    if (mounted && !ignoreChanges && (_previousValue != _controller.value || int.tryParse(_textController.text.trim()) == null)) {
+      ignoreChanges = true;
+      setState(() {
+        _textController.text = _controller.value.toString();
+        final newCursorPos = _textController.text.length;
+        _textController.selection = TextSelection.collapsed(offset: newCursorPos);
+        widget.onChanged?.call(_controller.value);
+        _previousValue = _controller.value;
+      });
+      ignoreChanges = false;
     }
+  }
 
-    if (_focusNodeTextField.hasFocus && _previousValue != clampedValue) {
-      final int addedLength = clampedValue.toString().length - _textController.text.length;
-      final updatedOffset = selection.baseOffset + addedLength;
-      _textController.value = TextEditingValue(
-        text: clampedValue.toString(),
-        selection: TextSelection.collapsed(offset: updatedOffset),
-      );
+  void _handleTextChange() {
+    int? value = int.tryParse(_textController.text);
+    if (value == null) {
+      if (_textController.text.trim().isEmpty) {
+        value = 0;
+      } else if (_previousValue < 0) {
+        value = widget.minValue ?? -double.maxFinite.toInt();
+      } else {
+        value = widget.maxValue ?? double.maxFinite.toInt();
+      }
     }
-    _previousValue = clampedValue;
+    _controller.value = value;
+    widget.onChanged?.call(_controller.value);
   }
 
   void _decrementValue() {
-    if (widget.controller != null) {
-      final newValue = (widget.controller!.value - widget.step).clamp(widget.minValue, widget.maxValue);
-      setState(() {
-        widget.controller!.value = newValue;
-        _textController.text = newValue.toString();
-        final newCursorPos = _textController.text.length;
-        _textController.selection = TextSelection.collapsed(offset: newCursorPos);
-        widget.onChanged(widget.controller!.value);
-      });
-    } else {
-      final currentValue = int.tryParse(_textController.text) ?? widget.minValue;
-      final newValue = (currentValue - widget.step).clamp(widget.minValue, widget.maxValue);
-      _updateTextField(newValue);
-      widget.onChanged(newValue);
-    }
+    final newValue = (_controller.value - widget.step).clamp(widget.minValue ?? -double.maxFinite.toInt(), widget.maxValue ?? double.maxFinite.toInt());
+    setState(() {
+      _controller.value = newValue;
+      _textController.text = newValue.toString();
+      final newCursorPos = _textController.text.length;
+      _textController.selection = TextSelection.collapsed(offset: newCursorPos);
+      widget.onChanged?.call(newValue);
+    });
   }
 
   void _incrementValue() {
-    if (widget.controller != null) {
-      final newValue = (widget.controller!.value + widget.step).clamp(widget.minValue, widget.maxValue);
-      setState(() {
-        widget.controller!.value = newValue;
-        _textController.text = newValue.toString();
-        final newCursorPos = _textController.text.length;
-        _textController.selection = TextSelection.collapsed(offset: newCursorPos);
-        widget.onChanged(widget.controller!.value);
-      });
-    } else {
-      final currentValue = int.tryParse(_textController.text) ?? widget.minValue;
-      final newValue = (currentValue + widget.step).clamp(widget.minValue, widget.maxValue);
-      _updateTextField(newValue);
-      widget.onChanged(newValue);
-    }
-  }
-
-  void _updateTextField(int newValue) {
-    final newCursorPos = newValue.toString().length;
-    _textController.value = TextEditingValue(
-      text: newValue.toString(),
-      selection: TextSelection.collapsed(offset: newCursorPos),
-    );
+    final newValue = (_controller.value + widget.step).clamp(widget.minValue ?? -double.maxFinite.toInt(), widget.maxValue ?? double.maxFinite.toInt());
+    setState(() {
+      _controller.value = newValue;
+      _textController.text = newValue.toString();
+      final newCursorPos = _textController.text.length;
+      _textController.selection = TextSelection.collapsed(offset: newCursorPos);
+      widget.onChanged?.call(newValue);
+    });
   }
 
   @override
@@ -184,43 +163,42 @@ class _MNumberPickerState extends State<MNumberPicker> {
         controller: _textController,
         keyboardType: TextInputType.number,
         textAlign: TextAlign.center,
-        inputFormatters: [textFormatterDigitsOnly],
+        inputFormatters: [textFormattedDigitsWithNegative],
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
           contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
           prefixIcon: IconButton(
             icon: const Icon(Icons.remove),
-            onPressed: widget.controller?.value != widget.minValue ? _decrementValue : null,
+            onPressed: _controller.value > (widget.minValue ?? -double.maxFinite.toInt()) ? _decrementValue : null,
           ),
           suffixIcon: IconButton(
             icon: const Icon(Icons.add),
-            onPressed: widget.controller?.value != widget.maxValue ? _incrementValue : null,
+            onPressed: _controller.value < (widget.maxValue ?? double.maxFinite.toInt()) ? _incrementValue : null,
           ),
         ),
-        onChanged: (value) => _handleTextChange(),
       );
 }
 
-/// A controller class for managing the numeric value of the [MNumberPicker] widget.
-///
-/// The [tag] parameter can be used to associate a tag or identifier with this controller.
-/// It can be helpful when managing multiple number pickers with different controllers.
-///
-/// The [initialValue] parameter sets the initial numeric value of the controller.
-/// If not provided, the default initial value is 0.
-///
-/// Example usage:
-/// ```dart
-/// // Create a controller with an initial value of 10
-/// MNumberPickerController controller = MNumberPickerController(initialValue: 10);
-///
-/// // Retrieve the current value
-/// int currentValue = controller.value;
-///
-/// // Change the value and notify listeners
-/// controller.value = 20;
-/// ```
+/// A controller to manage the numeric value of the [MNumberPicker] widget.
 class MNumberPickerController extends ChangeNotifier {
+  /// Creates a controller to manage the numeric value of the [MNumberPicker] widget.
+  ///
+  /// The [tag] parameter can be used to associate a tag or identifier with this controller.
+  /// It can be helpful when managing multiple number pickers with different controllers.
+  ///
+  /// The [initialValue] parameter sets the initial numeric value of the controller.
+  /// If not provided, the default initial value is 0.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// MNumberPickerController controller = MNumberPickerController(initialValue: 10);
+  ///
+  /// // Retrieve the current value
+  /// int currentValue = controller.value;
+  ///
+  /// // Change the value and notify listeners
+  /// controller.value = 20;
+  /// ```
   MNumberPickerController({
     this.tag,
     int? initialValue,

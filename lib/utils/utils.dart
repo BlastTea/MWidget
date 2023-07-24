@@ -12,46 +12,8 @@ part 'adaptive_dialog_route.dart';
 part 'text_editing_controller_thousand_format.dart';
 part 'submit_focus_node.dart';
 
-const String keyTransactionFee = 'transaction_fee';
-
 const String keyLanguage = 'language';
 const String keyThemeMode = 'theme_mode';
-
-const String tableUserAccounts = 'user_accounts';
-const String columnUserAccountUid = 'uid';
-const String columnUserAccountUsername = 'username';
-const String columnUserAccountEmail = 'email';
-const String columnUserAccountPassword = 'password';
-const String columnUserAccountPhotoUrl = 'photo_url';
-
-const String tableBusiness = 'business';
-const String columnBusinessId = 'business_id';
-const String columnBusinessName = 'name';
-const String columnBusinessAddress = 'address';
-const String columnBusinessDescription = 'description';
-const String columnBusinessOwner = 'owner';
-const String columnBusinessTax = 'tax';
-const String columnBusinessIsOpen = 'is_open';
-const String columnBusinessTypes = 'types';
-const String columnBusinessIsOpeningEveryday = 'is_opening_everyday';
-const String columnBusinessEverydayOpeningHour = 'everyday_opening_hour';
-const String columnBusinessEverydayClosingHour = 'everyday_closing_hour';
-const String columnBusinessSundayOpeningHour = 'sunday_opening_hour';
-const String columnBusinessSundayClosingHour = 'sunday_closing_hour';
-const String columnBusinessMondayOpeningHour = 'monday_opening_hour';
-const String columnBusinessMondayClosingHour = 'monday_closing_hour';
-const String columnBusinessTuesdayOpeningHour = 'tuesday_opening_hour';
-const String columnBusinessTuesdayClosingHour = 'tuesday_closing_hour';
-const String columnBusinessWednesdayOpeningHour = 'wednesday_opening_hour';
-const String columnBusinessWednesdayClosingHour = 'wednesday_closing_hour';
-const String columnBusinessThursdayOpeningHour = 'thursday_opening_hour';
-const String columnBusinessThursdayClosingHour = 'thursday_closing_hour';
-const String columnBusinessFridayOpeningHour = 'friday_opening_hour';
-const String columnBusinessFridayClosingHour = 'friday_closing_hour';
-const String columnBusinessSaturdayOpeningHour = 'saturday_opening_hour';
-const String columnBusinessSaturdayClosingHour = 'saturday_closing_hour';
-const String columnBusinessLatitude = 'latitude';
-const String columnBusinessLongitude = 'longitude';
 
 const double kCompactSize = 600.0;
 const double kMediumSize = 840.0;
@@ -61,6 +23,7 @@ const String longLorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing eli
 
 TextInputFormatter textFormatterDoubleWithNegative = FilteringTextInputFormatter.allow(RegExp(r'^-?\d+\.?\d*$'));
 TextInputFormatter textFormatterDoubleOnly = FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*$'));
+TextInputFormatter textFormattedDigitsWithNegative = FilteringTextInputFormatter.allow(RegExp(r'^-?\d+'));
 TextInputFormatter textFormatterDigitsOnly = FilteringTextInputFormatter.digitsOnly;
 TextInputFormatter textFormatterSingleLine = FilteringTextInputFormatter.singleLineFormatter;
 TextInputFormatter textFormatterLetterOnly = FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'));
