@@ -28,7 +28,7 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
   ///
   /// The [hintTextSearch] parameter sets the hint text for the search bar.
   ///
-  /// The [useFullScreenFab] parameter determines whether to use a full-screen floating action button for multiple selection mode.
+  /// The [useFullScreenFab] parameter determines whether to use a full-screen floating action button in full-screen mode.
   ///
   /// The [alwaysFullScreen] parameter forces the dialog to be displayed in full-screen mode regardless of the screen size.
   ///
@@ -37,6 +37,10 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
   /// The [hideSearchBar] parameter hides the search bar when set to `true`.
   ///
   /// The [multiple] parameter allows multiple selection when set to `true`, otherwise, it allows single selection (default is `false`).
+  ///
+  /// The [onDataEmpty] parameter is a widget to display when there is no data to show.
+  ///
+  /// The [onDataNotFound] parameter is a widget to display when the searched data is not found.
   ///
   /// The [data] parameter is a function that returns a [FutureOr] of [List<ChooseData<T>>] representing the items to be displayed and selected.
   ///
@@ -69,6 +73,8 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
     this.alwaysDialog = false,
     this.hideSearchBar = false,
     this.multiple = false,
+    this.onDataEmpty,
+    this.onDataNotFound,
     required this.data,
     this.onSnapshotErrorBuilder,
     this.onSnapshotErrorListener,
@@ -82,6 +88,8 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
   final bool alwaysDialog;
   final bool hideSearchBar;
   final bool multiple;
+  final Widget? onDataEmpty;
+  final Widget? onDataNotFound;
   final FutureOr<List<ChooseData<T>>> Function() data;
   final Widget Function(Object? e, void Function() retry)? onSnapshotErrorBuilder;
   final void Function(Object? e, void Function() retry)? onSnapshotErrorListener;
@@ -96,7 +104,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
   List<ChooseData<T>> _originalData = [];
   List<ChooseData<T>> _searchedData = [];
 
-  Completer<List<ChooseData<T>>> _dataCompleter = Completer();
+  Completer<List<ChooseData<T>>> _completer = Completer();
 
   @override
   void initState() {
@@ -117,7 +125,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
       data = await widget.data();
     } catch (e) {
       widget.onSnapshotErrorListener?.call(e, _retry);
-      _dataCompleter.completeError(e);
+      _completer.completeError(e);
       return;
     }
     assert(widget.hideSearchBar || data.every((element) => (element.searchValue?.trim().isNotEmpty ?? false)), 'searchValue must not be null or empty');
@@ -125,13 +133,13 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
     _originalData = List.generate(data.length, (index) => data[index]);
     _searchedData = List.of(_originalData);
 
-    _dataCompleter.complete(data);
+    _completer.complete(data);
   }
 
   void _retry() {
     setState(() {
+      _completer = Completer();
       _getData();
-      _dataCompleter = Completer();
     });
   }
 
@@ -191,7 +199,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
       );
 
   Widget get _body => FutureBuilder(
-        future: _dataCompleter.future,
+        future: _completer.future,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
@@ -209,26 +217,44 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
                     ),
                   ),
                 Expanded(
-                  child: ListView.builder(
-                    itemBuilder: (context, index) => ListTile(
-                      leading: _chooseData[index].leading,
-                      title: _chooseData[index].title,
-                      subtitle: _chooseData[index].subtitle,
-                      isThreeLine: _chooseData[index].isThreeLine,
-                      trailing: widget.multiple ? Checkbox(value: _chooseData[index].isSelected, onChanged: (value) => _setIsSelected(index, value!)) : _chooseData[index].trailing,
-                      onTap: () => !widget.multiple ? NavigationHelper.back<T>(_chooseData[index].value) : _setIsSelected(index, !_chooseData[index].isSelected),
-                    ),
-                    itemCount: _chooseData.length,
-                  ),
+                  child: _chooseData.isEmpty
+                      ? _textControllerSearch.text.trim().isEmpty
+                          ? widget.onDataEmpty ??
+                              Center(
+                                child: Text(
+                                  'No data',
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                              )
+                          : widget.onDataNotFound ??
+                              Center(
+                                child: Text(
+                                  'Data not found',
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                              )
+                      : ListView.builder(
+                          itemBuilder: (context, index) => ListTile(
+                            leading: _chooseData[index].leading,
+                            title: _chooseData[index].title,
+                            subtitle: _chooseData[index].subtitle,
+                            isThreeLine: _chooseData[index].isThreeLine,
+                            trailing: widget.multiple ? Checkbox(value: _chooseData[index].isSelected, onChanged: (value) => _setIsSelected(index, value!)) : _chooseData[index].trailing,
+                            onTap: () => !widget.multiple ? NavigationHelper.back<T>(_chooseData[index].value) : _setIsSelected(index, !_chooseData[index].isSelected),
+                          ),
+                          itemCount: _chooseData.length,
+                        ),
                 ),
               ],
             );
           } else if (snapshot.hasError) {
-            return widget.onSnapshotErrorBuilder?.call(snapshot.error, _retry) ??
-                Text(
-                  'Error',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                );
+            return Center(
+              child: widget.onSnapshotErrorBuilder?.call(snapshot.error, _retry) ??
+                  Text(
+                    'Error',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+            );
           }
 
           return const Center(child: CircularProgressIndicator());
