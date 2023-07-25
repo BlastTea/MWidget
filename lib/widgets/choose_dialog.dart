@@ -12,7 +12,7 @@ part of 'widgets.dart';
 ///   labelTextSearch: 'Search',
 ///   hintTextSearch: 'Type to search...',
 ///   useFullScreenFab: true,
-///   data: [
+///   data: () async => [
 ///     ChooseData(value: 'item1', searchValue: 'item one', title: Text('Item 1')),
 ///     ChooseData(value: 'item2', searchValue: 'item two', title: Text('Item 2')),
 ///     // Add more ChooseData objects for other items
@@ -38,7 +38,11 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
   ///
   /// The [multiple] parameter allows multiple selection when set to `true`, otherwise, it allows single selection (default is `false`).
   ///
-  /// The [data] parameter is a list of [ChooseData] objects representing the items to be displayed and selected.
+  /// The [data] parameter is a function that returns a [FutureOr] of [List<ChooseData<T>>] representing the items to be displayed and selected.
+  ///
+  /// The [onSnapshotErrorBuilder] parameter is a callback that takes an error and returns a widget to display when there is an error while loading data.
+  ///
+  /// The [onSnapshotErrorListener] parameter is a callback that takes an error and performs an action when there is an error while loading data.
   ///
   /// Example usage:
   /// ```dart
@@ -47,13 +51,13 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
   ///   labelTextSearch: 'Search',
   ///   hintTextSearch: 'Type to search...',
   ///   useFullScreenFab: true,
-  ///   data: [
+  ///   data: () async => [
   ///     ChooseData(value: 'item1', searchValue: 'item one', title: Text('Item 1')),
   ///     // Add more ChooseData objects for other items
   ///   ],
   /// )
   /// ```
-  ChooseDialog({
+  const ChooseDialog({
     super.key,
     this.title,
     this.labelTextSearch,
@@ -64,7 +68,9 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
     this.hideSearchBar = false,
     this.multiple = false,
     required this.data,
-  }) : assert(hideSearchBar || data.every((element) => (element.searchValue?.trim().isNotEmpty ?? false)), 'searchValue must not be null or empty');
+    this.onSnapshotErrorBuilder,
+    this.onSnapshotErrorListener,
+  });
 
   final Widget? title;
   final String? labelTextSearch;
@@ -74,7 +80,9 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
   final bool alwaysDialog;
   final bool hideSearchBar;
   final bool multiple;
-  final List<ChooseData<T>> data;
+  final FutureOr<List<ChooseData<T>>> Function() data;
+  final Widget Function(Object? e)? onSnapshotErrorBuilder;
+  final void Function(Object? e)? onSnapshotErrorListener;
 
   @override
   State<ChooseDialog<T>> createState() => _ChooseDialogState<T>();
@@ -86,18 +94,36 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
   List<ChooseData<T>> _originalData = [];
   List<ChooseData<T>> _searchedData = [];
 
+  final Completer<List<ChooseData<T>>> _dataCompleter = Completer();
+
   @override
   void initState() {
     super.initState();
 
-    _originalData = List.generate(widget.data.length, (index) => widget.data[index]);
-    _searchedData = List.of(_originalData);
+    _getData();
   }
 
   @override
   void dispose() {
     _textControllerSearch.dispose();
     super.dispose();
+  }
+
+  Future<void> _getData() async {
+    List<ChooseData<T>> data;
+    try {
+      data = await widget.data();
+    } catch (e) {
+      widget.onSnapshotErrorListener?.call(e);
+      _dataCompleter.completeError(e);
+      return;
+    }
+    assert(widget.hideSearchBar || data.every((element) => (element.searchValue?.trim().isNotEmpty ?? false)), 'searchValue must not be null or empty');
+
+    _originalData = List.generate(data.length, (index) => data[index]);
+    _searchedData = List.of(_originalData);
+
+    _dataCompleter.complete(data);
   }
 
   void _handleOnChanged(String value) {
@@ -155,34 +181,49 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
         ),
       );
 
-  Widget get _body => Column(
-        children: [
-          if (!widget.hideSearchBar)
-            Padding(
-              padding: widget.alwaysFullScreen || MediaQuery.sizeOf(context).width < kCompactSize ? const EdgeInsets.all(16.0) : const EdgeInsets.only(bottom: 16.0),
-              child: TextField(
-                controller: _textControllerSearch,
-                decoration: InputDecoration(
-                  labelText: widget.labelTextSearch,
-                  hintText: widget.hintTextSearch,
+  Widget get _body => FutureBuilder(
+        future: _dataCompleter.future,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              children: [
+                if (!widget.hideSearchBar)
+                  Padding(
+                    padding: widget.alwaysFullScreen || MediaQuery.sizeOf(context).width < kCompactSize ? const EdgeInsets.all(16.0) : const EdgeInsets.only(bottom: 16.0),
+                    child: TextField(
+                      controller: _textControllerSearch,
+                      decoration: InputDecoration(
+                        labelText: widget.labelTextSearch,
+                        hintText: widget.hintTextSearch,
+                      ),
+                      onChanged: _handleOnChanged,
+                    ),
+                  ),
+                Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) => ListTile(
+                      leading: _chooseData[index].leading,
+                      title: _chooseData[index].title,
+                      subtitle: _chooseData[index].subtitle,
+                      isThreeLine: _chooseData[index].isThreeLine,
+                      trailing: widget.multiple ? Checkbox(value: _chooseData[index].isSelected, onChanged: (value) => _setIsSelected(index, value!)) : _chooseData[index].trailing,
+                      onTap: () => !widget.multiple ? NavigationHelper.back<T>(_chooseData[index].value) : _setIsSelected(index, !_chooseData[index].isSelected),
+                    ),
+                    itemCount: _chooseData.length,
+                  ),
                 ),
-                onChanged: _handleOnChanged,
-              ),
-            ),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (context, index) => ListTile(
-                leading: _chooseData[index].leading,
-                title: _chooseData[index].title,
-                subtitle: _chooseData[index].subtitle,
-                isThreeLine: _chooseData[index].isThreeLine,
-                trailing: widget.multiple ? Checkbox(value: _chooseData[index].isSelected, onChanged: (value) => _setIsSelected(index, value!)) : _chooseData[index].trailing,
-                onTap: () => !widget.multiple ? NavigationHelper.back<T>(_chooseData[index].value) : _setIsSelected(index, !_chooseData[index].isSelected),
-              ),
-              itemCount: _chooseData.length,
-            ),
-          ),
-        ],
+              ],
+            );
+          } else if (snapshot.hasError) {
+            return widget.onSnapshotErrorBuilder?.call(snapshot.error) ??
+                Text(
+                  'Error',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                );
+          }
+
+          return const Center(child: CircularProgressIndicator());
+        },
       );
 }
 
