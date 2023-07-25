@@ -40,9 +40,11 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
   ///
   /// The [data] parameter is a function that returns a [FutureOr] of [List<ChooseData<T>>] representing the items to be displayed and selected.
   ///
-  /// The [onSnapshotErrorBuilder] parameter is a callback that takes an error and returns a widget to display when there is an error while loading data.
+  /// The [onSnapshotErrorBuilder] parameter is a callback that takes an error and a retry function. It returns a widget to display when there is an error while loading data.
+  /// The retry function can be invoked to retry fetching data.
   ///
-  /// The [onSnapshotErrorListener] parameter is a callback that takes an error and performs an action when there is an error while loading data.
+  /// The [onSnapshotErrorListener] parameter is a callback that takes an error and a retry function. It performs an action when there is an error while loading data.
+  /// The retry function can be invoked to retry fetching data.
   ///
   /// Example usage:
   /// ```dart
@@ -81,8 +83,8 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
   final bool hideSearchBar;
   final bool multiple;
   final FutureOr<List<ChooseData<T>>> Function() data;
-  final Widget Function(Object? e)? onSnapshotErrorBuilder;
-  final void Function(Object? e)? onSnapshotErrorListener;
+  final Widget Function(Object? e, void Function() retry)? onSnapshotErrorBuilder;
+  final void Function(Object? e, void Function() retry)? onSnapshotErrorListener;
 
   @override
   State<ChooseDialog<T>> createState() => _ChooseDialogState<T>();
@@ -94,7 +96,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
   List<ChooseData<T>> _originalData = [];
   List<ChooseData<T>> _searchedData = [];
 
-  final Completer<List<ChooseData<T>>> _dataCompleter = Completer();
+  Completer<List<ChooseData<T>>> _dataCompleter = Completer();
 
   @override
   void initState() {
@@ -114,7 +116,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
     try {
       data = await widget.data();
     } catch (e) {
-      widget.onSnapshotErrorListener?.call(e);
+      widget.onSnapshotErrorListener?.call(e, _retry);
       _dataCompleter.completeError(e);
       return;
     }
@@ -124,6 +126,13 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
     _searchedData = List.of(_originalData);
 
     _dataCompleter.complete(data);
+  }
+
+  void _retry() {
+    setState(() {
+      _getData();
+      _dataCompleter = Completer();
+    });
   }
 
   void _handleOnChanged(String value) {
@@ -215,7 +224,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
               ],
             );
           } else if (snapshot.hasError) {
-            return widget.onSnapshotErrorBuilder?.call(snapshot.error) ??
+            return widget.onSnapshotErrorBuilder?.call(snapshot.error, _retry) ??
                 Text(
                   'Error',
                   style: Theme.of(context).textTheme.bodyLarge,
