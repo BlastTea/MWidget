@@ -35,7 +35,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final SubmitFocusNode _submitFocusNode = SubmitFocusNode();
 
-  final MNumberPickerController _controller = MNumberPickerController();
+  final MNumberPickerController _controller = MNumberPickerController()
+    ..addListener(() {
+      debugPrint('controllerListener');
+    });
 
   @override
   Widget build(BuildContext context) => SizedBox(
@@ -66,6 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   MNumberPicker(
                     controller: _controller,
+                    onChanged: (value) => debugPrint('onChanged $value'),
                   ),
                   MNumberPicker(
                     controller: _controller,

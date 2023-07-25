@@ -113,7 +113,9 @@ class _MNumberPickerState extends State<MNumberPicker> {
         _textController.text = _controller.value.toString();
         final newCursorPos = _textController.text.length;
         _textController.selection = TextSelection.collapsed(offset: newCursorPos);
-        widget.onChanged?.call(_controller.value);
+        if (_previousValue != _controller.value) {
+          widget.onChanged?.call(_controller.value);
+        }
         _previousValue = _controller.value;
       });
       ignoreChanges = false;
@@ -132,30 +134,11 @@ class _MNumberPickerState extends State<MNumberPicker> {
       }
     }
     _controller.value = value;
-    widget.onChanged?.call(_controller.value);
   }
 
-  void _decrementValue() {
-    final newValue = (_controller.value - widget.step).clamp(widget.minValue ?? -double.maxFinite.toInt(), widget.maxValue ?? double.maxFinite.toInt());
-    setState(() {
-      _controller.value = newValue;
-      _textController.text = newValue.toString();
-      final newCursorPos = _textController.text.length;
-      _textController.selection = TextSelection.collapsed(offset: newCursorPos);
-      widget.onChanged?.call(newValue);
-    });
-  }
+  void _decrementValue() => setState(() => _controller.value = (_controller.value - widget.step).clamp(widget.minValue ?? -double.maxFinite.toInt(), widget.maxValue ?? double.maxFinite.toInt()));
 
-  void _incrementValue() {
-    final newValue = (_controller.value + widget.step).clamp(widget.minValue ?? -double.maxFinite.toInt(), widget.maxValue ?? double.maxFinite.toInt());
-    setState(() {
-      _controller.value = newValue;
-      _textController.text = newValue.toString();
-      final newCursorPos = _textController.text.length;
-      _textController.selection = TextSelection.collapsed(offset: newCursorPos);
-      widget.onChanged?.call(newValue);
-    });
-  }
+  void _incrementValue() => setState(() => _controller.value = (_controller.value + widget.step).clamp(widget.minValue ?? -double.maxFinite.toInt(), widget.maxValue ?? double.maxFinite.toInt()));
 
   @override
   Widget build(BuildContext context) => TextField(
