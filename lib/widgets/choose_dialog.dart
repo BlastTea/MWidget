@@ -38,7 +38,8 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
   ///
   /// The [multiple] parameter allows multiple selection when set to `true`, otherwise, it allows single selection (default is `false`).
   ///
-  /// The [onDataEmpty] parameter is a widget to display when there is no data to show.
+  /// [onDataEmpty] is a callback function that provides a widget to display when there is no data to show.
+  /// The [onDataEmpty] callback takes a function [retry] as a parameter, which can be invoked to retry fetching data.
   ///
   /// The [onDataNotFound] parameter is a widget to display when the searched data is not found.
   ///
@@ -61,6 +62,19 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
   ///     ChooseData(value: 'item1', searchValue: 'item one', title: Text('Item 1')),
   ///     // Add more ChooseData objects for other items
   ///   ],
+  ///   onDataEmpty: (retry) {
+  ///     return Center(
+  ///       child: Column(
+  ///         children: [
+  ///           Text('No data found.'),
+  ///           ElevatedButton(
+  ///             onPressed: retry,
+  ///             child: Text('Retry'),
+  ///           ),
+  ///         ],
+  ///       ),
+  ///     );
+  ///   },
   /// )
   /// ```
   const ChooseDialog({
@@ -88,7 +102,7 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
   final bool alwaysDialog;
   final bool hideSearchBar;
   final bool multiple;
-  final Widget? onDataEmpty;
+  final Widget? Function(void Function() retry)? onDataEmpty;
   final Widget? onDataNotFound;
   final FutureOr<List<ChooseData<T>>> Function() data;
   final Widget Function(Object? e, void Function() retry)? onSnapshotErrorBuilder;
@@ -222,7 +236,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
                           ? DefaultTextStyle(
                               style: Theme.of(context).textTheme.bodyLarge!,
                               child: Center(
-                                child: widget.onDataEmpty ?? const Text('No data'),
+                                child: widget.onDataEmpty?.call(_retry) ?? const Text('No data'),
                               ),
                             )
                           : DefaultTextStyle(
