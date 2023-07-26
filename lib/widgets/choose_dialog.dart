@@ -219,20 +219,18 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
                 Expanded(
                   child: _chooseData.isEmpty
                       ? _textControllerSearch.text.trim().isEmpty
-                          ? widget.onDataEmpty ??
-                              Center(
-                                child: Text(
-                                  'No data',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                              )
-                          : widget.onDataNotFound ??
-                              Center(
-                                child: Text(
-                                  'Data not found',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                              )
+                          ? DefaultTextStyle(
+                              style: Theme.of(context).textTheme.bodyLarge!,
+                              child: Center(
+                                child: widget.onDataEmpty ?? const Text('No data'),
+                              ),
+                            )
+                          : DefaultTextStyle(
+                              style: Theme.of(context).textTheme.bodyLarge!,
+                              child: Center(
+                                child: widget.onDataNotFound ?? const Text('Data not found'),
+                              ),
+                            )
                       : ListView.builder(
                           itemBuilder: (context, index) => ListTile(
                             leading: _chooseData[index].leading,
