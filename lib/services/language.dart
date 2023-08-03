@@ -12,7 +12,7 @@ final class Language {
   /// Initializes a new instance of the `Language` class with the given [name].
   ///
   /// If [name] is not provided, the default language will be set.
-  factory Language.initialze({String? name}) {
+  factory Language.initialize({String? name}) {
     Language newInstance = Language._internal(name ?? 'default');
 
     _instances.addAll({name ?? 'default': newInstance});
