@@ -16,16 +16,20 @@ import 'pakcage:m_widget/m_widget.dart';
 ```
 
 # Features
-  ## Language
+- ## Language
   The `Language` class provides localization support for different languages in the application.
   
   ### Usage
-  Use `ValueListenableBuilder` to get the value
+  First, initialize the instance
+  ```dart
+  Language.initialize();
+  ```
+  Then, use `ValueListenableBuilder` to get the value
   
   ```dart
   @override
   Widget build(BuildContext context) => ValueListenableBuilder(
-    valueListenable: Language.languageNotifier,
+    valueListenable: Language.getInstance().languageNotifier,
     builder: (context, language, child) => Scaffold(
       body: Center(
         child: Text(language['January']!),
@@ -33,11 +37,18 @@ import 'pakcage:m_widget/m_widget.dart';
     ),
   );
   ```
-  Or use `Language.getValue('January')` to get the value directly.
+  Or use `Language.getInstance().getValue()` to get the value directly.\
+  #### Create another instance
+  You can create another instances with name
+  ```dart
+  Language.initialize(name: 'secondLanguange');
+  Language.getInstance(name: 'secondLanguage');
+  ```
+
   #### Change the language
   To change to another language, use
   ```dart
-  Language.language = LanguageType.indonesiaIndonesian;
+  Language.languageType = LanguageType.indonesiaIndonesian;
   ```
   #### Add additional language
   To add a translation, use
@@ -50,9 +61,9 @@ import 'pakcage:m_widget/m_widget.dart';
   });
   ```
 - ## DateTime Extension
-  Extension for converting DateTime class into a formatted date and depends on language.
+  Extension for converting DateTime class into a formatted date.
   ### Usage
-  To convert DateTime into a formatted one, use
+  To convert DateTime into a formatted string, use
   ```dart
   DateTime now = DateTime.now();
   now.toFormattedDate(withWeekday: true, withMonthName: true); // Tuesday, July 04, 2023
@@ -66,8 +77,8 @@ import 'pakcage:m_widget/m_widget.dart';
   ```
   #### TimeOfDay to String
   ```dart
-  TimeOfDay(hour: 10, minute: 0).toFormattedString(); // 10:00
-  TimeOfDay(hour: 10, minute: 0).toFormattedString(isPeriod = true); // 10:00 AM
+  String formattedString = TimeOfDay(hour: 10, minute: 0).toFormattedString(); // 10:00
+  formattedString = TimeOfDay(hour: 10, minute: 0).toFormattedString(isPeriod = true); // 10:00 AM
   ```
 - ## String Extension
   An extension for additional string manipulation methods.
@@ -143,7 +154,7 @@ import 'pakcage:m_widget/m_widget.dart';
   ### Usage
   ```dart
   NavigationHelper.to(
-    AdaptiveRouteDialog(
+    AdaptiveDialogRoute(
       context: context,
       builder: (context) => AdaptiveFullScreenDialog(
         title: Text('Hello World'),
@@ -299,12 +310,12 @@ import 'pakcage:m_widget/m_widget.dart';
     ),
   );
   ```
-- ## MNumberPicker
-  A customizable number picker widget that allows users to input a numeric value within a specific range.
+- ## NumberPicker
+  A number picker widget that allows users to input a numeric value within a specific range.
   ### Usage
   ```dart
-  MNumberPicker(
-    controller: MNumberPickerController(initialValue: 10),
+  NumberPicker(
+    controller: NumberPickerController(initialValue: 10),
     minValue: 0,
     maxValue: 100,
     step: 5,

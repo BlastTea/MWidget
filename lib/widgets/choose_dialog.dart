@@ -172,7 +172,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder(
-        valueListenable: Language.languageNotifier,
+        valueListenable: Language.getInstance().languageNotifier,
         builder: (context, language, child) => AdaptiveFullScreenDialog(
           alwaysFullScreen: widget.alwaysFullScreen,
           alwaysDialog: widget.alwaysDialog,

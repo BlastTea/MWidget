@@ -1,6 +1,6 @@
 part of 'widgets.dart';
 
-/// A customizable number picker widget that allows users to input a numeric value within a specific range.
+/// A number picker widget that allows users to input a numeric value within a specific range.
 ///
 /// The `MNumberPicker` widget provides a text input field with increment and decrement buttons
 /// to adjust the numeric value within the specified [minValue] and [maxValue] range.
@@ -24,7 +24,7 @@ part of 'widgets.dart';
 ///   },
 /// )
 /// ```
-class MNumberPicker extends StatefulWidget {
+class NumberPicker extends StatefulWidget {
   /// Creates a customizable number picker widget.
   ///
   /// The [controller] parameter can be used to control the numeric value of the picker externally.
@@ -48,7 +48,7 @@ class MNumberPicker extends StatefulWidget {
   ///   },
   /// )
   /// ```
-  const MNumberPicker({
+  const NumberPicker({
     Key? key,
     this.controller,
     this.minValue,
@@ -61,7 +61,7 @@ class MNumberPicker extends StatefulWidget {
   ///
   /// The controller can be used to manipulate the numeric value externally and listen to value changes.
   /// If no controller is provided, a default controller will be created and used internally.
-  final MNumberPickerController? controller;
+  final NumberPickerController? controller;
 
   /// The minimum value that the number picker can take.
   final int? minValue;
@@ -79,20 +79,20 @@ class MNumberPicker extends StatefulWidget {
   final void Function(int value)? onChanged;
 
   @override
-  State<MNumberPicker> createState() => _MNumberPickerState();
+  State<NumberPicker> createState() => _NumberPickerState();
 }
 
-class _MNumberPickerState extends State<MNumberPicker> {
+class _NumberPickerState extends State<NumberPicker> {
   final FocusNode _focusNodeTextField = FocusNode();
   late TextEditingController _textController;
-  late MNumberPickerController _controller;
+  late NumberPickerController _controller;
   late int _previousValue;
   bool ignoreChanges = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller ?? MNumberPickerController(initialValue: widget.minValue);
+    _controller = widget.controller ?? NumberPickerController(initialValue: widget.minValue);
     _previousValue = _controller.value;
     _controller.addListener(_handleControllerChange);
     _textController = TextEditingController(text: _controller.value.toString());
@@ -162,9 +162,9 @@ class _MNumberPickerState extends State<MNumberPicker> {
       );
 }
 
-/// A controller to manage the numeric value of the [MNumberPicker] widget.
-class MNumberPickerController extends ChangeNotifier {
-  /// Creates a controller to manage the numeric value of the [MNumberPicker] widget.
+/// A controller to manage the numeric value of the [NumberPicker] widget.
+class NumberPickerController extends ChangeNotifier {
+  /// Creates a controller to manage the numeric value of the [NumberPicker] widget.
   ///
   /// The [tag] parameter can be used to associate a tag or identifier with this controller.
   /// It can be helpful when managing multiple number pickers with different controllers.
@@ -182,7 +182,7 @@ class MNumberPickerController extends ChangeNotifier {
   /// // Change the value and notify listeners
   /// controller.value = 20;
   /// ```
-  MNumberPickerController({
+  NumberPickerController({
     this.tag,
     int? initialValue,
   }) : _value = initialValue ?? 0;

@@ -3,24 +3,52 @@ part of 'services.dart';
 /// The `Language` class provides localization support for different languages in the application.
 /// It allows switching between different languages and getting localized strings based on the selected language.
 ///
-/// The class contains static methods and properties to handle language switching and localization.
-abstract class Language {
+/// The class contains methods and properties to handle language switching and localization.
+final class Language {
+  Language._internal(this.name) {
+    languageNotifier = ValueNotifier(_getValue());
+  }
+
+  /// Initializes a new instance of the `Language` class with the given [name].
+  ///
+  /// If [name] is not provided, the default language will be set.
+  factory Language.initialze({String? name}) {
+    Language newInstance = Language._internal(name ?? 'default');
+
+    _instances.addAll({name ?? 'default': newInstance});
+
+    return _instances[name ?? 'default']!;
+  }
+
+  /// Gets the existing instance of the `Language` class with the given [name].
+  ///
+  /// If [name] is not provided, the default instance will be returned.
+  static Language getInstance({String? name}) => _instances[name ?? 'default']!;
+
+  static final Map<String, Language> _instances = {};
+
+  /// The name of the current language.
+  final String name;
+
   /// A [ValueNotifier] that holds the currently selected [LanguageType].
   /// Listeners are notified whenever the language is changed.
-  static ValueNotifier<LanguageType> languageTypeNotifier = ValueNotifier(LanguageType.unitedStatesEnglish)..addListener(() => languageNotifier.value = _getValue());
+  ValueNotifier<LanguageType> languageTypeNotifier = ValueNotifier(LanguageType.unitedStatesEnglish);
 
   /// Returns the currently selected [LanguageType].
-  static LanguageType get language => languageTypeNotifier.value;
+  LanguageType get languageType => languageTypeNotifier.value;
 
   /// Sets the selected [LanguageType].
-  static set language(LanguageType value) => languageTypeNotifier.value = value;
+  set languageType(LanguageType value) {
+    languageTypeNotifier.value = value;
+    languageNotifier.value = _getValue();
+  }
 
   /// A [ValueNotifier] that holds a map of localized strings based on the selected [LanguageType].
   /// Listeners are notified whenever the language is changed or new data is added.
-  static ValueNotifier<Map<String, String?>> languageNotifier = ValueNotifier(_getValue());
+  late ValueNotifier<Map<String, String?>> languageNotifier;
 
   /// A private method that generates a map of localized strings based on the selected language.
-  static Map<String, String?> _getValue() => _data.map((key, value) => MapEntry(key, _formatValue(value[languageTypeNotifier.value])));
+  Map<String, String?> _getValue() => _data.map((key, value) => MapEntry(key, _formatValue(value[languageTypeNotifier.value])));
 
   /// A private method that formats the [value] with the provided [arguments].
   ///
@@ -28,7 +56,7 @@ abstract class Language {
   /// `{0}`, `{1}`, etc., in the [value].
   ///
   /// Returns the formatted string, or `null` if the [value] is `null`.
-  static String? _formatValue(String? value, [List<dynamic> arguments = const []]) {
+  String? _formatValue(String? value, [List<dynamic> arguments = const []]) {
     if (value == null) {
       return null;
     }
@@ -49,10 +77,18 @@ abstract class Language {
   ///
   /// Example:
   /// ```
-  /// String? greeting = Language.getValue('greeting', ['John']);
+  /// Language.getInstance().addData(
+  ///   {
+  ///     'greeting': {
+  ///       LanguageType.unitedStatesEnglish: 'Hello, {0}'
+  ///     }
+  ///   },
+  /// );
+  ///
+  /// String? greeting = Language.getInstance().getValue('greeting', ['John']);
   /// print(greeting); // Output: 'Hello, John!'
   /// ```
-  static String? getValue(String key, [List<dynamic>? arguments]) {
+  String? getValue(String key, [List<dynamic>? arguments]) {
     final localizedValue = _getValue()[key];
     if (localizedValue != null && arguments != null) {
       return _formatValue(localizedValue, arguments);

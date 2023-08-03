@@ -12,9 +12,6 @@ part 'adaptive_dialog_route.dart';
 part 'text_editing_controller_thousand_format.dart';
 part 'submit_focus_node.dart';
 
-const String keyLanguage = 'language';
-const String keyThemeMode = 'theme_mode';
-
 const double kCompactSize = 600.0;
 const double kMediumSize = 840.0;
 

@@ -11,6 +11,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
+      scaffoldMessengerKey: scaffoldMessengerKey,
       title: 'Flutter Demo',
       theme: ThemeData.light(
         useMaterial3: true,
@@ -35,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final SubmitFocusNode _submitFocusNode = SubmitFocusNode();
 
-  final MNumberPickerController _controller = MNumberPickerController()
+  final NumberPickerController _controller = NumberPickerController()
     ..addListener(() {
       debugPrint('controllerListener');
     });
@@ -67,21 +69,32 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ),
                   ),
-                  MNumberPicker(
+                  NumberPicker(
                     controller: _controller,
                     onChanged: (value) => debugPrint('onChanged $value'),
                   ),
-                  MNumberPicker(
+                  NumberPicker(
                     controller: _controller,
                   ),
-                  MNumberPicker(
+                  NumberPicker(
                     controller: _controller,
                   ),
-                  MNumberPicker(
+                  NumberPicker(
                     controller: _controller,
                   ),
-                  MNumberPicker(
+                  NumberPicker(
                     controller: _controller,
+                  ),
+                  FilledButton(
+                    onPressed: () => NavigationHelper.to(
+                      AdaptiveDialogRoute(
+                        context: context,
+                        builder: (context) => ChooseDialog(
+                          data: () => [],
+                        ),
+                      ),
+                    ),
+                    child: const Text('Show Choose Dialog'),
                   ),
                 ],
               ),
