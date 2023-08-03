@@ -9,7 +9,7 @@ extension DateTimeExtension on DateTime {
   ///   - [withWeekday]: Whether to include the weekday name in the date string. Default is `false`.
   ///   - [withMonthName]: Whether to include the month name in the date string. Default is `false`.
   ///   - [withHour]: Whether to include the time (hour, minute, and second) in 12-hour format along with AM/PM. Default is `false`.
-  ///   - [languageType]: The [LanguageType] to be used for formatting. If not provided, the language type will be determined based on the selected language.
+  ///   - [language]: The [Language] to be used for formatting. If not provided, the language will be determined based on the default value.
   ///
   /// The date string is formatted based on the selected language (English or other). If the language is English,
   /// the time is displayed in 12-hour format with AM/PM. Otherwise, the time is displayed in 24-hour format.
@@ -17,15 +17,15 @@ extension DateTimeExtension on DateTime {
   /// Example:
   ///   - `toFormattedDate(withWeekday: true, withMonthName: true, withHour: true)`: 'Wednesday, August 03, 2022, 02:30:15 PM'
   ///   - `toFormattedDate()`: '08/03/2022'
-  String toFormattedDate({bool withWeekday = false, bool withMonthName = false, bool withHour = false, LanguageType? languageType}) {
-    switch (languageType ?? Language.getInstance().languageType) {
+  String toFormattedDate({bool withWeekday = false, bool withMonthName = false, bool withHour = false, Language? language}) {
+    switch (language?.languageType ?? Language.getInstance().languageType) {
       case LanguageType.indonesiaIndonesian:
-        return '${withWeekday ? '${getWeekday()}, ' : ''}${day.toString().padLeft(2, '0')} ${withMonthName ? getMonthName() : month.toString().padLeft(2, '0')} $year${withHour ? ', ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')}' : ''}';
+        return '${withWeekday ? '${getWeekday(language)}, ' : ''}${day.toString().padLeft(2, '0')} ${withMonthName ? getMonthName(language) : month.toString().padLeft(2, '0')} $year${withHour ? ', ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')}' : ''}';
       default:
         String period = (hour < 12) ? 'AM' : 'PM';
         int hour12 = (hour > 12) ? hour - 12 : hour;
 
-        return '${withWeekday ? '${getWeekday()}, ' : ''}${withMonthName ? getMonthName() : month.toString().padLeft(2, '0')} ${day.toString().padLeft(2, '0')}, $year${withHour ? ', ${hour12.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')} $period' : ''}';
+        return '${withWeekday ? '${getWeekday(language)}, ' : ''}${withMonthName ? getMonthName(language) : month.toString().padLeft(2, '0')} ${day.toString().padLeft(2, '0')}, $year${withHour ? ', ${hour12.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')} $period' : ''}';
     }
   }
 
@@ -33,24 +33,28 @@ extension DateTimeExtension on DateTime {
   ///
   /// The weekday name is retrieved based on the selected language (English or other).
   ///
+  /// If the [language] parameter is provided, the weekday name will be retrieved based on that language.
+  /// Otherwise, it will use the default language set in the `Language` class.
+  ///
   /// Example:
   ///   - `getWeekday()`: 'Wednesday'
-  String getWeekday() {
+  ///   - `getWeekday(language)`: 'Rabu' (Indonesian)
+  String getWeekday([Language? language]) {
     switch (weekday) {
       case DateTime.sunday:
-        return Language.getInstance().getValue('Sunday')!;
+        return language?.getValue('Sunday') ?? Language.getInstance().getValue('Sunday')!;
       case DateTime.monday:
-        return Language.getInstance().getValue('Monday')!;
+        return language?.getValue('Monday') ?? Language.getInstance().getValue('Monday')!;
       case DateTime.tuesday:
-        return Language.getInstance().getValue('Tuesday')!;
+        return language?.getValue('Tuesday') ?? Language.getInstance().getValue('Tuesday')!;
       case DateTime.wednesday:
-        return Language.getInstance().getValue('Wednesday')!;
+        return language?.getValue('Wednesday') ?? Language.getInstance().getValue('Wednesday')!;
       case DateTime.thursday:
-        return Language.getInstance().getValue('Thursday')!;
+        return language?.getValue('Thursday') ?? Language.getInstance().getValue('Thursday')!;
       case DateTime.friday:
-        return Language.getInstance().getValue('Friday')!;
+        return language?.getValue('Friday') ?? Language.getInstance().getValue('Friday')!;
       default:
-        return Language.getInstance().getValue('Saturday')!;
+        return language?.getValue('Saturday') ?? Language.getInstance().getValue('Saturday')!;
     }
   }
 
@@ -58,34 +62,38 @@ extension DateTimeExtension on DateTime {
   ///
   /// The month name is retrieved based on the selected language (English or other).
   ///
+  /// If the [language] parameter is provided, the month name will be retrieved based on that language.
+  /// Otherwise, it will use the default language set in the `Language` class.
+  ///
   /// Example:
   ///   - `getMonthName()`: 'August'
-  String getMonthName() {
+  ///   - `getMonthName(language)`: 'Agustus' (Indonesian)
+  String getMonthName([Language? language]) {
     switch (month) {
       case DateTime.january:
-        return Language.getInstance().getValue('January')!;
+        return language?.getValue('January') ?? Language.getInstance().getValue('January')!;
       case DateTime.february:
-        return Language.getInstance().getValue('February')!;
+        return language?.getValue('February') ?? Language.getInstance().getValue('February')!;
       case DateTime.march:
-        return Language.getInstance().getValue('March')!;
+        return language?.getValue('March') ?? Language.getInstance().getValue('March')!;
       case DateTime.april:
-        return Language.getInstance().getValue('April')!;
+        return language?.getValue('April') ?? Language.getInstance().getValue('April')!;
       case DateTime.may:
-        return Language.getInstance().getValue('May')!;
+        return language?.getValue('May') ?? Language.getInstance().getValue('May')!;
       case DateTime.june:
-        return Language.getInstance().getValue('June')!;
+        return language?.getValue('June') ?? Language.getInstance().getValue('June')!;
       case DateTime.july:
-        return Language.getInstance().getValue('July')!;
+        return language?.getValue('July') ?? Language.getInstance().getValue('July')!;
       case DateTime.august:
-        return Language.getInstance().getValue('August')!;
+        return language?.getValue('August') ?? Language.getInstance().getValue('August')!;
       case DateTime.september:
-        return Language.getInstance().getValue('September')!;
+        return language?.getValue('September') ?? Language.getInstance().getValue('September')!;
       case DateTime.october:
-        return Language.getInstance().getValue('October')!;
+        return language?.getValue('October') ?? Language.getInstance().getValue('October')!;
       case DateTime.november:
-        return Language.getInstance().getValue('November')!;
+        return language?.getValue('November') ?? Language.getInstance().getValue('November')!;
       default:
-        return Language.getInstance().getValue('December')!;
+        return language?.getValue('December') ?? Language.getInstance().getValue('December')!;
     }
   }
 }
