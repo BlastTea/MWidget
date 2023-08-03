@@ -650,6 +650,21 @@ enum LanguageType {
   final String threeLetterLanguageCode;
   final String threeLetterCountryCode;
 
+  factory LanguageType.fromFormattedString(String value) {
+    List<String> splittedLanguage = value.split('-');
+
+    String country = splittedLanguage[0];
+    String language = splittedLanguage[1];
+    String twoLetterLanguageCode = splittedLanguage[2];
+    String twoLetterCountryCode = splittedLanguage[3];
+    String threeLetterLanguageCode = splittedLanguage[4];
+    String threeLetterCountryCode = splittedLanguage[5];
+
+    return values.trySingleWhere((element) => element.country == country && element.language == language && element.twoLetterLanguageCode == twoLetterLanguageCode && element.twoLetterCountryCode == twoLetterCountryCode && element.threeLetterLanguageCode == threeLetterLanguageCode && element.threeLetterCountryCode == threeLetterCountryCode) ?? unitedStatesEnglish;
+  }
+
+  String toFormattedString() => '$country-$language-$twoLetterLanguageCode-$twoLetterCountryCode-$threeLetterLanguageCode-$threeLetterCountryCode';
+
   static LanguageType? fromCountry(String country) => LanguageType.values.trySingleWhere((element) => element.country == country);
 
   static LanguageType? fromLanguage(String language) => LanguageType.values.trySingleWhere((element) => element.language == language);
