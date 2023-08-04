@@ -1,5 +1,6 @@
 part of 'extensions.dart';
 
+/// A set of useful extension methods for manipulating strings.
 extension StringExtension on String {
   /// Counts the occurrences of a [value] in the string.
   ///
@@ -66,5 +67,31 @@ extension StringExtension on String {
       return int.tryParse(extractedNumber);
     }
     return null;
+  }
+
+  /// Centers the string within the specified [width] using the provided [fill] character.
+  ///
+  /// The method creates a new string by padding the original string on both sides
+  /// with the [fill] character to center it within the given [width]. If the length
+  /// of the original string is already greater than or equal to the [width], the
+  /// original string is returned unchanged.
+  ///
+  /// Example:
+  /// ```dart
+  /// String text = 'Discount';
+  /// text.center(13, '-'); // Output: '---Discount--'
+  /// text.center(10, '+'); // Output: '+Discount+'
+  /// ```
+  String center(int width, [String fill = '-']) {
+    if (length >= width) {
+      return this;
+    } else {
+      int padding = (width - length) ~/ 2;
+      String centeredText = fill * padding + this + fill * padding;
+      if (centeredText.length < width) {
+        centeredText = '$fill$centeredText';
+      }
+      return centeredText;
+    }
   }
 }
