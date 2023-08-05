@@ -376,7 +376,7 @@ abstract class NavigationHelper {
   /// See also:
   ///   * [AlertDialog], [showGeneralDialog], and [showMaterialBanner]
   static Future<T?> showDialog<T>({
-    required material.Widget Function(material.BuildContext) builder,
+    required material.Widget Function(material.BuildContext context) builder,
     bool barrierDismissible = true,
     material.Color? barrierColor = material.Colors.black54,
     String? barrierLabel,

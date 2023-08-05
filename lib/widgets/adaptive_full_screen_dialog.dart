@@ -15,6 +15,10 @@ part of 'widgets.dart';
 /// mode. This is useful for full-screen dialogs that need additional actions. For normal-sized dialogs, the floating
 /// action button is ignored.
 ///
+/// The [fullScreenLeading] parameter allows you to provide a leading widget (typically a back button) for the app bar
+/// in full-screen mode. If not provided, a default back button will be shown. For normal-sized dialogs, this parameter
+/// is ignored, and the default back button won't be used.
+///
 /// The [title] parameter is used to set the title of the dialog. It can be a text widget or any other widget
 /// that represents the title content.
 ///
@@ -38,6 +42,10 @@ part of 'widgets.dart';
 ///   fullScreenFab: FloatingActionButton(
 ///     onPressed: () => print('Floating action button pressed'),
 ///     child: const Icon(Icons.add),
+///   ),
+///   fullScreenLeading: IconButton(
+///     onPressed: () => NavigationHelper.back(),
+///     icon: const Icon(Icons.close),
 ///   ),
 ///   title: Text('My Dialog'),
 ///   body: Container(
@@ -76,6 +84,10 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
   /// mode. This is useful for full-screen dialogs that need additional actions. For normal-sized dialogs, the floating
   /// action button is ignored.
   ///
+  /// The [fullScreenLeading] parameter allows you to provide a leading widget (typically a back button) for the app bar
+  /// in full-screen mode. If not provided, a default back button will be shown. For normal-sized dialogs, this parameter
+  /// is ignored, and the default back button won't be used.
+  ///
   /// The [title] parameter is used to set the title of the dialog. It can be a text widget or any other widget
   /// that represents the title content.
   ///
@@ -99,6 +111,10 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
   ///   fullScreenFab: FloatingActionButton(
   ///     onPressed: () => print('Floating action button pressed'),
   ///     child: const Icon(Icons.add),
+  ///   ),
+  ///   fullScreenLeading: IconButton(
+  ///     onPressed: () => NavigationHelper.back(),
+  ///     icon: const Icon(Icons.close),
   ///   ),
   ///   title: Text('My Dialog'),
   ///   body: Container(
@@ -130,6 +146,7 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
     this.alwaysFullScreen = false,
     this.alwaysDialog = false,
     this.fullScreenFab,
+    this.fullScreenLeading,
     this.title,
     this.body,
     this.dialogBody,
@@ -140,6 +157,7 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
   final bool alwaysFullScreen;
   final bool alwaysDialog;
   final Widget? fullScreenFab;
+  final Widget? fullScreenLeading;
   final Widget? title;
   final Widget? body;
   final Widget? dialogBody;
@@ -162,10 +180,11 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
   Widget _scaffold(BuildContext context) => Scaffold(
         floatingActionButton: fullScreenFab,
         appBar: AppBar(
-          leading: IconButton(
-            onPressed: () => NavigationHelper.back(),
-            icon: const Icon(Icons.close),
-          ),
+          leading: fullScreenLeading ??
+              IconButton(
+                onPressed: () => NavigationHelper.back(),
+                icon: const Icon(Icons.close),
+              ),
           title: title,
           actions: actions,
         ),
