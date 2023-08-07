@@ -62,7 +62,11 @@ class SheetImageSource extends StatelessWidget {
               ],
               Row(
                 children: List.generate(
-                  showDelete && (Platform.isAndroid || Platform.isIOS) ? 3 : 2,
+                  showDelete && (Platform.isAndroid || Platform.isIOS)
+                      ? 3
+                      : !showDelete && (Platform.isAndroid || Platform.isIOS)
+                          ? 2
+                          : 1,
                   (index) => Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: Material(
