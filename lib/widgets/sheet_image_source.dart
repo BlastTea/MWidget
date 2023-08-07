@@ -62,7 +62,7 @@ class SheetImageSource extends StatelessWidget {
               ],
               Row(
                 children: List.generate(
-                  showDelete ? 3 : 2,
+                  showDelete && (Platform.isAndroid || Platform.isIOS) ? 3 : 2,
                   (index) => Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: Material(
@@ -79,9 +79,9 @@ class SheetImageSource extends StatelessWidget {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon([Icons.photo, Icons.camera, Icons.delete][index]),
+                                Icon((Platform.isAndroid || Platform.isIOS ? [Icons.photo, Icons.camera, Icons.delete] : [Icons.folder, Icons.delete])[index]),
                                 const SizedBox(height: 8.0),
-                                Text(language[['Gallery', 'Camera', 'Delete'][index]]!),
+                                Text(language[(Platform.isAndroid || Platform.isIOS ? ['Gallery', 'Camera', 'Delete'] : ['File', 'Delete'])[index]]!),
                               ],
                             ),
                           ),

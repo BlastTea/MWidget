@@ -1,6 +1,6 @@
 name: m_widget
 description: A new Flutter package project.
-version: 1.17.6
+version: 1.17.7
 homepage: null
 
 environment:
@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  universal_io: ^2.2.2
 
 dev_dependencies:
   flutter_lints: ^2.0.0

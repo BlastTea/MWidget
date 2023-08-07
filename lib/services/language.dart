@@ -203,5 +203,9 @@ final class Language {
       LanguageType.unitedStatesEnglish: 'Delete',
       LanguageType.indonesiaIndonesian: 'Hapus',
     },
+    'File': {
+      LanguageType.unitedStatesEnglish: 'File',
+      LanguageType.indonesiaIndonesian: 'File',
+    },
   };
 }
