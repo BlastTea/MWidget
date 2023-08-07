@@ -70,7 +70,7 @@ class SheetImageSource extends StatelessWidget {
                       color: Colors.transparent,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(kShapeLarge),
-                        onTap: () => NavigationHelper.back(ImageSourceResult.values[index]),
+                        onTap: () => NavigationHelper.back((Platform.isAndroid || Platform.isIOS ? ImageSourceResult.values : [ImageSourceResult.gallery, ImageSourceResult.delete])[index]),
                         child: SizedBox(
                           width: 68.0,
                           height: 68.0,
