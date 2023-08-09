@@ -34,8 +34,6 @@ TextInputFormatter textFormatterSingleLine = FilteringTextInputFormatter.singleL
 TextInputFormatter textFormatterLetterOnly = FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]'));
 TextInputFormatter textFormatterLetterDigitsOnly = FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]'));
 
-ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
-
 /// Generates responsive horizontal padding based on the screen size.
 ///
 /// The [size] parameter is the current screen size.
@@ -158,3 +156,21 @@ Color? selectedTileColor({required ThemeMode themeMode, Animation<double>? anima
     : themeMode == ThemeMode.dark
         ? kColorSecondaryContainerDark
         : kColorSecondaryContainerLight;
+
+/// Animates the given [scrollController] to a specified [offset].
+///
+/// The [offset] parameter specifies the desired offset to scroll to.
+///
+/// The [scrollController] parameter is the ScrollController to be animated.
+Future<void> animateScrollController({required double offset, required ScrollController scrollController}) => scrollController.animateTo(
+      offset,
+      duration: const Duration(milliseconds: kDurationMedium2),
+      curve: Curves.fastOutSlowIn,
+    );
+
+/// Animates the given [controller] of a DraggableScrollableSheet to a specified [size].
+///
+/// The [size] parameter specifies the desired size to animate the sheet to.
+///
+/// The [controller] parameter is the DraggableScrollableController to be animated.
+Future<void> animateDraggableScrollableController({required double size, required DraggableScrollableController controller}) => controller.animateTo(size, duration: const Duration(milliseconds: kDurationShort2), curve: Curves.fastOutSlowIn);
