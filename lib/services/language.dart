@@ -219,5 +219,21 @@ final class Language {
       LanguageType.unitedStatesEnglish: 'An error occured!',
       LanguageType.indonesiaIndonesian: 'Terjadi error!',
     },
+    'Error': {
+      LanguageType.unitedStatesEnglish: 'Error',
+      LanguageType.indonesiaIndonesian: 'Error',
+    },
+    'Warning': {
+      LanguageType.unitedStatesEnglish: 'Warning',
+      LanguageType.indonesiaIndonesian: 'Peringatan',
+    },
+    'Save changes?': {
+      LanguageType.unitedStatesEnglish: 'Save changes?',
+      LanguageType.indonesiaIndonesian: 'Simpan perubahan?',
+    },
+    'Don\'t save': {
+      LanguageType.unitedStatesEnglish: 'Don\'t save',
+      LanguageType.indonesiaIndonesian: 'Jangan simpan',
+    },
   };
 }
