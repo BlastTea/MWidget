@@ -207,5 +207,17 @@ final class Language {
       LanguageType.unitedStatesEnglish: 'File',
       LanguageType.indonesiaIndonesian: 'File',
     },
+    'Save': {
+      LanguageType.unitedStatesEnglish: 'Save',
+      LanguageType.indonesiaIndonesian: 'Simpan',
+    },
+    'Retry': {
+      LanguageType.unitedStatesEnglish: 'Retry',
+      LanguageType.indonesiaIndonesian: 'Coba lagi',
+    },
+    'An error occured!': {
+      LanguageType.unitedStatesEnglish: 'An error occured!',
+      LanguageType.indonesiaIndonesian: 'Terjadi error!',
+    },
   };
 }

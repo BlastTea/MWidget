@@ -38,3 +38,83 @@ EdgeInsets responsivePadding(Size size) {
 
   return EdgeInsets.symmetric(horizontal: (size.width - kMediumSize) / 2 + 16.0);
 }
+
+Future<void> showErrorDialog(String message) => NavigationHelper.showDialog(
+      builder: (context) => AlertDialog(
+        title: Text(Language.getInstance().getValue('Error')!),
+        content: SelectableText(message),
+        actions: [
+          TextButton(
+            autofocus: true,
+            onPressed: () => NavigationHelper.back(),
+            child: Text(Language.getInstance().getValue('Ok')!),
+          ),
+        ],
+      ),
+    );
+
+Future<void> showWarningDialog(String message) => NavigationHelper.showDialog(
+      builder: (context) => AlertDialog(
+        title: Text(Language.getInstance().getValue('Warning')!),
+        content: SelectableText(message),
+        actions: [
+          TextButton(
+            autofocus: true,
+            onPressed: () => NavigationHelper.back(),
+            child: Text(Language.getInstance().getValue('Ok')!),
+          ),
+        ],
+      ),
+    );
+
+Future<void> showLoadingDialog() => NavigationHelper.showDialog(
+      barrierDismissible: false,
+      builder: (context) => WillPopScope(
+        onWillPop: () async => false,
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
+
+Future<bool?> showSaveChangesDialog() => NavigationHelper.showDialog(
+      builder: (context) => AlertDialog(
+        title: Text(Language.getInstance().getValue('Save changes?')!),
+        actions: [
+          TextButton(
+            onPressed: () => NavigationHelper.back(false),
+            child: Text(Language.getInstance().getValue('Don\'t save')!),
+          ),
+          TextButton(
+            onPressed: () => NavigationHelper.back(true),
+            child: Text(Language.getInstance().getValue('Save')!),
+          ),
+        ],
+      ),
+    );
+
+Color? selectedTileColor({required ThemeMode themeMode, Animation<double>? animation}) => animation != null
+    ? themeMode == ThemeMode.dark
+        ? Color.lerp(Colors.transparent, kColorSecondaryContainerDark, animation.value)
+        : Color.lerp(Colors.transparent, kColorSecondaryContainerLight, animation.value)
+    : themeMode == ThemeMode.dark
+        ? kColorSecondaryContainerDark
+        : kColorSecondaryContainerLight;
+
+double responsiveWidth(Size size) {
+  if (size.width < kCompactSize) {
+    return size.width - 32.0;
+  }
+  if (size.width <= kMediumSize) {
+    return kCompactSize;
+  }
+
+  return kMediumSize;
+}
+
+double responsiveDialogWidth(Size size) {
+  if (size.width < kCompactSize) {
+    return size.width - 32.0;
+  }
+  return kCompactSize - 32.0;
+}
