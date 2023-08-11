@@ -179,13 +179,13 @@ Future<void> animateDraggableScrollableController({required double size, require
       curve: Curves.fastOutSlowIn,
     );
 
-/// Animates the given [pageController] to a specified [offset].
+/// Animates the given [pageController] to a specified [page].
 ///
-/// The [offset] parameter specifies the desired offset to scroll to.
+/// The [page] parameter specifies the desired page to scroll to.
 ///
 /// The [pageController] parameter is the PageController to be animated.
-Future<void> animatePageController({required double offset, required PageController pageController}) => pageController.animateTo(
-      offset,
+Future<void> animatePageController({required int page, required PageController pageController}) => pageController.animateToPage(
+      page,
       duration: const Duration(milliseconds: kDurationShort2),
       curve: Curves.fastOutSlowIn,
     );
