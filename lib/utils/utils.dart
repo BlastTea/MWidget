@@ -173,4 +173,19 @@ Future<void> animateScrollController({required double offset, required ScrollCon
 /// The [size] parameter specifies the desired size to animate the sheet to.
 ///
 /// The [controller] parameter is the DraggableScrollableController to be animated.
-Future<void> animateDraggableScrollableController({required double size, required DraggableScrollableController controller}) => controller.animateTo(size, duration: const Duration(milliseconds: kDurationShort2), curve: Curves.fastOutSlowIn);
+Future<void> animateDraggableScrollableController({required double size, required DraggableScrollableController controller}) => controller.animateTo(
+      size,
+      duration: const Duration(milliseconds: kDurationShort2),
+      curve: Curves.fastOutSlowIn,
+    );
+
+/// Animates the given [pageController] to a specified [offset].
+///
+/// The [offset] parameter specifies the desired offset to scroll to.
+///
+/// The [pageController] parameter is the PageController to be animated.
+Future<void> animatePageController({required double offset, required PageController pageController}) => pageController.animateTo(
+      offset,
+      duration: const Duration(milliseconds: kDurationShort2),
+      curve: Curves.fastOutSlowIn,
+    );
