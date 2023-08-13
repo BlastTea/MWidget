@@ -235,5 +235,9 @@ final class Language {
       LanguageType.unitedStatesEnglish: 'Don\'t save',
       LanguageType.indonesiaIndonesian: 'Jangan simpan',
     },
+    'Change logo': {
+      LanguageType.unitedStatesEnglish: 'Change logo',
+      LanguageType.indonesiaIndonesian: 'Ganti logo',
+    },
   };
 }

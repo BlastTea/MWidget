@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:m_widget/m_widget.dart';
 
-void main() {
+void main() async {
+  Language.initialize();
+
   runApp(const MyApp());
 }
 
@@ -51,6 +53,12 @@ class _MyHomePageState extends State<MyHomePage> {
             Scaffold(
               appBar: AppBar(
                 title: const Text('Example App'),
+                actions: [
+                  IconButton(
+                    onPressed: () => ImageContainer.handleChangeImage(showDelete: true),
+                    icon: const Icon(Icons.photo_camera),
+                  ),
+                ],
               ),
               body: ListView(
                 children: [
