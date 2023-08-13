@@ -158,7 +158,7 @@ class ImageContainer extends StatefulWidget {
           showDelete: showDelete,
           title: Text(sheetTitleText ?? Language.getInstance().getValue('Change logo')!),
         ),
-      ).then((value) => value ?? ImageSourceResult.gallery);
+      ).then((value) => value ?? !(Platform.isAndroid || Platform.isIOS) ? ImageSourceResult.gallery : null);
     }
 
     ImagePicker picker = ImagePicker();
