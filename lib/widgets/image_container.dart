@@ -151,7 +151,7 @@ class ImageContainer extends StatefulWidget {
   ///
   /// Returns a [ChangeImageResult] indicating the result of the image selection process.
   static Future<ChangeImageResult> handleChangeImage({required bool showDelete, bool forceUsingSheet = false, String? sheetTitleText}) async {
-    ImageSourceResult imageSourceResult = ImageSourceResult.gallery;
+    ImageSourceResult? imageSourceResult = !(Platform.isAndroid || Platform.isIOS) ? ImageSourceResult.gallery : null;
     if (Platform.isAndroid || Platform.isIOS || forceUsingSheet && (!(Platform.isAndroid || Platform.isIOS) && showDelete)) {
       imageSourceResult = await NavigationHelper.showModalBottomSheet(
         builder: (context) => SheetImageSource(
@@ -169,6 +169,8 @@ class ImageContainer extends StatefulWidget {
         return ChangeImageResult(image: await picker.pickImage(source: ImageSource.camera));
       case ImageSourceResult.delete:
         return ChangeImageResult(isDelete: true);
+      default:
+        return ChangeImageResult();
     }
   }
 
