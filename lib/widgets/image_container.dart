@@ -189,13 +189,15 @@ class ImageContainer extends StatefulWidget {
 class _ImageContainerState extends State<ImageContainer> with SingleTickerProviderStateMixin {
   bool _onHover = false;
 
-  static late BorderRadiusGeometry _fromBorderRadius;
+  static late BorderRadiusGeometry _toBorderRadius;
+  static late double _toIconSize;
 
   @override
   void initState() {
     super.initState();
 
-    _fromBorderRadius = widget.borderRadius ?? BorderRadius.circular(kShapeLarge);
+    _toBorderRadius = widget.borderRadius ?? BorderRadius.circular(kShapeLarge);
+    _toIconSize = widget.iconSize ?? 96.0;
   }
 
   Future<void> _fullScreenDialog() => NavigationHelper.to(
@@ -214,7 +216,8 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                 flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => AnimatedBuilder(
                   animation: animation,
                   builder: (context, child) {
-                    _fromBorderRadius = BorderRadius.circular(kShapeExtraLarge);
+                    _toBorderRadius = BorderRadius.circular(kShapeExtraLarge);
+                    _toIconSize = 96.0;
                     return _container(
                       context: context,
                       width: responsiveDialogWidth(MediaQuery.sizeOf(context)),
@@ -266,7 +269,8 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                                           flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => AnimatedBuilder(
                                             animation: animation,
                                             builder: (context, child) {
-                                              _fromBorderRadius = BorderRadius.zero;
+                                              _toBorderRadius = BorderRadius.zero;
+                                              _toIconSize = 96.0;
                                               return _container(
                                                 context: context,
                                                 width: double.infinity,
@@ -279,7 +283,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                                                       )
                                                     : null,
                                                 color: Color.lerp(Colors.transparent, Theme.of(context).colorScheme.surface, animation.value),
-                                                child: _icon(context: context, iconSize: Tween(begin: widget.iconSize ?? 96.0, end: 96.0).animate(animation).value),
+                                                child: _icon(context: context, iconSize: Tween(begin: 96.0, end: 96.0).animate(animation).value),
                                               );
                                             },
                                           ),
@@ -290,19 +294,17 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                                                   fit: BoxFit.contain,
                                                   //enableLoadState: false,
                                                   mode: ExtendedImageMode.gesture,
-                                                  initGestureConfigHandler: (state) {
-                                                    return GestureConfig(
-                                                      minScale: 0.9,
-                                                      animationMinScale: 0.7,
-                                                      maxScale: 3.0,
-                                                      animationMaxScale: 3.5,
-                                                      speed: 1.0,
-                                                      inertialSpeed: 100.0,
-                                                      initialScale: 1.0,
-                                                      inPageView: false,
-                                                      initialAlignment: InitialAlignment.center,
-                                                    );
-                                                  },
+                                                  initGestureConfigHandler: (state) => GestureConfig(
+                                                    minScale: 0.9,
+                                                    animationMinScale: 0.7,
+                                                    maxScale: 3.0,
+                                                    animationMaxScale: 3.5,
+                                                    speed: 1.0,
+                                                    inertialSpeed: 100.0,
+                                                    initialScale: 1.0,
+                                                    inPageView: false,
+                                                    initialAlignment: InitialAlignment.center,
+                                                  ),
                                                 )
                                               : _container(
                                                   context: context,
@@ -357,9 +359,9 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                             fit: BoxFit.cover,
                           )
                         : null,
-                    borderRadius: BorderRadiusGeometry.lerp(widget.borderRadius ?? BorderRadius.circular(kShapeLarge), _fromBorderRadius, animation.value),
+                    borderRadius: BorderRadiusGeometry.lerp(widget.borderRadius ?? BorderRadius.circular(kShapeLarge), _toBorderRadius, animation.value),
                     color: Color.lerp(Colors.transparent, Theme.of(context).colorScheme.surface, animation.value),
-                    child: _icon(context: context, iconSize: Tween(begin: widget.iconSize ?? 96.0, end: 96.0).animate(animation).value),
+                    child: _icon(context: context, iconSize: Tween(begin: widget.iconSize ?? 96.0, end: _toIconSize).animate(animation).value),
                   ),
                 ),
                 tag: widget.tag,

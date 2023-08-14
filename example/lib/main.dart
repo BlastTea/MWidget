@@ -72,8 +72,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: double.infinity,
                   height: MediaQuery.sizeOf(context).width - 32.0,
                   border: const Border(),
+                  iconSize: 24.0,
                   // borderRadius: BorderRadius.zero,
-                  image: const NetworkImage('https://plus.unsplash.com/premium_photo-1691338312403-e9f7f7984eeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80'),
+                  // image: const NetworkImage('https://plus.unsplash.com/premium_photo-1691338312403-e9f7f7984eeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80'),
                   extendedAppBar: AppBar(
                     title: const Text('Detail image'),
                   ),
