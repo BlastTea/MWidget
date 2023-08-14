@@ -8,11 +8,14 @@ part of 'widgets.dart';
 /// The widget supports both the gallery and camera options by default. Additionally, you can enable the delete option
 /// by setting [showDelete] to `true`, which allows users to delete an existing image.
 ///
+/// The [showGallery] and [showDelete] parameters control whether the gallery and delete options are shown, respectively.
+///
 /// The [title] parameter is optional and can be used to display a title above the image source options.
 ///
 /// Example usage:
 /// ```dart
 /// SheetImageSource(
+///   showGallery: true,
 ///   showDelete: true,
 ///   title: Text('Select Image Source'),
 /// )
@@ -20,25 +23,36 @@ part of 'widgets.dart';
 class SheetImageSource extends StatelessWidget {
   /// Creates a widget to display image source options in a bottom sheet.
   ///
-  /// The [showDelete] parameter determines whether to show the delete option in addition to the gallery and camera options.
-  /// Set [showDelete] to `true` to enable the delete option, or `false` to display only the gallery and camera options.
+  /// The [showGallery] parameter determines whether to show the gallery option.
+  /// Set [showGallery] to `true` to enable the gallery option, or `false` to hide it.
+  ///
+  /// The [showDelete] parameter determines whether to show the delete option.
+  /// Set [showDelete] to `true` to enable the delete option, or `false` to hide it.
   ///
   /// The [title] parameter is optional and can be used to display a title above the image source options.
   ///
   /// Example usage:
   /// ```dart
   /// SheetImageSource(
+  ///   showGallery: true,
   ///   showDelete: true,
   ///   title: Text('Select Image Source'),
   /// )
   /// ```
   const SheetImageSource({
     super.key,
+    this.showGallery = true,
     this.showDelete = false,
     this.title,
   });
 
+  /// Determines whether the gallery option should be shown.
+  final bool showGallery;
+
+  /// Determines whether the delete option should be shown.
   final bool showDelete;
+
+  /// An optional title to display above the image source options.
   final Widget? title;
 
   @override
@@ -62,11 +76,7 @@ class SheetImageSource extends StatelessWidget {
               ],
               Row(
                 children: List.generate(
-                  showDelete && (Platform.isAndroid || Platform.isIOS)
-                      ? 3
-                      : (!showDelete && (Platform.isAndroid || Platform.isIOS)) || showDelete
-                          ? 2
-                          : 1,
+                  _index,
                   (index) => Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: Material(
@@ -74,7 +84,7 @@ class SheetImageSource extends StatelessWidget {
                       color: Colors.transparent,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(kShapeLarge),
-                        onTap: () => NavigationHelper.back((Platform.isAndroid || Platform.isIOS ? ImageSourceResult.values : [ImageSourceResult.gallery, ImageSourceResult.delete])[index]),
+                        onTap: () => NavigationHelper.back((Platform.isAndroid || Platform.isIOS ? [if (showGallery) ImageSourceResult.gallery, ImageSourceResult.camera, ImageSourceResult.delete] : [ImageSourceResult.gallery, ImageSourceResult.delete])[index]),
                         child: SizedBox(
                           width: 68.0,
                           height: 68.0,
@@ -83,9 +93,9 @@ class SheetImageSource extends StatelessWidget {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon((Platform.isAndroid || Platform.isIOS ? [Icons.photo, Icons.camera, Icons.delete] : [Icons.folder, Icons.delete])[index]),
+                                Icon((Platform.isAndroid || Platform.isIOS ? [if (showGallery) Icons.photo, Icons.camera, Icons.delete] : [Icons.folder, Icons.delete])[index]),
                                 const SizedBox(height: 8.0),
-                                Text(language[(Platform.isAndroid || Platform.isIOS ? ['Gallery', 'Camera', 'Delete'] : ['File', 'Delete'])[index]]!),
+                                Text(language[(Platform.isAndroid || Platform.isIOS ? [if (showGallery) 'Gallery', 'Camera', 'Delete'] : ['File', 'Delete'])[index]]!),
                               ],
                             ),
                           ),
@@ -99,6 +109,16 @@ class SheetImageSource extends StatelessWidget {
           ),
         ),
       );
+
+  int get _index {
+    if (showGallery && showDelete && (Platform.isAndroid || Platform.isIOS)) {
+      return 3;
+    } else if (((!showDelete && showGallery) || (showDelete && !showGallery)) && (Platform.isAndroid || Platform.isIOS) || (showDelete || showGallery)) {
+      return 2;
+    }
+
+    return 1;
+  }
 }
 
 enum ImageSourceResult {

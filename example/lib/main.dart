@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    timeDilation = 10.0;
+    timeDilation = 1.0;
 
     return SizedBox(
       width: MediaQuery.sizeOf(context).width,
@@ -59,8 +59,22 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('Example App'),
               actions: [
                 IconButton(
-                  onPressed: () => ImageContainer.handleChangeImage(showDelete: true),
+                  onPressed: () => ImageContainer.handleChangeImage(
+                    showDelete: false,
+                    allowPickImageFromGallery: true,
+                    forceUsingSheet: true,
+                  ),
                   icon: const Icon(Icons.photo_camera),
+                ),
+                IconButton(
+                  onPressed: () => NavigationHelper.showModalBottomSheet(
+                    builder: (context) => SheetImageSource(
+                      showGallery: false,
+                      showDelete: false,
+                      title: Text(Language.getInstance().getValue('Change logo')!),
+                    ),
+                  ),
+                  icon: const Icon(Icons.question_mark),
                 ),
               ],
             ),
@@ -70,11 +84,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 ImageContainer.hero(
                   tag: 'hero',
                   width: double.infinity,
-                  height: MediaQuery.sizeOf(context).width - 32.0,
+                  height: 400.0,
                   border: const Border(),
                   iconSize: 24.0,
                   // borderRadius: BorderRadius.zero,
-                  // image: const NetworkImage('https://plus.unsplash.com/premium_photo-1691338312403-e9f7f7984eeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80'),
+                  image: const NetworkImage('https://plus.unsplash.com/premium_photo-1691338312403-e9f7f7984eeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80'),
                   extendedAppBar: AppBar(
                     title: const Text('Detail image'),
                   ),

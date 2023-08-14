@@ -50,6 +50,10 @@ class ImageContainer extends StatefulWidget {
   /// The [enabled] callback determines whether the container's interaction is enabled.
   ///
   /// The [onImageChanged] callback is triggered when the image is changed or deleted.
+  ///
+  /// The [allowPickImageFromGallery] parameter determines whether the user can pick images
+  /// from the gallery when changing the image. Set it to `true` to allow gallery selection,
+  /// and `false` to restrict it.
   const ImageContainer({
     super.key,
     required this.tag,
@@ -64,6 +68,7 @@ class ImageContainer extends StatefulWidget {
     this.iconSize,
     this.enabled,
     this.onImageChanged,
+    this.allowPickImageFromGallery = true,
   })  : _isHero = false,
         extendedAppBar = null;
 
@@ -105,7 +110,8 @@ class ImageContainer extends StatefulWidget {
     this.enabled,
     this.extendedAppBar,
   })  : onImageChanged = null,
-        _isHero = true;
+        _isHero = true,
+        allowPickImageFromGallery = false;
 
   /// A unique identifier for hero animations when transitioning between images.
   final Object tag;
@@ -149,6 +155,16 @@ class ImageContainer extends StatefulWidget {
   /// An optional [AppBar] that, when provided, enables full-screen mode and zooming for the image.
   final AppBar? extendedAppBar;
 
+  /// Indicates whether the user is allowed to pick images from the gallery when changing the image.
+  ///
+  /// When set to `true`, the user can choose an image from the device's gallery
+  /// to set as the new image in the container. If set to `false`, the gallery option
+  /// won't be available, and only the camera option (if applicable) and delete option
+  /// will be shown in the image selection bottom sheet.
+  ///
+  /// By default, this value is set to `true`.
+  final bool allowPickImageFromGallery;
+
   /// Displays a bottom sheet to handle image selection and returns the result.
   ///
   /// The [showDelete] parameter determines whether the delete option should be shown in the bottom sheet.
@@ -157,16 +173,21 @@ class ImageContainer extends StatefulWidget {
   ///
   /// The [sheetTitleText] is the title text to be displayed in the image selection bottom sheet.
   ///
+  /// The [allowPickImageFromGallery] parameter specifies whether the user can pick images
+  /// from the gallery when changing the image. If set to `true`, the gallery option is available.
+  /// If set to `false`, only the camera option (if applicable) and delete option will be shown.
+  ///
   /// Returns a [ChangeImageResult] indicating the result of the image selection process.
-  static Future<ChangeImageResult> handleChangeImage({required bool showDelete, bool forceUsingSheet = false, String? sheetTitleText}) async {
-    ImageSourceResult? imageSourceResult = !(Platform.isAndroid || Platform.isIOS) ? ImageSourceResult.gallery : null;
-    if (Platform.isAndroid || Platform.isIOS || forceUsingSheet && (!(Platform.isAndroid || Platform.isIOS) && showDelete)) {
+  static Future<ChangeImageResult> handleChangeImage({required bool showDelete, bool forceUsingSheet = false, String? sheetTitleText, bool allowPickImageFromGallery = true}) async {
+    ImageSourceResult? imageSourceResult = !(Platform.isAndroid || Platform.isIOS) ? ImageSourceResult.gallery : (!allowPickImageFromGallery && !showDelete ? ImageSourceResult.camera : null);
+    if (((Platform.isAndroid || Platform.isIOS) && (allowPickImageFromGallery || showDelete)) || forceUsingSheet && (!(Platform.isAndroid || Platform.isIOS) && showDelete)) {
       imageSourceResult = await NavigationHelper.showModalBottomSheet(
         builder: (context) => SheetImageSource(
+          showGallery: allowPickImageFromGallery,
           showDelete: showDelete,
           title: Text(sheetTitleText ?? Language.getInstance().getValue('Change logo')!),
         ),
-      ).then((value) => value ?? (!(Platform.isAndroid || Platform.isIOS) ? ImageSourceResult.gallery : null));
+      ).then((value) => value ?? (!(Platform.isAndroid || Platform.isIOS) ? (showDelete ? null : ImageSourceResult.gallery) : null));
     }
 
     ImagePicker picker = ImagePicker();
@@ -391,7 +412,13 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                           return;
                         }
 
-                        widget.onImageChanged?.call(await ImageContainer.handleChangeImage(showDelete: widget.image != null, sheetTitleText: widget.sheetTitleText));
+                        widget.onImageChanged?.call(
+                          await ImageContainer.handleChangeImage(
+                            showDelete: widget.image != null,
+                            sheetTitleText: widget.sheetTitleText,
+                            allowPickImageFromGallery: widget.allowPickImageFromGallery,
+                          ),
+                        );
                       },
                       child: _icon(
                         context: context,
