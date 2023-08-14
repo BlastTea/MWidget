@@ -270,7 +270,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.23.0"
+    version: "1.23.1"
   matcher:
     dependency: transitive
     description:
