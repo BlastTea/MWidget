@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:m_widget/m_widget.dart';
 
 void main() async {
@@ -45,207 +46,230 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-        width: MediaQuery.sizeOf(context).width,
-        height: MediaQuery.sizeOf(context).height,
-        child: Stack(
-          children: [
-            Scaffold(
-              appBar: AppBar(
-                title: const Text('Example App'),
-                actions: [
-                  IconButton(
-                    onPressed: () => ImageContainer.handleChangeImage(showDelete: true),
-                    icon: const Icon(Icons.photo_camera),
-                  ),
-                ],
-              ),
-              body: ListView(
-                children: [
-                  ConstrainedBox(
-                    constraints: const BoxConstraints.tightFor(
-                      width: double.infinity,
-                      height: 200.0,
-                    ),
-                    child: TextField(
-                      focusNode: _submitFocusNode,
-                      expands: true,
-                      maxLines: null,
-                      decoration: const InputDecoration(border: OutlineInputBorder()),
-                      onSubmitted: (value) {
-                        debugPrint('submitted $value');
-                      },
-                    ),
-                  ),
-                  NumberPicker(
-                    controller: _controller,
-                    onChanged: (value) => debugPrint('onChanged $value'),
-                  ),
-                  NumberPicker(
-                    controller: _controller,
-                  ),
-                  NumberPicker(
-                    controller: _controller,
-                  ),
-                  NumberPicker(
-                    controller: _controller,
-                  ),
-                  NumberPicker(
-                    controller: _controller,
-                  ),
-                  FilledButton(
-                    onPressed: () => NavigationHelper.to(
-                      AdaptiveDialogRoute(
-                        context: context,
-                        builder: (context) => ChooseDialog(
-                          data: () => [],
-                        ),
-                      ),
-                    ),
-                    child: const Text('Show Choose Dialog'),
-                  ),
-                ],
-              ),
-            ),
-            AnimatedDraggableScrollableSheet(
-              minChildSize: 90 / MediaQuery.sizeOf(context).height,
-              snap: true,
-              snapAnimationDuration: const Duration(milliseconds: 150),
-              transitions: [
-                SingleChildSheetDraggableTransition(
-                  tag: 'top',
-                  startTransition: 0.7,
-                  endTransition: 1.0,
-                  transitionCurve: SheetDraggableTransitionCurves.end,
-                  child: const Text(
-                    'Hello',
-                    // style: Theme.of(context).textTheme.headlineLarge,
-                  ),
-                  transitionBuilder: (context, animation, curvedAnimation, child) {
-                    return FadeTransition(
-                      opacity: curvedAnimation,
-                      child: Align(
-                        child: SizedBox(
-                          // height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
-                          child: child,
-                        ),
-                      ),
-                    );
-                  },
-                  alwaysVisible: false,
+  Widget build(BuildContext context) {
+    timeDilation = 10.0;
+
+    return SizedBox(
+      width: MediaQuery.sizeOf(context).width,
+      height: MediaQuery.sizeOf(context).height,
+      child: Stack(
+        children: [
+          Scaffold(
+            appBar: AppBar(
+              title: const Text('Example App'),
+              actions: [
+                IconButton(
+                  onPressed: () => ImageContainer.handleChangeImage(showDelete: true),
+                  icon: const Icon(Icons.photo_camera),
                 ),
-                SingleChildSheetDraggableTransition(
-                  tag: 'top',
-                  startTransition: 0.0,
-                  endTransition: 0.3,
-                  transitionCurve: SheetDraggableTransitionCurves.start,
-                  child: const Text(
-                    'World',
-                    // style: Theme.of(context).textTheme.headlineLarge,
-                  ),
-                  transitionBuilder: (context, animation, curvedAnimation, child) {
-                    return FadeTransition(
-                      opacity: curvedAnimation,
-                      child: Align(
-                        child: SizedBox(
-                          // height: (MediaQuery.sizeOf(context).height) * animation.value,
-                          child: child,
-                        ),
-                      ),
-                    );
-                  },
-                  alwaysVisible: false,
-                ),
-                // SingleChildSheetDraggableTransition(
-                //   tag: 'bottom',
-                //   startTransition: 0.7,
-                //   endTransition: 1.0,
-                //   transitionCurve: SheetDraggableTransitionCurves.end,
-                //   child: Text(
-                //     'World',
-                //     style: Theme.of(context).textTheme.headlineLarge,
-                //   ),
-                //   transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
-                //     opacity: curvedAnimation,
-                //     child: Align(
-                //       child: SizedBox(
-                //         height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
-                //         child: child,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // SingleChildSheetDraggableTransition(
-                //   tag: 'beside image',
-                //   startTransition: 0.0,
-                //   endTransition: 0.3,
-                //   transitionCurve: SheetDraggableTransitionCurves.start,
-                //   child: Text(
-                //     'Hello There',
-                //     style: Theme.of(context).textTheme.headlineLarge,
-                //   ),
-                //   transitionBuilder: (context, animation, curvedAnimation, child) => Positioned(
-                //     left: 32.0 + 48.0,
-                //     child: FadeTransition(
-                //       opacity: curvedAnimation,
-                //       child: child,
-                //     ),
-                //   ),
-                // ),
               ],
-              builder: (context, scrollController, animation, children) => Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
-                  borderRadius: BorderRadius.lerp(
-                    BorderRadius.zero,
-                    const BorderRadius.vertical(
-                      top: Radius.circular(kShapeExtraLarge),
-                    ),
-                    animation.value,
+            ),
+            body: ListView(
+              padding: responsivePadding(MediaQuery.sizeOf(context)),
+              children: [
+                ImageContainer.hero(
+                  tag: 'hero',
+                  width: double.infinity,
+                  height: MediaQuery.sizeOf(context).width - 32.0,
+                  border: const Border(),
+                  // borderRadius: BorderRadius.zero,
+                  image: const NetworkImage('https://plus.unsplash.com/premium_photo-1691338312403-e9f7f7984eeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80'),
+                  extendedAppBar: AppBar(
+                    title: const Text('Detail image'),
                   ),
                 ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: ScrollConfiguration(
-                    behavior: CustomScrollBehavior.all,
-                    child: Stack(
-                      children: [
-                        ListView(
-                          controller: scrollController,
-                          children: [
-                            Align(
-                              child: Container(
-                                width: 32.0,
-                                height: 4.0,
-                                margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
-                                  borderRadius: BorderRadius.circular(2.0),
-                                ),
+                const SizedBox(height: 16.0),
+                ConstrainedBox(
+                  constraints: const BoxConstraints.tightFor(
+                    width: double.infinity,
+                    height: 200.0,
+                  ),
+                  child: TextField(
+                    focusNode: _submitFocusNode,
+                    expands: true,
+                    maxLines: null,
+                    decoration: const InputDecoration(border: OutlineInputBorder()),
+                    onSubmitted: (value) {
+                      debugPrint('submitted $value');
+                    },
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                NumberPicker(
+                  controller: _controller,
+                  onChanged: (value) => debugPrint('onChanged $value'),
+                ),
+                const SizedBox(height: 16.0),
+                NumberPicker(
+                  controller: _controller,
+                ),
+                const SizedBox(height: 16.0),
+                NumberPicker(
+                  controller: _controller,
+                ),
+                const SizedBox(height: 16.0),
+                NumberPicker(
+                  controller: _controller,
+                ),
+                const SizedBox(height: 16.0),
+                NumberPicker(
+                  controller: _controller,
+                ),
+                const SizedBox(height: 16.0),
+                FilledButton(
+                  onPressed: () => NavigationHelper.to(
+                    AdaptiveDialogRoute(
+                      context: context,
+                      builder: (context) => ChooseDialog(
+                        data: () => [],
+                      ),
+                    ),
+                  ),
+                  child: const Text('Show Choose Dialog'),
+                ),
+              ],
+            ),
+          ),
+          AnimatedDraggableScrollableSheet(
+            minChildSize: 90 / MediaQuery.sizeOf(context).height,
+            snap: true,
+            snapAnimationDuration: const Duration(milliseconds: 150),
+            transitions: [
+              SingleChildSheetDraggableTransition(
+                tag: 'top',
+                startTransition: 0.7,
+                endTransition: 1.0,
+                transitionCurve: SheetDraggableTransitionCurves.end,
+                child: const Text(
+                  'Hello',
+                  // style: Theme.of(context).textTheme.headlineLarge,
+                ),
+                transitionBuilder: (context, animation, curvedAnimation, child) {
+                  return FadeTransition(
+                    opacity: curvedAnimation,
+                    child: Align(
+                      child: SizedBox(
+                        // height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
+                        child: child,
+                      ),
+                    ),
+                  );
+                },
+                alwaysVisible: false,
+              ),
+              SingleChildSheetDraggableTransition(
+                tag: 'top',
+                startTransition: 0.0,
+                endTransition: 0.3,
+                transitionCurve: SheetDraggableTransitionCurves.start,
+                child: const Text(
+                  'World',
+                  // style: Theme.of(context).textTheme.headlineLarge,
+                ),
+                transitionBuilder: (context, animation, curvedAnimation, child) {
+                  return FadeTransition(
+                    opacity: curvedAnimation,
+                    child: Align(
+                      child: SizedBox(
+                        // height: (MediaQuery.sizeOf(context).height) * animation.value,
+                        child: child,
+                      ),
+                    ),
+                  );
+                },
+                alwaysVisible: false,
+              ),
+              // SingleChildSheetDraggableTransition(
+              //   tag: 'bottom',
+              //   startTransition: 0.7,
+              //   endTransition: 1.0,
+              //   transitionCurve: SheetDraggableTransitionCurves.end,
+              //   child: Text(
+              //     'World',
+              //     style: Theme.of(context).textTheme.headlineLarge,
+              //   ),
+              //   transitionBuilder: (context, animation, curvedAnimation, child) => FadeTransition(
+              //     opacity: curvedAnimation,
+              //     child: Align(
+              //       child: SizedBox(
+              //         height: ((MediaQuery.sizeOf(context).height - imageHeight) / 2 - 24.0) * animation.value,
+              //         child: child,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              // SingleChildSheetDraggableTransition(
+              //   tag: 'beside image',
+              //   startTransition: 0.0,
+              //   endTransition: 0.3,
+              //   transitionCurve: SheetDraggableTransitionCurves.start,
+              //   child: Text(
+              //     'Hello There',
+              //     style: Theme.of(context).textTheme.headlineLarge,
+              //   ),
+              //   transitionBuilder: (context, animation, curvedAnimation, child) => Positioned(
+              //     left: 32.0 + 48.0,
+              //     child: FadeTransition(
+              //       opacity: curvedAnimation,
+              //       child: child,
+              //     ),
+              //   ),
+              // ),
+            ],
+            builder: (context, scrollController, animation, children) => Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondaryContainer,
+                borderRadius: BorderRadius.lerp(
+                  BorderRadius.zero,
+                  const BorderRadius.vertical(
+                    top: Radius.circular(kShapeExtraLarge),
+                  ),
+                  animation.value,
+                ),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: ScrollConfiguration(
+                  behavior: CustomScrollBehavior.all,
+                  child: Stack(
+                    children: [
+                      ListView(
+                        controller: scrollController,
+                        children: [
+                          Align(
+                            child: Container(
+                              width: 32.0,
+                              height: 4.0,
+                              margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
+                                borderRadius: BorderRadius.circular(2.0),
                               ),
                             ),
-                            ...children?.where((element) => element.tag == 'top').map((e) => e.child) ?? [],
-                            // Align(
-                            //   alignment: Alignment.centerLeft,
-                            //   child: Container(
-                            //     width: Tween(begin: 48.0, end: MediaQuery.sizeOf(context).width).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
-                            //     height: Tween(begin: 48.0, end: imageHeight).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
-                            //     margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                            //     color: Colors.blue[50],
-                            //     child: const FlutterLogo(),
-                            //   ),
-                            // ),
-                            ...children?.where((element) => element.tag == 'bottom').map((e) => e.child) ?? [],
-                          ],
-                        ),
-                        ...children?.where((element) => element.tag == 'beside image').map((e) => e.child) ?? [],
-                      ],
-                    ),
+                          ),
+                          ...children?.where((element) => element.tag == 'top').map((e) => e.child) ?? [],
+                          // Align(
+                          //   alignment: Alignment.centerLeft,
+                          //   child: Container(
+                          //     width: Tween(begin: 48.0, end: MediaQuery.sizeOf(context).width).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
+                          //     height: Tween(begin: 48.0, end: imageHeight).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)).value,
+                          //     margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                          //     color: Colors.blue[50],
+                          //     child: const FlutterLogo(),
+                          //   ),
+                          // ),
+                          ...children?.where((element) => element.tag == 'bottom').map((e) => e.child) ?? [],
+                        ],
+                      ),
+                      ...children?.where((element) => element.tag == 'beside image').map((e) => e.child) ?? [],
+                    ],
                   ),
                 ),
               ),
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 }

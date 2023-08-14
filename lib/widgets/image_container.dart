@@ -4,7 +4,7 @@ part of 'widgets.dart';
 ///
 /// The `ImageContainer` widget allows you to display an image within a container and provides various customization options
 /// such as dimensions, margins, border, and more. It also supports optional user interactions like changing the image and
-/// deleting it.
+/// deleting it. If an [extendedAppBar] is provided, the widget supports entering full-screen mode and zooming in on the image.
 ///
 /// This widget can be used with or without the hero animation for smooth transitions between images.
 ///
@@ -23,6 +23,7 @@ part of 'widgets.dart';
 ///       // Handle image change
 ///     }
 ///   },
+///   extendedAppBar: AppBar(title: Text('Full Screen Image')),
 /// )
 /// ```
 class ImageContainer extends StatefulWidget {
@@ -63,9 +64,10 @@ class ImageContainer extends StatefulWidget {
     this.iconSize,
     this.enabled,
     this.onImageChanged,
-  }) : isHero = false;
+  })  : _isHero = false,
+        extendedAppBar = null;
 
-  /// Creates an `ImageContainer` widget with a hero animation.
+  /// Creates an `ImageContainer` widget with a hero animation and support for full-screen mode.
   ///
   /// The [tag] is a unique identifier for the hero animation when transitioning between images.
   ///
@@ -86,6 +88,8 @@ class ImageContainer extends StatefulWidget {
   /// The [iconSize] determines the size of the icon when displayed in the container.
   ///
   /// The [enabled] callback determines whether the container's interaction is enabled.
+  ///
+  /// The [extendedAppBar] is an optional app bar that, when provided, enables full-screen mode and zooming for the image.
   const ImageContainer.hero({
     super.key,
     required this.tag,
@@ -99,8 +103,9 @@ class ImageContainer extends StatefulWidget {
     this.icon,
     this.iconSize,
     this.enabled,
+    this.extendedAppBar,
   })  : onImageChanged = null,
-        isHero = true;
+        _isHero = true;
 
   /// A unique identifier for hero animations when transitioning between images.
   final Object tag;
@@ -139,7 +144,10 @@ class ImageContainer extends StatefulWidget {
   final void Function(ChangeImageResult result)? onImageChanged;
 
   /// Indicates whether hero animations are enabled for image transitions.
-  final bool isHero;
+  final bool _isHero;
+
+  /// An optional [AppBar] that, when provided, enables full-screen mode and zooming for the image.
+  final AppBar? extendedAppBar;
 
   /// Displays a bottom sheet to handle image selection and returns the result.
   ///
@@ -178,8 +186,17 @@ class ImageContainer extends StatefulWidget {
   State<ImageContainer> createState() => _ImageContainerState();
 }
 
-class _ImageContainerState extends State<ImageContainer> {
+class _ImageContainerState extends State<ImageContainer> with SingleTickerProviderStateMixin {
   bool _onHover = false;
+
+  static late BorderRadiusGeometry _fromBorderRadius;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _fromBorderRadius = widget.borderRadius ?? BorderRadius.circular(kShapeLarge);
+  }
 
   Future<void> _fullScreenDialog() => NavigationHelper.to(
         PageRouteBuilder(
@@ -196,20 +213,23 @@ class _ImageContainerState extends State<ImageContainer> {
                 createRectTween: (begin, end) => RectTween(begin: begin, end: end),
                 flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => AnimatedBuilder(
                   animation: animation,
-                  builder: (context, child) => _container(
-                    context: context,
-                    width: responsiveDialogWidth(MediaQuery.sizeOf(context)),
-                    height: responsiveDialogWidth(MediaQuery.sizeOf(context)),
-                    borderRadius: BorderRadiusGeometry.lerp(widget.borderRadius ?? BorderRadius.circular(kShapeExtraLarge), BorderRadius.circular(kShapeExtraLarge), animation.value),
-                    image: widget.image != null
-                        ? DecorationImage(
-                            image: widget.image!,
-                            fit: BoxFit.cover,
-                          )
-                        : null,
-                    color: Color.lerp(Colors.transparent, Theme.of(context).colorScheme.surface, animation.value),
-                    child: _icon(context: context, iconSize: Tween(begin: widget.iconSize ?? 96.0, end: 96.0).animate(animation).value),
-                  ),
+                  builder: (context, child) {
+                    _fromBorderRadius = BorderRadius.circular(kShapeExtraLarge);
+                    return _container(
+                      context: context,
+                      width: responsiveDialogWidth(MediaQuery.sizeOf(context)),
+                      height: responsiveDialogWidth(MediaQuery.sizeOf(context)),
+                      borderRadius: BorderRadiusGeometry.lerp(widget.borderRadius ?? BorderRadius.circular(kShapeLarge), BorderRadius.circular(kShapeExtraLarge), animation.value),
+                      image: widget.image != null
+                          ? DecorationImage(
+                              image: widget.image!,
+                              fit: BoxFit.cover,
+                            )
+                          : null,
+                      color: Color.lerp(Colors.transparent, Theme.of(context).colorScheme.surface, animation.value),
+                      child: _icon(context: context, iconSize: Tween(begin: widget.iconSize ?? 96.0, end: 96.0).animate(animation).value),
+                    );
+                  },
                 ),
                 tag: widget.tag,
                 child: _container(
@@ -224,8 +244,85 @@ class _ImageContainerState extends State<ImageContainer> {
                         )
                       : null,
                   color: Theme.of(context).colorScheme.surface,
-                  child: _icon(
-                    context: context,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(kShapeExtraLarge),
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(kShapeExtraLarge),
+                      onTap: widget.extendedAppBar != null
+                          ? () => NavigationHelper.toReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => Theme(
+                                    data: Theme.of(context).copyWith(
+                                      appBarTheme: const AppBarTheme(
+                                        backgroundColor: Colors.transparent,
+                                      ),
+                                    ),
+                                    child: Scaffold(
+                                      appBar: widget.extendedAppBar,
+                                      body: Center(
+                                        child: Hero(
+                                          createRectTween: (begin, end) => RectTween(begin: begin, end: end),
+                                          flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => AnimatedBuilder(
+                                            animation: animation,
+                                            builder: (context, child) {
+                                              _fromBorderRadius = BorderRadius.zero;
+                                              return _container(
+                                                context: context,
+                                                width: double.infinity,
+                                                height: null,
+                                                borderRadius: BorderRadiusGeometry.lerp(BorderRadius.circular(kShapeExtraLarge), BorderRadius.zero, animation.value),
+                                                image: widget.image != null
+                                                    ? DecorationImage(
+                                                        image: widget.image!,
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                    : null,
+                                                color: Color.lerp(Colors.transparent, Theme.of(context).colorScheme.surface, animation.value),
+                                                child: _icon(context: context, iconSize: Tween(begin: widget.iconSize ?? 96.0, end: 96.0).animate(animation).value),
+                                              );
+                                            },
+                                          ),
+                                          tag: widget.tag,
+                                          child: widget.image != null
+                                              ? ExtendedImage(
+                                                  image: widget.image!,
+                                                  fit: BoxFit.contain,
+                                                  //enableLoadState: false,
+                                                  mode: ExtendedImageMode.gesture,
+                                                  initGestureConfigHandler: (state) {
+                                                    return GestureConfig(
+                                                      minScale: 0.9,
+                                                      animationMinScale: 0.7,
+                                                      maxScale: 3.0,
+                                                      animationMaxScale: 3.5,
+                                                      speed: 1.0,
+                                                      inertialSpeed: 100.0,
+                                                      initialScale: 1.0,
+                                                      inPageView: false,
+                                                      initialAlignment: InitialAlignment.center,
+                                                    );
+                                                  },
+                                                )
+                                              : _container(
+                                                  context: context,
+                                                  width: MediaQuery.sizeOf(context).width,
+                                                  height: 400.0,
+                                                  child: _icon(
+                                                    context: context,
+                                                  ),
+                                                ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                          : null,
+                      child: _icon(
+                        context: context,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -240,11 +337,6 @@ class _ImageContainerState extends State<ImageContainer> {
           width: widget.width,
           height: widget.height,
         ),
-        // context: context,
-        // width: widget.width,
-        // height: widget.height,
-        // borderRadius: widget.borderRadius,
-        // margin: widget.margin,
         child: MouseRegion(
           onEnter: (event) => setState(() => _onHover = true),
           onExit: (event) => setState(() => _onHover = false),
@@ -265,7 +357,7 @@ class _ImageContainerState extends State<ImageContainer> {
                             fit: BoxFit.cover,
                           )
                         : null,
-                    borderRadius: BorderRadiusGeometry.lerp(widget.borderRadius ?? BorderRadius.circular(kShapeExtraLarge), BorderRadius.circular(kShapeExtraLarge), animation.value),
+                    borderRadius: BorderRadiusGeometry.lerp(widget.borderRadius ?? BorderRadius.circular(kShapeLarge), _fromBorderRadius, animation.value),
                     color: Color.lerp(Colors.transparent, Theme.of(context).colorScheme.surface, animation.value),
                     child: _icon(context: context, iconSize: Tween(begin: widget.iconSize ?? 96.0, end: 96.0).animate(animation).value),
                   ),
@@ -289,7 +381,7 @@ class _ImageContainerState extends State<ImageContainer> {
                     child: InkWell(
                       borderRadius: widget.borderRadius as BorderRadius? ?? BorderRadius.circular(kShapeLarge),
                       onTap: () async {
-                        if (widget.isHero) {
+                        if (widget._isHero) {
                           _fullScreenDialog();
                           return;
                         }
@@ -307,7 +399,7 @@ class _ImageContainerState extends State<ImageContainer> {
                   ),
                 ),
               ),
-              if (_onHover && widget.image != null && !widget.isHero)
+              if (_onHover && widget.image != null && !widget._isHero)
                 Positioned(
                   top: 16.0,
                   right: 16.0,
