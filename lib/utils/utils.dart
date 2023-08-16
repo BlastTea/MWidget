@@ -12,6 +12,16 @@ part 'adaptive_dialog_route.dart';
 part 'text_editing_controller_thousand_format.dart';
 part 'submit_focus_node.dart';
 
+ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
+
+List<LanguageType> availableLanguages = [
+  LanguageType.unitedStatesEnglish,
+  LanguageType.indonesiaIndonesian,
+];
+
+const keyLanguage = 'language';
+const keyThemeMode = 'theme_mode';
+
 /// The maximum width for compact screen layout.
 const double kCompactSize = 600.0;
 

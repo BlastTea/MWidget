@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:m_widget/m_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_io/io.dart';
 
 part 'number_picker.dart';
@@ -20,3 +21,5 @@ part 'draggable_scrollable_body.dart';
 part 'retry_button.dart';
 part 'error_occured_button.dart';
 part 'sliver_header.dart';
+part 'theme_switcher.dart';
+part 'language_switcher.dart';

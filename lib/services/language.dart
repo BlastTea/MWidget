@@ -239,5 +239,41 @@ final class Language {
       LanguageType.unitedStatesEnglish: 'Change logo',
       LanguageType.indonesiaIndonesian: 'Ganti logo',
     },
+    'Change theme': {
+      LanguageType.unitedStatesEnglish: 'Change theme',
+      LanguageType.indonesiaIndonesian: 'Ganti tema',
+    },
+    'Theme': {
+      LanguageType.unitedStatesEnglish: 'Theme',
+      LanguageType.indonesiaIndonesian: 'Tema',
+    },
+    'Dark': {
+      LanguageType.unitedStatesEnglish: 'Dark',
+      LanguageType.indonesiaIndonesian: 'Gelap',
+    },
+    'Light': {
+      LanguageType.unitedStatesEnglish: 'Light',
+      LanguageType.indonesiaIndonesian: 'Terang',
+    },
+    'Language': {
+      LanguageType.unitedStatesEnglish: 'Language',
+      LanguageType.indonesiaIndonesian: 'Bahasa',
+    },
+    'Choose language': {
+      LanguageType.unitedStatesEnglish: 'Choose language',
+      LanguageType.indonesiaIndonesian: 'Pilih bahasa',
+    },
+    'No data': {
+      LanguageType.unitedStatesEnglish: 'No data',
+      LanguageType.indonesiaIndonesian: 'Tidak ada data',
+    },
+    'Data not found': {
+      LanguageType.unitedStatesEnglish: 'Data not found',
+      LanguageType.indonesiaIndonesian: 'Data tidak ditemukan',
+    },
+    'Search language': {
+      LanguageType.unitedStatesEnglish: 'Search language',
+      LanguageType.indonesiaIndonesian: 'Cari bahasa',
+    },
   };
 }
