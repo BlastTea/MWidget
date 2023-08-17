@@ -223,3 +223,19 @@ Future<void> animatePageController({required int page, required PageController p
       duration: const Duration(milliseconds: kDurationShort2),
       curve: Curves.fastOutSlowIn,
     );
+
+String jsonToCorrectStringFormat(String jsonString) {
+  String words = jsonString;
+
+  while (words.characters.elementAt(0) == '\'' || words.characters.elementAt(0) == '"') {
+    words = words.substring(1);
+  }
+  while (words.characters.elementAt(words.length - 1) == '\'' || words.characters.elementAt(words.length - 1) == '"') {
+    words = words.substring(0, words.length - 1);
+  }
+
+  if (words.contains('\\')) {
+    words = words.replaceAll('\\', '');
+  }
+  return words;
+}
