@@ -275,5 +275,17 @@ final class Language {
       LanguageType.unitedStatesEnglish: 'Search language',
       LanguageType.indonesiaIndonesian: 'Cari bahasa',
     },
+    'Information': {
+      LanguageType.unitedStatesEnglish: 'Information',
+      LanguageType.indonesiaIndonesian: 'Informasi',
+    },
+    'Yes': {
+      LanguageType.unitedStatesEnglish: 'Yes',
+      LanguageType.indonesiaIndonesian: 'Ya',
+    },
+    'No': {
+      LanguageType.unitedStatesEnglish: 'No',
+      LanguageType.indonesiaIndonesian: 'Tidak',
+    },
   };
 }
