@@ -70,6 +70,105 @@ abstract class NavigationHelper {
   ///   * [to], [toReplacement], and [canBack]
   static void back<T extends Object?>([T? result]) => navigatorKey.currentState!.pop<T>(result);
 
+  /// Navigates back until a specific condition is met.
+  ///
+  /// The `predicate` parameter is a function that determines when the navigation
+  /// should stop. It should return `true` for the routes that need to be popped.
+  ///
+  /// Example:
+  /// ```dart
+  /// NavigationHelper.backUntil((route) => route.settings.name == 'desired_route');
+  /// ```
+  ///
+  /// See also:
+  ///   * [to], [toReplacement], [back], and [canBack]
+  static void backUntil(bool Function(Route<dynamic> route) predicate) => navigatorKey.currentState!.popUntil(predicate);
+
+  /// Navigates back to the previous route and pushes a new named route.
+  ///
+  /// The `routeName` parameter specifies the name of the route to push, and the
+  /// optional `result` parameter can be used to pass a result back to the previous route.
+  /// The `arguments` parameter is used to pass arguments to the pushed route.
+  ///
+  /// Example:
+  /// ```dart
+  /// Future<int?> result = NavigationHelper.backAndPushNamed<int, String>(
+  ///   'new_route',
+  ///   result: 'Result from new route',
+  ///   arguments: {'key': 'value'},
+  /// );
+  /// ```
+  ///
+  /// See also:
+  ///   * [to], [toReplacement], [toNamedAndRemoveUntil], [back], and [canBack]
+  static Future<T?> backAndPushNamed<T extends Object?, TO extends Object?>(
+    String routeName, {
+    TO? result,
+    Object? arguments,
+  }) =>
+      navigatorKey.currentState!.popAndPushNamed<T, TO>(
+        routeName,
+        result: result,
+        arguments: arguments,
+      );
+
+  /// Navigates to a named route and returns a result when the route is popped.
+  ///
+  /// The `routeName` parameter specifies the name of the route to navigate to, and
+  /// the optional `arguments` parameter is used to pass arguments to the pushed route.
+  /// The method returns a [Future] that resolves to the result returned by the popped route.
+  ///
+  /// Example:
+  /// ```dart
+  /// String? result = await NavigationHelper.toNamed<String>(
+  ///   'new_route',
+  ///   arguments: {'key': 'value'},
+  /// );
+  /// ```
+  ///
+  /// See also:
+  ///   * [to], [toReplacement], [back], and [canBack]
+  static Future<T?> toNamed<T>(String routeName, {Object? arguments}) => navigatorKey.currentState!.pushNamed<T>(routeName, arguments: arguments);
+
+  /// Navigates to a new route and removes routes until a specific condition is met.
+  ///
+  /// The `newRoute` parameter specifies the route to navigate to, and the `predicate`
+  /// parameter is a function that determines when the navigation should stop. It should
+  /// return `true` for the routes that need to be removed. The optional `arguments` parameter
+  /// is used to pass arguments to the pushed route.
+  ///
+  /// Example:
+  /// ```dart
+  /// Future<int?> result = NavigationHelper.toAndRemoveUntil<int>(
+  ///   newRoute,
+  ///   (route) => route.settings.name == 'desired_route',
+  /// );
+  /// ```
+  ///
+  /// See also:
+  ///   * [to], [toReplacement], [back], [backUntil], and [canBack]
+  static Future<T?> toAndRemoveUntil<T>(Route<T> newRoute, bool Function(Route<dynamic> route) predicate) => navigatorKey.currentState!.pushAndRemoveUntil<T>(newRoute, predicate);
+
+  /// Navigates to a named route and removes routes until a specific condition is met.
+  ///
+  /// The `newRouteName` parameter specifies the name of the route to navigate to, and
+  /// the `predicate` parameter is a function that determines when the navigation should
+  /// stop. It should return `true` for the routes that need to be removed. The optional
+  /// `arguments` parameter is used to pass arguments to the pushed route.
+  ///
+  /// Example:
+  /// ```dart
+  /// Future<int?> result = NavigationHelper.toNamedAndRemoveUntil<int>(
+  ///   'new_route',
+  ///   (route) => route.settings.name == 'desired_route',
+  ///   arguments: {'key': 'value'},
+  /// );
+  /// ```
+  ///
+  /// See also:
+  ///   * [to], [toReplacement], [back], [backUntil], and [canBack]
+  static Future<T?> toNamedAndRemoveUntil<T>(String newRouteName, bool Function(Route<dynamic> route) predicate, Object? arguments) => navigatorKey.currentState!.pushNamedAndRemoveUntil(newRouteName, predicate, arguments: arguments);
+
   /// Checks if there is at least one route that can be popped from the navigation stack.
   ///
   /// Returns `true` if there is a route that can be popped, otherwise `false`.
@@ -185,7 +284,7 @@ abstract class NavigationHelper {
   /// See also:
   ///   * [showModalBottomSheet], [showDialog], and [showGeneralDialog]
   static material.PersistentBottomSheetController<T> showBottomSheet<T>({
-    required material.Widget Function(material.BuildContext) builder,
+    required material.Widget Function(material.BuildContext context) builder,
     material.Color? backgroundColor,
     double? elevation,
     material.ShapeBorder? shape,
@@ -230,7 +329,7 @@ abstract class NavigationHelper {
     required DateTime lastDate,
     DateTime? currentDate,
     material.DatePickerEntryMode initialEntryMode = material.DatePickerEntryMode.calendar,
-    bool Function(DateTime)? selectableDayPredicate,
+    bool Function(DateTime day)? selectableDayPredicate,
     String? helpText,
     String? cancelText,
     String? confirmText,
@@ -238,7 +337,7 @@ abstract class NavigationHelper {
     bool useRootNavigator = true,
     material.RouteSettings? routeSettings,
     material.TextDirection? textDirection,
-    material.Widget Function(material.BuildContext, material.Widget?)? builder,
+    material.Widget Function(material.BuildContext context, material.Widget? child)? builder,
     material.DatePickerMode initialDatePickerMode = material.DatePickerMode.day,
     String? errorFormatText,
     String? errorInvalidText,
@@ -316,7 +415,7 @@ abstract class NavigationHelper {
     bool useRootNavigator = true,
     material.RouteSettings? routeSettings,
     material.TextDirection? textDirection,
-    material.Widget Function(material.BuildContext, material.Widget?)? builder,
+    material.Widget Function(material.BuildContext context, material.Widget? child)? builder,
     material.Offset? anchorPoint,
     material.TextInputType keyboardType = material.TextInputType.datetime,
   }) =>
@@ -424,12 +523,12 @@ abstract class NavigationHelper {
   /// See also:
   ///   * [showDialog], [showBottomSheet], and [showDatePicker]
   static Future<T?> showGeneralDialog<T extends Object?>({
-    required material.Widget Function(material.BuildContext, material.Animation<double>, material.Animation<double>) pageBuilder,
+    required material.Widget Function(material.BuildContext context, material.Animation<double> animation, material.Animation<double> secondaryAnimation) pageBuilder,
     bool barrierDismissible = false,
     String? barrierLabel,
     material.Color barrierColor = const material.Color(0x80000000),
     Duration transitionDuration = const Duration(milliseconds: 200),
-    material.Widget Function(material.BuildContext, material.Animation<double>, material.Animation<double>, material.Widget)? transitionBuilder,
+    material.Widget Function(material.BuildContext context, material.Animation<double> animation, material.Animation<double> secondaryAnimation, material.Widget child)? transitionBuilder,
     bool useRootNavigator = true,
     material.RouteSettings? routeSettings,
     material.Offset? anchorPoint,
@@ -531,7 +630,7 @@ abstract class NavigationHelper {
   /// See also:
   ///   * [showBottomSheet], [showDialog], and [showTimePicker]
   static Future<T?> showModalBottomSheet<T>({
-    required material.Widget Function(material.BuildContext) builder,
+    required material.Widget Function(material.BuildContext context) builder,
     material.Color? backgroundColor,
     double? elevation,
     material.ShapeBorder? shape,
@@ -613,7 +712,7 @@ abstract class NavigationHelper {
   ///   * [showDatePicker], [showDialog], and [showTimeRangePicker]
   static Future<material.TimeOfDay?> showTimePicker({
     required material.TimeOfDay initialTime,
-    material.Widget Function(material.BuildContext, material.Widget?)? builder,
+    material.Widget Function(material.BuildContext context, material.Widget? child)? builder,
     bool useRootNavigator = true,
     material.TimePickerEntryMode initialEntryMode = material.TimePickerEntryMode.dial,
     String? cancelText,
@@ -623,7 +722,7 @@ abstract class NavigationHelper {
     String? hourLabelText,
     String? minuteLabelText,
     material.RouteSettings? routeSettings,
-    void Function(material.TimePickerEntryMode)? onEntryModeChanged,
+    void Function(material.TimePickerEntryMode mode)? onEntryModeChanged,
     material.Offset? anchorPoint,
     material.Orientation? orientation,
   }) =>
