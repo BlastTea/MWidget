@@ -23,3 +23,5 @@ part 'error_occured_button.dart';
 part 'sliver_header.dart';
 part 'theme_switcher.dart';
 part 'language_switcher.dart';
+part 'adaptive_scaffold.dart';
+part 'adaptive_appbar.dart';
