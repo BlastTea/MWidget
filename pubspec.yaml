@@ -1,6 +1,6 @@
 name: m_widget
 description: A new Flutter package project.
-version: 1.29.0
+version: 1.30.0
 homepage: null
 
 environment:
@@ -8,7 +8,7 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  extended_image: ^8.0.2
+  extended_image: ^8.1.0
   flutter:
     sdk: flutter
   image_picker: ^1.0.2
