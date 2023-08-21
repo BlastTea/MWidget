@@ -11,7 +11,7 @@ extension ListExtension<T> on List<T> {
   /// List<String> list2 = ['cherry', 'banana', 'apple'];
   /// print(list1.areEqualTo(list2)); // Should print true
   /// ```
-  bool areEqualTo(List other) {
+  bool areEqualTo(List<T> other, [dynamic Function(int index, T element)? a, dynamic Function(int index, T element)? b]) {
     if (length != other.length) {
       return false;
     }
@@ -20,7 +20,7 @@ extension ListExtension<T> on List<T> {
     other.sort();
 
     for (int i = 0; i < length; i++) {
-      if (this[i] != other[i]) {
+      if ((a?.call(i, this[i]) ?? this[i]) != (b?.call(i, this[i]) ?? other[i])) {
         return false;
       }
     }
