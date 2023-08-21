@@ -236,13 +236,13 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
                           ? DefaultTextStyle(
                               style: Theme.of(context).textTheme.bodyLarge!,
                               child: Center(
-                                child: widget.onDataEmpty?.call(_retry) ?? const Text('No data'),
+                                child: widget.onDataEmpty?.call(_retry) ?? Text(Language.getInstance().getValue('No data')!),
                               ),
                             )
                           : DefaultTextStyle(
                               style: Theme.of(context).textTheme.bodyLarge!,
                               child: Center(
-                                child: widget.onDataNotFound ?? const Text('Data not found'),
+                                child: widget.onDataNotFound ?? Text(Language.getInstance().getValue('Data not found')!),
                               ),
                             )
                       : ListView.builder(
