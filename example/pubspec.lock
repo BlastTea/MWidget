@@ -68,10 +68,11 @@ packages:
   extended_image:
     dependency: transitive
     description:
-      name: extended_image
-      sha256: d1b122d6f5cf5596ea61d703d116d89e2ece7e324db414cfeed12967b72b7aef
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: d255cc2465d83b50719d5b90eb1120e47d2bcde6
+      resolved-ref: d255cc2465d83b50719d5b90eb1120e47d2bcde6
+      url: "https://github.com/fluttercandies/extended_image.git"
+    source: git
     version: "8.1.0"
   extended_image_library:
     dependency: transitive
@@ -278,7 +279,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.31.1"
+    version: "1.31.2"
   matcher:
     dependency: transitive
     description:
