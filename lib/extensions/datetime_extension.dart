@@ -17,15 +17,15 @@ extension DateTimeExtension on DateTime {
   /// Example:
   ///   - `toFormattedDate(withWeekday: true, withMonthName: true, withHour: true)`: 'Wednesday, August 03, 2022, 02:30:15 PM'
   ///   - `toFormattedDate()`: '08/03/2022'
-  String toFormattedDate({bool withWeekday = false, bool withMonthName = false, bool withHour = false, Language? language}) {
+  String toFormattedDate({bool withYear = true, bool withWeekday = false, bool withMonthName = false, bool withHour = false, Language? language}) {
     switch (language?.languageType ?? Language.getInstance().languageType) {
       case LanguageType.indonesiaIndonesian:
-        return '${withWeekday ? '${getWeekday(language)}, ' : ''}${day.toString().padLeft(2, '0')} ${withMonthName ? getMonthName(language) : month.toString().padLeft(2, '0')} $year${withHour ? ', ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')}' : ''}';
+        return '${withWeekday ? '${getWeekday(language)}, ' : ''}${day.toString().padLeft(2, '0')} ${withMonthName ? getMonthName(language) : month.toString().padLeft(2, '0')}${withYear ? ' $year' : ''}${withHour ? ', ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')}' : ''}';
       default:
         String period = (hour < 12) ? 'AM' : 'PM';
         int hour12 = (hour > 12) ? hour - 12 : hour;
 
-        return '${withWeekday ? '${getWeekday(language)}, ' : ''}${withMonthName ? getMonthName(language) : month.toString().padLeft(2, '0')} ${day.toString().padLeft(2, '0')}, $year${withHour ? ', ${hour12.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')} $period' : ''}';
+        return '${withWeekday ? '${getWeekday(language)}, ' : ''}${withMonthName ? getMonthName(language) : month.toString().padLeft(2, '0')} ${day.toString().padLeft(2, '0')}${withYear ? ', $year' : ''}${withHour ? ', ${hour12.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')} $period' : ''}';
     }
   }
 
