@@ -79,12 +79,12 @@ Future<bool?> showSaveChangesDialog() => NavigationHelper.showDialog(
     );
 
 Future<bool?> showYesOrNoDialog({
-  required String titleText,
+  String? titleText,
   String? contentText,
 }) =>
     NavigationHelper.showDialog(
       builder: (context) => AlertDialog(
-        title: Text(titleText),
+        title: titleText != null ? Text(titleText) : null,
         content: contentText != null ? Text(contentText) : null,
         actions: [
           TextButton(
