@@ -1,10 +1,10 @@
 part of 'widgets.dart';
 
-class DropdownField extends StatefulWidget {
+class DropdownField extends StatelessWidget {
   const DropdownField({
     super.key,
     this.focusNode,
-    this.controller,
+    required this.controller,
     required this.items,
     this.decoration,
     this.onValueSelected,
@@ -68,7 +68,7 @@ class DropdownField extends StatefulWidget {
   });
 
   final FocusNode? focusNode;
-  final TextEditingController? controller;
+  final TextEditingController controller;
   final List<PopupMenuItem<String>> items;
   final InputDecoration? decoration;
   final void Function(String value)? onValueSelected;
@@ -130,19 +130,6 @@ class DropdownField extends StatefulWidget {
   final TextInputAction? textInputAction;
   final UndoHistoryController? undoController;
 
-  @override
-  State<DropdownField> createState() => _DropdownFieldState();
-}
-
-class _DropdownFieldState extends State<DropdownField> {
-  late TextEditingController _textController;
-
-  @override
-  void initState() {
-    super.initState();
-    _textController = widget.controller ?? TextEditingController();
-  }
-
   Future<void> _handleShowDropdownMenu(BuildContext context) async {
     final RenderBox overlay = context.findRenderObject() as RenderBox;
     final Offset offset = overlay.localToGlobal(Offset.zero);
@@ -157,7 +144,7 @@ class _DropdownFieldState extends State<DropdownField> {
     showMenu<String>(
       context: context,
       position: position,
-      items: widget.items,
+      items: items,
       constraints: BoxConstraints.tightFor(
         width: overlay.constraints.minWidth,
       ),
@@ -166,85 +153,79 @@ class _DropdownFieldState extends State<DropdownField> {
         return;
       }
 
-      _textController.text = value;
+      controller.text = value;
 
-      widget.onValueSelected?.call(value);
+      onValueSelected?.call(value);
     });
   }
 
   @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) => TextField(
-        focusNode: widget.focusNode,
-        controller: _textController,
-        decoration: widget.decoration?.copyWith(
-          suffixIcon: widget.decoration?.suffixIcon ??
+        focusNode: focusNode,
+        controller: controller,
+        decoration: decoration?.copyWith(
+          suffixIcon: decoration?.suffixIcon ??
               IconButton(
                 onPressed: () => _handleShowDropdownMenu(context),
                 icon: const Icon(Icons.arrow_drop_down),
               ),
         ),
-        autocorrect: widget.autocorrect,
-        autofillHints: widget.autoFillHints ?? widget.items.map((e) => e.value ?? ''),
-        autofocus: widget.autofocus,
-        buildCounter: widget.buildCounter,
-        canRequestFocus: widget.canRequestFocus,
-        clipBehavior: widget.clipBehavior,
-        contentInsertionConfiguration: widget.contentInsertionConfiguration,
-        contextMenuBuilder: widget.contextMenuBuilder,
-        cursorColor: widget.cursorColor,
-        cursorHeight: widget.cursorHeight,
-        cursorOpacityAnimates: widget.cursorOpacityAnimates,
-        cursorRadius: widget.cursorRadius,
-        cursorWidth: widget.cursorWidth,
-        dragStartBehavior: widget.dragStartBehavior,
-        enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
-        enableInteractiveSelection: widget.enableInteractiveSelection,
-        enableSuggestions: widget.enableSuggestions,
-        enabled: widget.enabled,
-        expands: widget.expands,
-        inputFormatters: widget.inputFormatters,
-        keyboardAppearance: widget.keyboardAppearance,
-        keyboardType: widget.keyboardType,
-        magnifierConfiguration: widget.magnifierConfiguration,
-        maxLength: widget.maxLength,
-        maxLengthEnforcement: widget.maxLengthEnforcement,
-        maxLines: widget.maxLines,
-        minLines: widget.minLines,
-        mouseCursor: widget.mouseCursor,
-        obscureText: widget.obscureText,
-        obscuringCharacter: widget.obscuringCharacter,
-        onAppPrivateCommand: widget.onAppPrivateCommand,
-        onChanged: widget.onChanged,
-        onEditingComplete: widget.onEditingComplete,
-        onSubmitted: widget.onSubmitted,
-        onTap: widget.onTap,
-        onTapOutside: widget.onTapOutside,
-        readOnly: widget.readOnly,
-        restorationId: widget.restorationId,
-        scribbleEnabled: widget.scribbleEnabled,
-        scrollController: widget.scrollController,
-        scrollPadding: widget.scrollPadding,
-        scrollPhysics: widget.scrollPhysics,
-        selectionControls: widget.selectionControls,
-        selectionHeightStyle: widget.selectionHeightStyle,
-        selectionWidthStyle: widget.selectionWidthStyle,
-        showCursor: widget.showCursor,
-        smartDashesType: widget.smartDashesType,
-        smartQuotesType: widget.smartQuotesType,
-        spellCheckConfiguration: widget.spellCheckConfiguration,
-        strutStyle: widget.strutStyle,
-        style: widget.style,
-        textAlign: widget.textAlign,
-        textAlignVertical: widget.textAlignVertical,
-        textCapitalization: widget.textCapitalization,
-        textDirection: widget.textDirection,
-        textInputAction: widget.textInputAction,
-        undoController: widget.undoController,
+        autocorrect: autocorrect,
+        autofillHints: autoFillHints ?? items.map((e) => e.value ?? ''),
+        autofocus: autofocus,
+        buildCounter: buildCounter,
+        canRequestFocus: canRequestFocus,
+        clipBehavior: clipBehavior,
+        contentInsertionConfiguration: contentInsertionConfiguration,
+        contextMenuBuilder: contextMenuBuilder,
+        cursorColor: cursorColor,
+        cursorHeight: cursorHeight,
+        cursorOpacityAnimates: cursorOpacityAnimates,
+        cursorRadius: cursorRadius,
+        cursorWidth: cursorWidth,
+        dragStartBehavior: dragStartBehavior,
+        enableIMEPersonalizedLearning: enableIMEPersonalizedLearning,
+        enableInteractiveSelection: enableInteractiveSelection,
+        enableSuggestions: enableSuggestions,
+        enabled: enabled,
+        expands: expands,
+        inputFormatters: inputFormatters,
+        keyboardAppearance: keyboardAppearance,
+        keyboardType: keyboardType,
+        magnifierConfiguration: magnifierConfiguration,
+        maxLength: maxLength,
+        maxLengthEnforcement: maxLengthEnforcement,
+        maxLines: maxLines,
+        minLines: minLines,
+        mouseCursor: mouseCursor,
+        obscureText: obscureText,
+        obscuringCharacter: obscuringCharacter,
+        onAppPrivateCommand: onAppPrivateCommand,
+        onChanged: onChanged,
+        onEditingComplete: onEditingComplete,
+        onSubmitted: onSubmitted,
+        onTap: onTap,
+        onTapOutside: onTapOutside,
+        readOnly: readOnly,
+        restorationId: restorationId,
+        scribbleEnabled: scribbleEnabled,
+        scrollController: scrollController,
+        scrollPadding: scrollPadding,
+        scrollPhysics: scrollPhysics,
+        selectionControls: selectionControls,
+        selectionHeightStyle: selectionHeightStyle,
+        selectionWidthStyle: selectionWidthStyle,
+        showCursor: showCursor,
+        smartDashesType: smartDashesType,
+        smartQuotesType: smartQuotesType,
+        spellCheckConfiguration: spellCheckConfiguration,
+        strutStyle: strutStyle,
+        style: style,
+        textAlign: textAlign,
+        textAlignVertical: textAlignVertical,
+        textCapitalization: textCapitalization,
+        textDirection: textDirection,
+        textInputAction: textInputAction,
+        undoController: undoController,
       );
 }

@@ -36,6 +36,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final TextEditingController _textController = TextEditingController();
+
   final double imageHeight = 400.0;
 
   final SubmitFocusNode _submitFocusNode = SubmitFocusNode();
@@ -83,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 const SizedBox(height: 16.0),
                 DropdownField(
+                  controller: _textController,
                   items: ['Hello', 'World']
                       .map(
                         (e) => PopupMenuItem(
