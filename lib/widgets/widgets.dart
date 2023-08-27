@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
 
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:m_widget/m_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,3 +28,4 @@ part 'theme_switcher.dart';
 part 'language_switcher.dart';
 part 'adaptive_scaffold.dart';
 part 'adaptive_appbar.dart';
+part 'dropdown_field.dart';

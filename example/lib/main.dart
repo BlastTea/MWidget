@@ -81,6 +81,22 @@ class _MyHomePageState extends State<MyHomePage> {
             body: ListView(
               padding: responsivePadding(MediaQuery.sizeOf(context)),
               children: [
+                const SizedBox(height: 16.0),
+                DropdownField(
+                  items: ['Hello', 'World']
+                      .map(
+                        (e) => PopupMenuItem(
+                          value: e,
+                          child: Text(e),
+                        ),
+                      )
+                      .toList(),
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Dropdown field',
+                  ),
+                ),
+                const SizedBox(height: 16.0),
                 ImageContainer.hero(
                   tag: 'hero',
                   width: double.infinity,
