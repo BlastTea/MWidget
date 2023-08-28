@@ -166,7 +166,7 @@ class DropdownField extends StatelessWidget {
         decoration: decoration?.copyWith(
           suffixIcon: decoration?.suffixIcon ??
               IconButton(
-                onPressed: () => _handleShowDropdownMenu(context),
+                onPressed: readOnly ? null : () => _handleShowDropdownMenu(context),
                 icon: const Icon(Icons.arrow_drop_down),
               ),
         ),
