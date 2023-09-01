@@ -68,9 +68,11 @@ class ImageContainer extends StatefulWidget {
     this.iconSize,
     this.enabled,
     this.onImageChanged,
+    this.containerGradient,
     this.allowPickImageFromGallery = true,
   })  : _isHero = false,
-        extendedAppBar = null;
+        extendedAppBar = null,
+        dialogGradient = null;
 
   /// Creates an `ImageContainer` widget with a hero animation and support for full-screen mode.
   ///
@@ -109,7 +111,10 @@ class ImageContainer extends StatefulWidget {
     this.iconSize,
     this.enabled,
     this.extendedAppBar,
-  })  : onImageChanged = null,
+    this.containerGradient,
+    this.dialogGradient,
+  })  : assert((containerGradient == null && dialogGradient == null) || (containerGradient != null && dialogGradient != null)),
+        onImageChanged = null,
         _isHero = true,
         allowPickImageFromGallery = false;
 
@@ -165,6 +170,10 @@ class ImageContainer extends StatefulWidget {
   /// By default, this value is set to `true`.
   final bool allowPickImageFromGallery;
 
+  final Gradient? containerGradient;
+
+  final Gradient? dialogGradient;
+
   /// Displays a bottom sheet to handle image selection and returns the result.
   ///
   /// The [showDelete] parameter determines whether the delete option should be shown in the bottom sheet.
@@ -210,6 +219,7 @@ class ImageContainer extends StatefulWidget {
 class _ImageContainerState extends State<ImageContainer> with SingleTickerProviderStateMixin {
   bool _onHover = false;
 
+  static Gradient? _toGradient;
   static late BorderRadiusGeometry _toBorderRadius;
   static late double _toIconSize;
 
@@ -217,6 +227,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
   void initState() {
     super.initState();
 
+    _toGradient = widget.dialogGradient;
     _toBorderRadius = widget.borderRadius ?? BorderRadius.circular(kShapeLarge);
     _toIconSize = widget.iconSize ?? 96.0;
   }
@@ -237,6 +248,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                 flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => AnimatedBuilder(
                   animation: animation,
                   builder: (context, child) {
+                    _toGradient = widget.dialogGradient;
                     _toBorderRadius = BorderRadius.circular(kShapeExtraLarge);
                     _toIconSize = 96.0;
                     return _container(
@@ -244,6 +256,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                       width: responsiveDialogWidth(MediaQuery.sizeOf(context)),
                       height: responsiveDialogWidth(MediaQuery.sizeOf(context)),
                       borderRadius: BorderRadiusGeometry.lerp(widget.borderRadius ?? BorderRadius.circular(kShapeLarge), BorderRadius.circular(kShapeExtraLarge), animation.value),
+                      gradient: Gradient.lerp(widget.containerGradient, widget.dialogGradient, animation.value),
                       image: widget.image != null
                           ? DecorationImage(
                               image: widget.image!,
@@ -261,6 +274,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                   height: responsiveDialogWidth(MediaQuery.sizeOf(context)),
                   context: context,
                   borderRadius: BorderRadius.circular(kShapeExtraLarge),
+                  gradient: widget.dialogGradient,
                   image: widget.image != null
                       ? DecorationImage(
                           image: widget.image!,
@@ -290,6 +304,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                                           flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => AnimatedBuilder(
                                             animation: animation,
                                             builder: (context, child) {
+                                              _toGradient = const RadialGradient(colors: [Colors.transparent, Colors.transparent]);
                                               _toBorderRadius = BorderRadius.zero;
                                               _toIconSize = 96.0;
                                               return _container(
@@ -297,6 +312,15 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                                                 width: double.infinity,
                                                 height: null,
                                                 borderRadius: BorderRadiusGeometry.lerp(BorderRadius.circular(kShapeExtraLarge), BorderRadius.zero, animation.value),
+                                                gradient: Gradient.lerp(
+                                                    widget.dialogGradient,
+                                                    const RadialGradient(
+                                                      colors: [
+                                                        Colors.transparent,
+                                                        Colors.transparent,
+                                                      ],
+                                                    ),
+                                                    animation.value),
                                                 image: widget.image != null
                                                     ? DecorationImage(
                                                         image: widget.image!,
@@ -374,6 +398,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                     context: context,
                     width: widget.width,
                     height: widget.height,
+                    gradient: Gradient.lerp(widget.containerGradient, _toGradient, animation.value),
                     image: widget.image != null
                         ? DecorationImage(
                             image: widget.image!,
@@ -391,6 +416,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                   width: widget.width,
                   height: widget.height,
                   borderRadius: widget.borderRadius,
+                  gradient: widget.containerGradient,
                   margin: widget.margin,
                   image: widget.image != null
                       ? DecorationImage(
@@ -449,24 +475,43 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
     required double? height,
     EdgeInsetsGeometry? margin,
     BorderRadiusGeometry? borderRadius,
+    Gradient? gradient,
     DecorationImage? image,
     Color? color,
     required Widget? child,
   }) =>
-      Container(
-        width: width,
-        height: height,
-        margin: margin,
-        decoration: BoxDecoration(
-          border: widget.border ??
-              Border.all(
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-          color: color,
-          borderRadius: borderRadius ?? BorderRadius.circular(kShapeLarge),
-          image: image,
-        ),
-        child: child,
+      Stack(
+        fit: StackFit.expand,
+        children: [
+          Container(
+            width: width,
+            height: height,
+            margin: margin,
+            decoration: BoxDecoration(
+              border: widget.border ??
+                  Border.all(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+              color: color,
+              borderRadius: borderRadius ?? BorderRadius.circular(kShapeLarge),
+              image: image,
+            ),
+          ),
+          Container(
+            width: width,
+            height: height,
+            margin: margin,
+            decoration: BoxDecoration(
+              border: widget.border ??
+                  Border.all(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+              gradient: gradient,
+              borderRadius: borderRadius ?? BorderRadius.circular(kShapeLarge),
+            ),
+            child: child,
+          ),
+        ],
       );
 
   Widget? _icon({required BuildContext context, double? iconSize}) => widget.image != null
