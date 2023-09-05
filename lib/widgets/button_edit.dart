@@ -11,7 +11,7 @@ part of 'widgets.dart';
 ///
 /// The secondary buttons include icons for actions such as clearing the input,
 /// deleting content, and saving changes. You can specify callback functions
-/// for each of these actions using the [onClearPressed], [onDeletePressed],
+/// for each of these actions using the [onCancelPressed], [onDeletePressed],
 /// and [onSavePressed] parameters.
 ///
 /// Example usage:
@@ -19,8 +19,8 @@ part of 'widgets.dart';
 /// ```dart
 /// ButtonEdit(
 ///   trailing: Icon(Icons.info),
-///   onClearPressed: () {
-///     // Perform clear action
+///   onCancelPressed: () {
+///     // Perform cancel action
 ///   },
 ///   onDeletePressed: () {
 ///     // Perform delete action
@@ -36,28 +36,37 @@ class ButtonEdit extends StatelessWidget {
   /// The [trailing] parameter allows you to place a widget on the left side
   /// of the button row. If not specified, an empty container is used.
   ///
-  /// The [onClearPressed], [onDeletePressed], and [onSavePressed] parameters
+  /// The [onCancelPressed], [onDeletePressed], and [onSavePressed] parameters
   /// are callback functions that get triggered when the respective buttons
   /// are pressed.
   const ButtonEdit({
     super.key,
     this.trailing,
-    this.onClearPresssed,
+    this.onCancelPressed,
     this.onDeletePressed,
     this.onSavePressed,
+    this.onCancelDisabledPressed,
+    this.onDeleteDisabledPressed,
+    this.onSaveDisabledPressed,
   });
 
   /// The widget to be displayed on the left side of the button row.
   final Widget? trailing;
 
-  /// Callback function for the clear action button.
-  final void Function()? onClearPresssed;
+  /// Callback function for the cancel action button.
+  final void Function()? onCancelPressed;
 
   /// Callback function for the delete action button.
   final void Function()? onDeletePressed;
 
   /// Callback function for the save action button.
   final void Function()? onSavePressed;
+
+  final void Function()? onCancelDisabledPressed;
+
+  final void Function()? onDeleteDisabledPressed;
+
+  final void Function()? onSaveDisabledPressed;
 
   @override
   Widget build(BuildContext context) => Row(
@@ -69,20 +78,29 @@ class ButtonEdit extends StatelessWidget {
           const SizedBox(width: 8.0),
           Row(
             children: [
-              IconButton.outlined(
-                onPressed: onClearPresssed,
-                icon: const Icon(Icons.clear),
-                tooltip: Language.getInstance().getValue('Cancel'),
+              GestureDetector(
+                onTap: onCancelPressed == null ? onCancelDisabledPressed : null,
+                child: IconButton.outlined(
+                  onPressed: onCancelPressed,
+                  icon: const Icon(Icons.clear),
+                  tooltip: Language.getInstance().getValue('Cancel'),
+                ),
               ),
-              IconButton.outlined(
-                onPressed: onDeletePressed,
-                icon: const Icon(Icons.delete),
-                tooltip: Language.getInstance().getValue('Delete'),
+              GestureDetector(
+                onTap: onDeletePressed == null ? onDeleteDisabledPressed : null,
+                child: IconButton.outlined(
+                  onPressed: onDeletePressed,
+                  icon: const Icon(Icons.delete),
+                  tooltip: Language.getInstance().getValue('Delete'),
+                ),
               ),
-              IconButton.outlined(
-                onPressed: onSavePressed,
-                icon: const Icon(Icons.save),
-                tooltip: Language.getInstance().getValue('Save'),
+              GestureDetector(
+                onTap: onSavePressed == null ? onSaveDisabledPressed : null,
+                child: IconButton.outlined(
+                  onPressed: onSavePressed,
+                  icon: const Icon(Icons.save),
+                  tooltip: Language.getInstance().getValue('Save'),
+                ),
               ),
             ],
           ),

@@ -84,6 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: responsivePadding(MediaQuery.sizeOf(context)),
               children: [
                 const SizedBox(height: 16.0),
+                ButtonEdit(
+                  onCancelDisabledPressed: () => debugPrint('onCancelDisabledPressed'),
+                ),
+                const SizedBox(height: 16.0),
                 DropdownField(
                   controller: _textController,
                   items: ['Hello', 'World']
