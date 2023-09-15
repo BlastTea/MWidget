@@ -1,6 +1,5 @@
 import 'dart:math';
 
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -114,8 +113,6 @@ double responsiveDialogWidth(Size size) {
   return kCompactSize - 32.0;
 }
 
-
-
 /// Determines the color for a selected tile based on the theme mode.
 ///
 /// The [themeMode] parameter is the current theme mode.
@@ -123,11 +120,11 @@ double responsiveDialogWidth(Size size) {
 /// The [animation] parameter is an optional animation value for color transition.
 ///
 /// Returns the selected tile color for the specified theme mode.
-Color? selectedTileColor({required ThemeMode themeMode, Animation<double>? animation}) => animation != null
-    ? themeMode == ThemeMode.dark
+Color? selectedTileColor({Animation<double>? animation}) => animation != null
+    ? themeNotifier.value == ThemeMode.dark
         ? Color.lerp(Colors.transparent, kColorSecondaryContainerDark, animation.value)
         : Color.lerp(Colors.transparent, kColorSecondaryContainerLight, animation.value)
-    : themeMode == ThemeMode.dark
+    : themeNotifier.value == ThemeMode.dark
         ? kColorSecondaryContainerDark
         : kColorSecondaryContainerLight;
 

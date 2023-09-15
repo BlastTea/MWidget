@@ -65,6 +65,7 @@ class DropdownField extends StatelessWidget {
     this.textDirection,
     this.textInputAction,
     this.undoController,
+    this.enableDropdown = true,
   });
 
   final FocusNode? focusNode;
@@ -129,6 +130,7 @@ class DropdownField extends StatelessWidget {
   final TextDirection? textDirection;
   final TextInputAction? textInputAction;
   final UndoHistoryController? undoController;
+  final bool enableDropdown;
 
   Future<void> _handleShowDropdownMenu(BuildContext context) async {
     final RenderBox overlay = context.findRenderObject() as RenderBox;
@@ -166,7 +168,7 @@ class DropdownField extends StatelessWidget {
         decoration: decoration?.copyWith(
           suffixIcon: decoration?.suffixIcon ??
               IconButton(
-                onPressed: readOnly ? null : () => _handleShowDropdownMenu(context),
+                onPressed: !enableDropdown ? null : () => _handleShowDropdownMenu(context),
                 icon: const Icon(Icons.arrow_drop_down),
               ),
         ),

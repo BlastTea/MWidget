@@ -82,7 +82,7 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
     this.title,
     this.labelTextSearch,
     this.hintTextSearch,
-    this.useFullScreenFab = false,
+    this.useFullScreenFab = true,
     this.alwaysFullScreen = false,
     this.alwaysDialog = false,
     this.hideSearchBar = false,

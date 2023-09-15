@@ -49,7 +49,6 @@ class LanguageSwitcher extends StatelessWidget {
                   subtitle: Text(languageType.language),
                   onTap: () => NavigationHelper.to(
                     AdaptiveDialogRoute(
-                      context: context,
                       builder: (context) => ChooseDialog(
                         data: () => availableLanguages
                             .map(

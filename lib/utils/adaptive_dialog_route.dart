@@ -7,7 +7,7 @@ part of 'utils.dart';
 class AdaptiveDialogRoute<T> extends DialogRoute<T> implements PageRoute<T> {
   /// Creates an [AdaptiveDialogRoute] with the given parameters.
   ///
-  /// The [context] and [builder] are required parameters inherited from [DialogRoute].
+  /// The [builder] is required parameters inherited from [DialogRoute].
   /// The [maintainState] determines whether the state of the underlying screen should be maintained
   /// when the dialog route is closed. By default, the state is maintained.
   /// The [fullscreenDialog] parameter specifies whether the dialog should take up the entire screen
@@ -23,24 +23,34 @@ class AdaptiveDialogRoute<T> extends DialogRoute<T> implements PageRoute<T> {
   /// The [anchorPoint] can be set to a specific offset, and [traversalEdgeBehavior] can be used
   /// to customize the behavior when the route is popped.
   ///
-  /// The [widgetBuilder] is a [WidgetBuilder] that returns the widget tree for the dialog content.
+  /// The [builder] is a [WidgetBuilder] that returns the widget tree for the dialog content.
   AdaptiveDialogRoute({
-    required super.context,
-    required super.builder,
+    required this.builder,
     this.maintainState = true,
     this.fullscreenDialog = false,
-    super.themes,
-    super.barrierColor = Colors.black54,
-    super.barrierDismissible,
-    super.barrierLabel,
-    super.useSafeArea = true,
-    super.settings,
-    super.anchorPoint,
-    super.traversalEdgeBehavior,
-  }) : widgetBuilder = builder;
+    CapturedThemes? themes,
+    Color? barrierColor = Colors.black54,
+    bool barrierDismissible = true,
+    String? barrierLabel,
+    bool useSafeArea = true,
+    RouteSettings? settings,
+    Offset? anchorPoint,
+    TraversalEdgeBehavior? traversalEdgeBehavior,
+  }) : super(
+          context: navigatorKey.currentContext!,
+          builder: builder,
+          themes: themes,
+          barrierColor: barrierColor,
+          barrierDismissible: barrierDismissible,
+          barrierLabel: barrierLabel,
+          useSafeArea: useSafeArea,
+          settings: settings,
+          anchorPoint: anchorPoint,
+          traversalEdgeBehavior: traversalEdgeBehavior,
+        );
 
   /// The builder that returns the widget tree for the dialog content.
-  final WidgetBuilder widgetBuilder;
+  final WidgetBuilder builder;
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
@@ -51,7 +61,7 @@ class AdaptiveDialogRoute<T> extends DialogRoute<T> implements PageRoute<T> {
       child: DisplayFeatureSubScreen(
         anchorPoint: anchorPoint,
         // child: _pageBuilder(context, animation, secondaryAnimation),
-        child: theme.buildTransitions(this, context, animation, secondaryAnimation, widgetBuilder(context)),
+        child: theme.buildTransitions(this, context, animation, secondaryAnimation, builder(context)),
       ),
     );
   }
