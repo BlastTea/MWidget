@@ -165,13 +165,13 @@ class DropdownField extends StatelessWidget {
   Widget build(BuildContext context) => TextField(
         focusNode: focusNode,
         controller: controller,
-        decoration: decoration?.copyWith(
-          suffixIcon: decoration?.suffixIcon ??
-              IconButton(
-                onPressed: !enableDropdown ? null : () => _handleShowDropdownMenu(context),
-                icon: const Icon(Icons.arrow_drop_down),
-              ),
-        ),
+        decoration: (decoration ?? const InputDecoration()).applyDefaults(Theme.of(context).inputDecorationTheme).copyWith(
+              suffixIcon: decoration?.suffixIcon ??
+                  IconButton(
+                    onPressed: !enableDropdown ? null : () => _handleShowDropdownMenu(context),
+                    icon: const Icon(Icons.arrow_drop_down),
+                  ),
+            ),
         autocorrect: autocorrect,
         autofillHints: autoFillHints ?? items.map((e) => e.value ?? ''),
         autofocus: autofocus,
