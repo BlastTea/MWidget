@@ -175,7 +175,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 FilledButton(
                   onPressed: () => NavigationHelper.to(
                     AdaptiveDialogRoute(
-                      context: context,
                       builder: (context) => ChooseDialog(
                         data: () => [],
                       ),
