@@ -29,3 +29,4 @@ part 'language_switcher.dart';
 part 'adaptive_scaffold.dart';
 part 'adaptive_appbar.dart';
 part 'dropdown_field.dart';
+part 'date_range_field.dart';

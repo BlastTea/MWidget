@@ -3,7 +3,11 @@ import 'package:flutter/scheduler.dart';
 import 'package:m_widget/m_widget.dart';
 
 void main() async {
-  Language.initialize();
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await MWidget.initialize(
+    defaultLanguage: LanguageType.indonesiaIndonesian,
+  );
 
   runApp(const MyApp());
 }
@@ -47,9 +51,11 @@ class _MyHomePageState extends State<MyHomePage> {
       debugPrint('controllerListener');
     });
 
+  DateTimeRange currentDateRange = DateTimeRange(start: DateTime.now(), end: DateTime.now().add(const Duration(days: 30)));
+
   @override
   Widget build(BuildContext context) {
-    timeDilation = 10.0;
+    timeDilation = 1.0;
 
     return SizedBox(
       width: MediaQuery.sizeOf(context).width,
@@ -83,6 +89,14 @@ class _MyHomePageState extends State<MyHomePage> {
             body: ListView(
               padding: responsivePadding(MediaQuery.sizeOf(context)),
               children: [
+                const SizedBox(height: 16.0),
+                DateRangeField(
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(const Duration(days: 30)),
+                  dateRange: currentDateRange,
+                  onDateChanged: (value) => setState(() => value != null ? currentDateRange = value : null),
+                ),
                 const SizedBox(height: 16.0),
                 ButtonEdit(
                   onCancelDisabledPressed: () => debugPrint('onCancelDisabledPressed'),
