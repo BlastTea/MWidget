@@ -46,4 +46,12 @@ extension IterableExtension<E> on Iterable<E> {
       return null;
     }
   }
+
+  E? get tryFirst {
+    try {
+      return first;
+    } on StateError {
+      return null;
+    }
+  }
 }
