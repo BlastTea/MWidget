@@ -37,6 +37,7 @@ extension StringExtension on String {
   /// ```
   String? extractNumberString() {
     RegExpMatch? match = RegExp(r'^-?\d+').firstMatch(this);
+    match ??= RegExp(r'(\d+)').firstMatch(this);
 
     if (match != null) {
       return match.group(0)!;

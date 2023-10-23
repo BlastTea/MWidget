@@ -143,8 +143,7 @@ import 'pakcage:m_widget/m_widget.dart';
   ### Usage
   ```dart
   NavigationHelper.to(
-    AdaptiveRouteDialog(
-      context: context,
+    AdaptiveDialogRoute(
       builder: (context) => AdaptiveFullScreenDialog(),
     ),
   );
@@ -176,7 +175,7 @@ import 'pakcage:m_widget/m_widget.dart';
   ### Usage
   ```dart
   NavigationHelper.to(
-    AdaptiveRouteDialog(
+    AdaptiveDialogRoute(
       context: context,
       builder: (context) => ChooseDialog(
         multiple: true,

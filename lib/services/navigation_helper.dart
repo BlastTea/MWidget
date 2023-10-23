@@ -23,7 +23,7 @@ abstract class NavigationHelper {
   /// ```
   ///
   /// See also:
-  ///   * [toReplacement], [back], and [canBack]
+  ///   * [toReplacement], [back], and [canGoBack]
   static Future<T?> to<T extends Object?>(material.Route<T> route) => navigatorKey.currentState!.push<T>(route);
 
   /// Navigates to a new route and replaces the current route with the new route.
@@ -45,7 +45,7 @@ abstract class NavigationHelper {
   /// ```
   ///
   /// See also:
-  ///   * [to], [back], and [canBack]
+  ///   * [to], [back], and [canGoBack]
   static Future<T?> toReplacement<T extends Object?, TO extends Object?>(
     material.Route<T> newRoute, {
     TO? result,
@@ -67,7 +67,7 @@ abstract class NavigationHelper {
   /// ```
   ///
   /// See also:
-  ///   * [to], [toReplacement], and [canBack]
+  ///   * [to], [toReplacement], and [canGoBack]
   static void back<T extends Object?>([T? result]) => navigatorKey.currentState!.pop<T>(result);
 
   /// Navigates back until a specific condition is met.
@@ -81,7 +81,7 @@ abstract class NavigationHelper {
   /// ```
   ///
   /// See also:
-  ///   * [to], [toReplacement], [back], and [canBack]
+  ///   * [to], [toReplacement], [back], and [canGoBack]
   static void backUntil(bool Function(Route<dynamic> route) predicate) => navigatorKey.currentState!.popUntil(predicate);
 
   /// Navigates back to the previous route and pushes a new named route.
@@ -100,7 +100,7 @@ abstract class NavigationHelper {
   /// ```
   ///
   /// See also:
-  ///   * [to], [toReplacement], [toNamedAndRemoveUntil], [back], and [canBack]
+  ///   * [to], [toReplacement], [toNamedAndRemoveUntil], [back], and [canGoBack]
   static Future<T?> backAndPushNamed<T extends Object?, TO extends Object?>(
     String routeName, {
     TO? result,
@@ -127,7 +127,7 @@ abstract class NavigationHelper {
   /// ```
   ///
   /// See also:
-  ///   * [to], [toReplacement], [back], and [canBack]
+  ///   * [to], [toReplacement], [back], and [canGoBack]
   static Future<T?> toNamed<T>(String routeName, {Object? arguments}) => navigatorKey.currentState!.pushNamed<T>(routeName, arguments: arguments);
 
   /// Navigates to a new route and removes routes until a specific condition is met.
@@ -146,7 +146,7 @@ abstract class NavigationHelper {
   /// ```
   ///
   /// See also:
-  ///   * [to], [toReplacement], [back], [backUntil], and [canBack]
+  ///   * [to], [toReplacement], [back], [backUntil], and [canGoBack]
   static Future<T?> toAndRemoveUntil<T>(Route<T> newRoute, bool Function(Route<dynamic> route) predicate) => navigatorKey.currentState!.pushAndRemoveUntil<T>(newRoute, predicate);
 
   /// Navigates to a named route and removes routes until a specific condition is met.
@@ -166,7 +166,7 @@ abstract class NavigationHelper {
   /// ```
   ///
   /// See also:
-  ///   * [to], [toReplacement], [back], [backUntil], and [canBack]
+  ///   * [to], [toReplacement], [back], [backUntil], and [canGoBack]
   static Future<T?> toNamedAndRemoveUntil<T>(String newRouteName, bool Function(Route<dynamic> route) predicate, Object? arguments) => navigatorKey.currentState!.pushNamedAndRemoveUntil(newRouteName, predicate, arguments: arguments);
 
   /// Checks if there is at least one route that can be popped from the navigation stack.
@@ -184,7 +184,7 @@ abstract class NavigationHelper {
   ///
   /// See also:
   ///   * [to], [toReplacement], and [back]
-  static bool canBack() => navigatorKey.currentState!.canPop();
+  static bool canGoBack() => navigatorKey.currentState!.canPop();
 
   /// Displays an AboutDialog to show information about the application.
   ///
