@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 DateRangeField(
                   firstDate: DateTime.now(),
                   lastDate: DateTime.now().add(const Duration(days: 30)),
-                  dateRange: currentDateRange,
+                  value: currentDateRange,
                   onDateChanged: (value) => setState(() => value != null ? currentDateRange = value : null),
                 ),
                 const SizedBox(height: 16.0),

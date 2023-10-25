@@ -6,7 +6,7 @@ class DateRangeField extends StatelessWidget {
     this.focusNode,
     required this.firstDate,
     required this.lastDate,
-    this.dateRange,
+    this.value,
     this.onDateChanged,
     this.onDateFormat,
     this.decoration,
@@ -73,7 +73,7 @@ class DateRangeField extends StatelessWidget {
   final FocusNode? focusNode;
   final DateTime firstDate;
   final DateTime lastDate;
-  final DateTimeRange? dateRange;
+  final DateTimeRange? value;
   final void Function(DateTimeRange? value)? onDateChanged;
   final String Function(DateTimeRange? value)? onDateFormat;
   final InputDecoration? decoration;
@@ -173,7 +173,7 @@ class DateRangeField extends StatelessWidget {
       context: context,
       firstDate: firstDate,
       lastDate: lastDate,
-      initialDateRange: dateRange,
+      initialDateRange: value,
       builder: (context, child) => Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(
@@ -200,7 +200,7 @@ class DateRangeField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => TextField(
         focusNode: focusNode,
-        controller: TextEditingController(text: onDateFormat?.call(dateRange) ?? (dateRange != null ? '${dateRange!.start.toFormattedDate(withMonthName: true)} - ${dateRange!.end.toFormattedDate(withMonthName: true)}' : '')),
+        controller: TextEditingController(text: onDateFormat?.call(value) ?? (value != null ? '${value!.start.toFormattedDate(withMonthName: true)} - ${value!.end.toFormattedDate(withMonthName: true)}' : '')),
         decoration: (decoration ?? const InputDecoration()).applyDefaults(Theme.of(context).inputDecorationTheme).copyWith(
               suffixIcon: decoration?.suffixIcon ??
                   IconButton(
