@@ -91,7 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 const SizedBox(height: 16.0),
                 DateRangeField(
-                  initialDate: DateTime.now(),
                   firstDate: DateTime.now(),
                   lastDate: DateTime.now().add(const Duration(days: 30)),
                   dateRange: currentDateRange,

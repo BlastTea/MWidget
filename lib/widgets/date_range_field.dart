@@ -4,7 +4,6 @@ class DateRangeField extends StatelessWidget {
   const DateRangeField({
     super.key,
     this.focusNode,
-    required this.initialDate,
     required this.firstDate,
     required this.lastDate,
     this.dateRange,
@@ -72,7 +71,6 @@ class DateRangeField extends StatelessWidget {
   });
 
   final FocusNode? focusNode;
-  final DateTime initialDate;
   final DateTime firstDate;
   final DateTime lastDate;
   final DateTimeRange? dateRange;
