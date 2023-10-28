@@ -1,6 +1,6 @@
 name: m_widget
 description: A new Flutter package project.
-version: 1.45.0
+version: 1.46.0
 homepage: null
 publish_to: 'none'
 
@@ -9,10 +9,7 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  extended_image:
-    git:
-      url: https://github.com/fluttercandies/extended_image.git
-      ref: d255cc2465d83b50719d5b90eb1120e47d2bcde6
+  extended_image: ^8.1.1
   flutter:
     sdk: flutter
   image_picker: ^1.0.2

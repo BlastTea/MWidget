@@ -175,7 +175,7 @@ abstract class NavigationHelper {
   ///
   /// Example:
   /// ```dart
-  /// if (NavigationHelper.canBack()) {
+  /// if (NavigationHelper.canGoBack()) {
   ///   NavigationHelper.back();
   /// } else {
   ///   // Handle the situation when there is no route to pop.

@@ -96,6 +96,16 @@ final class Language {
     return localizedValue;
   }
 
+  String? getKey(String value) {
+    for (MapEntry<String, Map<LanguageType, String>> dataEntry in _data.entries) {
+      for (MapEntry<LanguageType, String> dataEntryValue in dataEntry.value.entries) {
+        if (dataEntryValue.value == value) return dataEntry.key;
+      }
+    }
+
+    return null;
+  }
+
   /// Adds new localization data to the language map.
   ///
   /// The `data` parameter should be a map where the key is the localization key, and the value is
