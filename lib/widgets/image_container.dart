@@ -73,7 +73,8 @@ class ImageContainer extends StatefulWidget {
   })  : _isHero = false,
         extendedAppBar = null,
         dialogGradient = null,
-        useDynamicColor = false;
+        useDynamicColor = false,
+        disuseDynamicColor = false;
 
   /// Creates an `ImageContainer` widget with a hero animation and support for full-screen mode.
   ///
@@ -113,6 +114,7 @@ class ImageContainer extends StatefulWidget {
     this.enabled,
     this.extendedAppBar,
     this.useDynamicColor = false,
+    this.disuseDynamicColor = false,
     this.containerGradient,
     this.dialogGradient,
   })  : assert((containerGradient == null && dialogGradient == null) || (containerGradient != null && dialogGradient != null)),
@@ -163,6 +165,8 @@ class ImageContainer extends StatefulWidget {
   final AppBar? extendedAppBar;
 
   final bool useDynamicColor;
+
+  final bool disuseDynamicColor;
 
   /// Indicates whether the user is allowed to pick images from the gallery when changing the image.
   ///
@@ -373,7 +377,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                                   ),
                                 ),
                               ).then((value) {
-                                if (widget.useDynamicColor) {
+                                if (widget.disuseDynamicColor) {
                                   MWidget.themeValue.fromImageProvider(null);
                                 }
                               });
