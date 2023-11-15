@@ -16,20 +16,17 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      scaffoldMessengerKey: scaffoldMessengerKey,
-      title: 'Flutter Demo',
-      theme: ThemeData.light(
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData.dark(
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(),
-    );
-  }
+  Widget build(BuildContext context) => MWidgetThemeBuilder(
+        builder: (context, theme, darkTheme, themeMode) => MaterialApp(
+          navigatorKey: navigatorKey,
+          scaffoldMessengerKey: scaffoldMessengerKey,
+          title: 'MWidget',
+          theme: theme,
+          darkTheme: darkTheme,
+          themeMode: themeMode,
+          home: const MyHomePage(),
+        ),
+      );
 }
 
 class MyHomePage extends StatefulWidget {
@@ -64,8 +61,32 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           Scaffold(
             appBar: AppBar(
-              title: const Text('Example App'),
+              title: const Text('MWidget'),
               actions: [
+                const ThemeSwitcher.iconButton(),
+                IconButton(
+                  onPressed: () => NavigationHelper.to(
+                    AdaptiveDialogRoute(
+                      builder: (context) => ChooseDialog(
+                        data: () => [
+                          'Sapi',
+                          'Kerbau',
+                          'Kucing',
+                          'Harimau',
+                        ]
+                            .map(
+                              (e) => ChooseData(
+                                value: e,
+                                searchValue: e,
+                                title: Text(e),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                  icon: const Icon(Icons.access_time),
+                ),
                 IconButton(
                   onPressed: () => ImageContainer.handleChangeImage(
                     showDelete: false,
@@ -89,6 +110,12 @@ class _MyHomePageState extends State<MyHomePage> {
             body: ListView(
               padding: responsivePadding(MediaQuery.sizeOf(context)),
               children: [
+                ListTile(
+                  title: const Text('test'),
+                  selectedTileColor: Theme.of(context).colorScheme.secondaryContainer,
+                  selected: true,
+                  onTap: () {},
+                ),
                 const SizedBox(height: 16.0),
                 DateRangeField(
                   firstDate: DateTime.now(),
@@ -142,10 +169,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       Colors.transparent,
                     ],
                   ),
-                  image: const NetworkImage('https://plus.unsplash.com/premium_photo-1691338312403-e9f7f7984eeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80'),
+                  // image: const NetworkImage('https://plus.unsplash.com/premium_photo-1691338312403-e9f7f7984eeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80'),
+                  image: const AssetImage('assets/purple-image.jpg'),
                   extendedAppBar: AppBar(
                     title: const Text('Detail image'),
                   ),
+                  useDynamicColor: true,
                 ),
                 const SizedBox(height: 16.0),
                 ConstrainedBox(
@@ -284,16 +313,15 @@ class _MyHomePageState extends State<MyHomePage> {
               //   ),
               // ),
             ],
-            builder: (context, scrollController, animation, children) => Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondaryContainer,
-                borderRadius: BorderRadius.lerp(
-                  BorderRadius.zero,
-                  const BorderRadius.vertical(
-                    top: Radius.circular(kShapeExtraLarge),
-                  ),
-                  animation.value,
+            builder: (context, scrollController, animation, children) => DraggableScrollableBody(
+              themeMode: MWidget.themeValue.themeMode,
+              color: Theme.of(context).colorScheme.secondaryContainer,
+              borderRadius: BorderRadius.lerp(
+                BorderRadius.zero,
+                const BorderRadius.vertical(
+                  top: Radius.circular(kShapeExtraLarge),
                 ),
+                animation.value,
               ),
               child: Material(
                 color: Colors.transparent,

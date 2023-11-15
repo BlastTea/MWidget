@@ -257,6 +257,10 @@ final class Language {
       LanguageType.unitedStatesEnglish: 'Theme',
       LanguageType.indonesiaIndonesian: 'Tema',
     },
+    'System': {
+      LanguageType.unitedStatesEnglish: 'System',
+      LanguageType.indonesiaIndonesian: 'Sistem',
+    },
     'Dark': {
       LanguageType.unitedStatesEnglish: 'Dark',
       LanguageType.indonesiaIndonesian: 'Gelap',
@@ -264,6 +268,18 @@ final class Language {
     'Light': {
       LanguageType.unitedStatesEnglish: 'Light',
       LanguageType.indonesiaIndonesian: 'Terang',
+    },
+    'Don\'t use dynamic colors': {
+      LanguageType.unitedStatesEnglish: 'Don\'t use dynamic colors',
+      LanguageType.indonesiaIndonesian: 'Jangan gunakan warna dinamis',
+    },
+    'Use dynamic colors': {
+      LanguageType.unitedStatesEnglish: 'Use dynamic colors',
+      LanguageType.indonesiaIndonesian: 'Gunakan warna dinamis',
+    },
+    'With custom colors': {
+      LanguageType.unitedStatesEnglish: 'With custom colors',
+      LanguageType.indonesiaIndonesian: 'Dengan warna khusus',
     },
     'Language': {
       LanguageType.unitedStatesEnglish: 'Language',

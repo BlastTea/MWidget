@@ -176,7 +176,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
         builder: (context, language, child) => AdaptiveFullScreenDialog(
           alwaysFullScreen: widget.alwaysFullScreen,
           alwaysDialog: widget.alwaysDialog,
-          fullScreenFab: widget.useFullScreenFab
+          fullScreenFab: widget.multiple && widget.useFullScreenFab
               ? FloatingActionButton(
                   onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
                   child: const Icon(Icons.done),

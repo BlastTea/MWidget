@@ -72,7 +72,8 @@ class ImageContainer extends StatefulWidget {
     this.allowPickImageFromGallery = true,
   })  : _isHero = false,
         extendedAppBar = null,
-        dialogGradient = null;
+        dialogGradient = null,
+        useDynamicColor = false;
 
   /// Creates an `ImageContainer` widget with a hero animation and support for full-screen mode.
   ///
@@ -111,6 +112,7 @@ class ImageContainer extends StatefulWidget {
     this.iconSize,
     this.enabled,
     this.extendedAppBar,
+    this.useDynamicColor = false,
     this.containerGradient,
     this.dialogGradient,
   })  : assert((containerGradient == null && dialogGradient == null) || (containerGradient != null && dialogGradient != null)),
@@ -159,6 +161,8 @@ class ImageContainer extends StatefulWidget {
 
   /// An optional [AppBar] that, when provided, enables full-screen mode and zooming for the image.
   final AppBar? extendedAppBar;
+
+  final bool useDynamicColor;
 
   /// Indicates whether the user is allowed to pick images from the gallery when changing the image.
   ///
@@ -288,7 +292,11 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                     child: InkWell(
                       borderRadius: BorderRadius.circular(kShapeExtraLarge),
                       onTap: widget.extendedAppBar != null
-                          ? () => NavigationHelper.toReplacement(
+                          ? () {
+                              if (widget.useDynamicColor) {
+                                MWidget.themeValue.fromImageProvider(widget.image);
+                              }
+                              NavigationHelper.toReplacement(
                                 MaterialPageRoute(
                                   builder: (context) => Theme(
                                     data: Theme.of(context).copyWith(
@@ -364,7 +372,12 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                                     ),
                                   ),
                                 ),
-                              )
+                              ).then((value) {
+                                if (widget.useDynamicColor) {
+                                  MWidget.themeValue.fromImageProvider(null);
+                                }
+                              });
+                            }
                           : null,
                       child: _icon(
                         context: context,
