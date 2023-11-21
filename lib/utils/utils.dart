@@ -400,3 +400,15 @@ String jsonToCorrectStringFormat(String jsonString) {
   }
   return words;
 }
+
+Size getTextSize({
+  required String text,
+  required TextStyle style,
+}) {
+  final TextPainter textPainter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    textDirection: TextDirection.ltr,
+    textScaleFactor: PlatformDispatcher.instance.textScaleFactor,
+  )..layout();
+  return textPainter.size;
+}
