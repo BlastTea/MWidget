@@ -194,7 +194,7 @@ class DateRangeField extends StatelessWidget {
       fieldStartLabelText: null,
       helpText: null,
       saveText: language.getValue('Save'),
-    ).then((value) => onDateChanged?.call(value));
+    ).then((value) => onDateChanged?.call(value != null ? DateTimeRange(start: value.start, end: DateTime(value.end.year, value.end.month, value.end.day, 23, 59, 59)) : null));
   }
 
   @override
