@@ -398,6 +398,11 @@ String jsonToCorrectStringFormat(String jsonString) {
   if (words.contains('\\')) {
     words = words.replaceAll('\\', '');
   }
+
+  if (words.contains('\\\\\\"')) {
+    words = words.replaceAll('\\\\\\"', '');
+  }
+
   return words;
 }
 
