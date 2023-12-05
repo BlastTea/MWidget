@@ -51,9 +51,9 @@ Future<void> showInformationDialog(String message) => NavigationHelper.showDialo
 /// Displays a loading dialog with a progress indicator.
 Future<void> showLoadingDialog() => NavigationHelper.showDialog(
       barrierDismissible: false,
-      builder: (context) => WillPopScope(
-        onWillPop: () async => false,
-        child: const Center(
+      builder: (context) => const PopScope(
+        canPop: false,
+        child: Center(
           child: CircularProgressIndicator(),
         ),
       ),

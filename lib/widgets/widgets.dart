@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
 
 import 'package:extended_image/extended_image.dart';
@@ -31,3 +32,4 @@ part 'adaptive_scaffold.dart';
 part 'adaptive_appbar.dart';
 part 'dropdown_field.dart';
 part 'date_range_field.dart';
+part 'date_field.dart';
