@@ -180,11 +180,11 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
   Widget _scaffold(BuildContext context) => Scaffold(
         floatingActionButton: fullScreenFab,
         appBar: AppBar(
-          leading: fullScreenLeading ??
-              IconButton(
-                onPressed: () => NavigationHelper.back(),
-                icon: const Icon(Icons.close),
-              ),
+          // leading: fullScreenLeading ??
+          //     IconButton(
+          //       onPressed: () => NavigationHelper.back(),
+          //       icon: const Icon(Icons.close),
+          //     ),
           title: title,
           actions: actions,
         ),

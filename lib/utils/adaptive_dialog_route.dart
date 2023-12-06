@@ -11,7 +11,7 @@ class AdaptiveDialogRoute<T> extends DialogRoute<T> implements PageRoute<T> {
   /// The [maintainState] determines whether the state of the underlying screen should be maintained
   /// when the dialog route is closed. By default, the state is maintained.
   /// The [fullscreenDialog] parameter specifies whether the dialog should take up the entire screen
-  /// when it is displayed. By default, this is set to false.
+  /// when it is displayed. By default, this is set to true.
   ///
   /// Other parameters are inherited from [DialogRoute] and [PageRoute].
   /// The [themes] parameter can be used to provide a custom [TransitionTheme] for the page transitions.
@@ -27,7 +27,7 @@ class AdaptiveDialogRoute<T> extends DialogRoute<T> implements PageRoute<T> {
   AdaptiveDialogRoute({
     required this.builder,
     this.maintainState = true,
-    this.fullscreenDialog = false,
+    this.fullscreenDialog = true,
     CapturedThemes? themes,
     Color? barrierColor = Colors.black54,
     bool barrierDismissible = true,
