@@ -30,8 +30,15 @@ extension NumExtension on num {
   /// String formatted4 = number4.toThousandFormat(includeDecimalPart: false);
   /// print(formatted4); // Output: "1,234"
   /// ```
-  String toThousandFormat({bool includeDecimalPart = false}) {
-    String numString = toString();
+  String toThousandFormat({bool includeDecimalPart = false, int? fractionalDigits}) {
+    String numString;
+
+    if (fractionalDigits != null) {
+      numString = toStringAsFixed(fractionalDigits);
+    } else {
+      numString = toString();
+    }
+
     String formattedString = '';
     String decimalPart = '';
 
