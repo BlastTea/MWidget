@@ -1,6 +1,6 @@
 name: m_widget
 description: A new Flutter package project.
-version: 2.3.2
+version: 2.3.3
 homepage: null
 publish_to: 'none'
 
@@ -10,11 +10,11 @@ environment:
 
 dependencies:
   dynamic_color: ^1.6.8
-  extended_image: ^8.1.1
+  extended_image: ^8.2.0
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.0.3
-  image_picker: ^1.0.4
+  image_picker: ^1.0.5
   shared_preferences: ^2.2.2
   universal_io: ^2.2.2
 
