@@ -152,6 +152,7 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
     this.dialogBody,
     this.actions,
     this.dialogActions,
+    this.automaticallyImplyLeading = true,
   }) : assert(alwaysFullScreen || alwaysDialog || (!alwaysFullScreen && !alwaysDialog), 'alwaysFullScreen and alwaysDialog both cannot be true');
 
   final bool alwaysFullScreen;
@@ -163,6 +164,7 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
   final Widget? dialogBody;
   final List<Widget>? actions;
   final List<Widget>? dialogActions;
+  final bool automaticallyImplyLeading;
 
   @override
   Widget build(BuildContext context) {
@@ -180,11 +182,13 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
   Widget _scaffold(BuildContext context) => Scaffold(
         floatingActionButton: fullScreenFab,
         appBar: AppBar(
-          // leading: fullScreenLeading ??
-          //     IconButton(
-          //       onPressed: () => NavigationHelper.back(),
-          //       icon: const Icon(Icons.close),
-          //     ),
+          leading: fullScreenLeading ??
+              (automaticallyImplyLeading
+                  ? IconButton(
+                      onPressed: () => NavigationHelper.back(),
+                      icon: const Icon(Icons.close),
+                    )
+                  : null),
           title: title,
           actions: actions,
         ),
