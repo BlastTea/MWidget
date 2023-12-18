@@ -181,12 +181,10 @@ TextStyle kTextStyleTitleLarge = const TextStyle(
 
 TextStyle kTextStyleTitleMedium = const TextStyle(
   fontSize: 16.0,
-  fontWeight: FontWeight.w300,
 );
 
 TextStyle kTextStyleTitleSmall = const TextStyle(
   fontSize: 14.0,
-  fontWeight: FontWeight.w300,
 );
 
 TextStyle kTextStyleBodyLarge = const TextStyle(
@@ -203,7 +201,6 @@ TextStyle kTextStyleBodySmall = const TextStyle(
 
 TextStyle kTextStyleLabelLarge = const TextStyle(
   fontSize: 14.0,
-  fontWeight: FontWeight.w300,
 );
 
 TextStyle kTextStyleLabelMedium = const TextStyle(
