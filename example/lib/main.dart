@@ -21,7 +21,14 @@ class MyApp extends StatelessWidget {
           navigatorKey: navigatorKey,
           scaffoldMessengerKey: scaffoldMessengerKey,
           title: 'MWidget',
-          theme: theme,
+          theme: theme.copyWith(
+            filledButtonTheme: FilledButtonThemeData(
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(56.0),
+                textStyle: kTextTheme.titleLarge!.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
           darkTheme: darkTheme,
           themeMode: themeMode,
           home: const MyHomePage(),
@@ -110,6 +117,10 @@ class _MyHomePageState extends State<MyHomePage> {
             body: ListView(
               padding: responsivePadding(MediaQuery.sizeOf(context)),
               children: [
+                FilledButton(
+                  onPressed: () => showErrorDialog('Hello', useFilledButton: true),
+                  child: const Text('Hello'),
+                ),
                 ListTile(
                   title: const Text('test'),
                   selectedTileColor: Theme.of(context).colorScheme.secondaryContainer,

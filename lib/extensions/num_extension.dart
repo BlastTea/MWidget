@@ -30,7 +30,11 @@ extension NumExtension on num {
   /// String formatted4 = number4.toThousandFormat(includeDecimalPart: false);
   /// print(formatted4); // Output: "1,234"
   /// ```
-  String toThousandFormat({bool includeDecimalPart = false, int? fractionalDigits}) {
+  String toThousandFormat({
+    bool includeDecimalPart = false,
+    int? fractionalDigits,
+    bool? invertThousandSeparator,
+  }) {
     String numString;
 
     if (fractionalDigits != null) {
@@ -65,7 +69,7 @@ extension NumExtension on num {
       count++;
 
       if (count % 3 == 0 && i != 0) {
-        formattedString = ',$formattedString';
+        formattedString = '${(invertThousandSeparator ?? (navigatorKey.currentContext != null ? MWidgetTheme.of(navigatorKey.currentContext!)?.invertThousandSeparator : null) ?? false) ? '.' : ','}$formattedString';
       }
     }
 
@@ -73,6 +77,6 @@ extension NumExtension on num {
       return (isNegative ? '-' : '') + formattedString;
     }
 
-    return (isNegative ? '-' : '') + formattedString + decimalPart;
+    return (isNegative ? '-' : '') + formattedString + decimalPart.replaceFirst('.', (invertThousandSeparator ?? (navigatorKey.currentContext != null ? MWidgetTheme.of(navigatorKey.currentContext!)?.invertThousandSeparator : null) ?? false) ? ',' : '.');
   }
 }

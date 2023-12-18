@@ -5,9 +5,11 @@ class MWidgetTheme extends InheritedWidget {
     super.key,
     required super.child,
     this.errorDialogTheme = const MWidgetErrorDialogThemeData(),
+    this.invertThousandSeparator = false,
   });
 
   final MWidgetErrorDialogThemeData errorDialogTheme;
+  final bool invertThousandSeparator;
 
   static MWidgetTheme? of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<MWidgetTheme>();
 
