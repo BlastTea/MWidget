@@ -3,7 +3,7 @@ part of 'utils.dart';
 /// Displays an error dialog with the provided message.
 ///
 /// The [message] parameter is the error message to display.
-Future<void> showErrorDialog(String message, String? titleText, bool? useFilledButton) => NavigationHelper.showDialog(
+Future<void> showErrorDialog(String message, {String? titleText, bool? useFilledButton}) => NavigationHelper.showDialog(
       builder: (context) => AlertDialog(
         title: Text(titleText ?? MWidgetTheme.of(context)?.errorDialogTheme.titleText ?? Language.getInstance().getValue('Error')!),
         content: SelectableText(message),
