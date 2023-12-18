@@ -31,7 +31,7 @@ class LanguageSwitcher extends StatelessWidget {
         builder: (context, languageType, child) => _isDropdownButton
             ? DropdownButton(
                 value: languageType,
-                items: availableLanguages
+                items: MWidget.availableLanguages
                     .map(
                       (e) => DropdownMenuItem(
                         value: e,
@@ -50,7 +50,7 @@ class LanguageSwitcher extends StatelessWidget {
                   onTap: () => NavigationHelper.to(
                     AdaptiveDialogRoute(
                       builder: (context) => ChooseDialog(
-                        data: () => availableLanguages
+                        data: () => MWidget.availableLanguages
                             .map(
                               (e) => ChooseData(
                                 value: e,

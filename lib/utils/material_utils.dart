@@ -150,6 +150,105 @@ List<BoxShadow> kElevation5Dark = [
   ),
 ];
 
+// Material 3 Text styles
+TextStyle kTextStyleDisplayLarge = const TextStyle(
+  fontSize: 57.0,
+  height: 64.0,
+);
+
+TextStyle kTextStyleDisplayMedium = const TextStyle(
+  fontSize: 45.0,
+  height: 52.0,
+);
+
+TextStyle kTextStyleDisplaySmall = const TextStyle(
+  fontSize: 36.0,
+  height: 44.0,
+);
+
+TextStyle kTextStyleHeadlineLarge = const TextStyle(
+  fontSize: 32.0,
+  height: 40.0,
+);
+
+TextStyle kTextStyleHeadlineMedium = const TextStyle(
+  fontSize: 28.0,
+  height: 36.0,
+);
+
+TextStyle kTextStyleHeadlineSmall = const TextStyle(
+  fontSize: 24.0,
+  height: 32.0,
+);
+
+TextStyle kTextStyleTitleLarge = const TextStyle(
+  fontSize: 22.0,
+  height: 28.0,
+);
+
+TextStyle kTextStyleTitleMedium = const TextStyle(
+  fontSize: 16.0,
+  height: 24.0,
+  fontWeight: FontWeight.w300,
+);
+
+TextStyle kTextStyleTitleSmall = const TextStyle(
+  fontSize: 14.0,
+  height: 20.0,
+  fontWeight: FontWeight.w300,
+);
+
+TextStyle kTextStyleBodyLarge = const TextStyle(
+  fontSize: 16.0,
+  height: 24.0,
+);
+
+TextStyle kTextStyleBodyMedium = const TextStyle(
+  fontSize: 14.0,
+  height: 20.0,
+);
+
+TextStyle kTextStyleBodySmall = const TextStyle(
+  fontSize: 12.0,
+  height: 16.0,
+);
+
+TextStyle kTextStyleLabelLarge = const TextStyle(
+  fontSize: 14.0,
+  height: 20.0,
+  fontWeight: FontWeight.w300,
+);
+
+TextStyle kTextStyleLabelMedium = const TextStyle(
+  fontSize: 12.0,
+  height: 16.0,
+  fontWeight: FontWeight.w300,
+);
+
+TextStyle kTextStyleLabelSmall = const TextStyle(
+  fontSize: 11.0,
+  height: 16.0,
+  fontWeight: FontWeight.w300,
+);
+
+TextTheme kTextTheme = TextTheme(
+  displayLarge: kTextStyleDisplayLarge,
+  displayMedium: kTextStyleDisplayMedium,
+  displaySmall: kTextStyleDisplaySmall,
+  headlineLarge: kTextStyleHeadlineLarge,
+  headlineMedium: kTextStyleHeadlineMedium,
+  headlineSmall: kTextStyleHeadlineSmall,
+  titleLarge: kTextStyleTitleLarge,
+  titleMedium: kTextStyleTitleMedium,
+  titleSmall: kTextStyleTitleSmall,
+  bodyLarge: kTextStyleBodyLarge,
+  bodyMedium: kTextStyleBodyMedium,
+  bodySmall: kTextStyleBodySmall,
+  labelLarge: kTextStyleLabelLarge,
+  labelMedium: kTextStyleLabelMedium,
+  labelSmall: kTextStyleLabelSmall,
+);
+
 // Material 3 Colors
 const Color kColorPrimaryLight = Color(0xFF6750A4);
 const Color kColorPrimaryDark = Color(0xFFD0BCFF);
@@ -244,19 +343,19 @@ const double kElevationLevel4 = 8.0;
 const double kElevationLevel5 = 12.0;
 
 // Material 3 Durations (ms)
-const int kDurationShort1 = 50;
-const int kDurationShort2 = 100;
-const int kDurationShort3 = 150;
-const int kDurationShort4 = 200;
-const int kDurationMedium1 = 250;
-const int kDurationMedium2 = 300;
-const int kDurationMedium3 = 350;
-const int kDurationMedium4 = 400;
-const int kDurationLong1 = 450;
-const int kDurationLong2 = 500;
-const int kDurationLong3 = 550;
-const int kDurationLong4 = 600;
-const int kDurationExtraLong1 = 700;
-const int kDurationExtraLong2 = 800;
-const int kDurationExtraLong3 = 900;
-const int kDurationExtraLong4 = 1000;
+const Duration kDurationShort1 = Duration(milliseconds: 50);
+const Duration kDurationShort2 = Duration(milliseconds: 100);
+const Duration kDurationShort3 = Duration(milliseconds: 150);
+const Duration kDurationShort4 = Duration(milliseconds: 200);
+const Duration kDurationMedium1 = Duration(milliseconds: 250);
+const Duration kDurationMedium2 = Duration(milliseconds: 300);
+const Duration kDurationMedium3 = Duration(milliseconds: 350);
+const Duration kDurationMedium4 = Duration(milliseconds: 400);
+const Duration kDurationLong1 = Duration(milliseconds: 450);
+const Duration kDurationLong2 = Duration(milliseconds: 500);
+const Duration kDurationLong3 = Duration(milliseconds: 550);
+const Duration kDurationLong4 = Duration(milliseconds: 600);
+const Duration kDurationExtraLong1 = Duration(milliseconds: 700);
+const Duration kDurationExtraLong2 = Duration(milliseconds: 800);
+const Duration kDurationExtraLong3 = Duration(milliseconds: 900);
+const Duration kDurationExtraLong4 = Duration(milliseconds: 1000);

@@ -17,6 +17,11 @@ part 'submit_focus_node.dart';
 part 'dialog_utils.dart';
 
 class MWidget {
+  static List<LanguageType> availableLanguages = [
+    LanguageType.unitedStatesEnglish,
+    LanguageType.indonesiaIndonesian,
+  ];
+
   static ThemeValue themeValue = ThemeValue();
 
   static Future<void> initialize({
@@ -266,11 +271,6 @@ class CustomColors extends ThemeExtension<CustomColors> {
   CustomColors harmonized(ColorScheme dynamic) => copyWith(danger: danger!.harmonizeWith(dynamic.primary));
 }
 
-List<LanguageType> availableLanguages = [
-  LanguageType.unitedStatesEnglish,
-  LanguageType.indonesiaIndonesian,
-];
-
 const keyLanguage = 'language';
 const keyThemeMode = 'theme_mode';
 const keyColor = 'color';
@@ -359,7 +359,7 @@ Color selectedTileColor({Animation<double>? animation}) => animation != null ? C
 /// The [scrollController] parameter is the ScrollController to be animated.
 Future<void> animateScrollController({required double offset, required ScrollController scrollController}) => scrollController.animateTo(
       offset,
-      duration: const Duration(milliseconds: kDurationMedium2),
+      duration: kDurationMedium2,
       curve: Curves.fastOutSlowIn,
     );
 
@@ -370,7 +370,7 @@ Future<void> animateScrollController({required double offset, required ScrollCon
 /// The [controller] parameter is the DraggableScrollableController to be animated.
 Future<void> animateDraggableScrollableController({required double size, required DraggableScrollableController controller}) => controller.animateTo(
       size,
-      duration: const Duration(milliseconds: kDurationShort2),
+      duration: kDurationShort2,
       curve: Curves.fastOutSlowIn,
     );
 
@@ -381,7 +381,7 @@ Future<void> animateDraggableScrollableController({required double size, require
 /// The [pageController] parameter is the PageController to be animated.
 Future<void> animatePageController({required int page, required PageController pageController}) => pageController.animateToPage(
       page,
-      duration: const Duration(milliseconds: kDurationShort2),
+      duration: kDurationShort2,
       curve: Curves.fastOutSlowIn,
     );
 

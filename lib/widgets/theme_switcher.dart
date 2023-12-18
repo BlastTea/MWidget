@@ -144,7 +144,7 @@ class ThemeSwitcher extends StatelessWidget {
   /// This widget displays an animated switcher with an icon button that triggers
   /// the [_handleThemeChanged] function on press.
   Widget _iconButton({required Map<String, String?> language, required Brightness brightness}) => AnimatedSwitcher(
-        duration: const Duration(milliseconds: kDurationLong4),
+        duration: kDurationLong4,
         transitionBuilder: (child, animation) => FadeTransition(
           opacity: animation,
           child: ScaleTransition(
