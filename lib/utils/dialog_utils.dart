@@ -3,16 +3,22 @@ part of 'utils.dart';
 /// Displays an error dialog with the provided message.
 ///
 /// The [message] parameter is the error message to display.
-Future<void> showErrorDialog(String message) => NavigationHelper.showDialog(
+Future<void> showErrorDialog(String message, String? titleText, bool? useFilledButton) => NavigationHelper.showDialog(
       builder: (context) => AlertDialog(
-        title: Text(Language.getInstance().getValue('Error')!),
+        title: Text(titleText ?? MWidgetTheme.of(context)?.errorDialogTheme.titleText ?? Language.getInstance().getValue('Error')!),
         content: SelectableText(message),
         actions: [
-          TextButton(
-            autofocus: true,
-            onPressed: () => NavigationHelper.back(),
-            child: Text(Language.getInstance().getValue('Ok')!),
-          ),
+          (useFilledButton ?? MWidgetTheme.of(context)?.errorDialogTheme.useFilledButton ?? false)
+              ? FilledButton(
+                  autofocus: true,
+                  onPressed: () => NavigationHelper.back(),
+                  child: Text(Language.getInstance().getValue('Ok')!),
+                )
+              : TextButton(
+                  autofocus: true,
+                  onPressed: () => NavigationHelper.back(),
+                  child: Text(Language.getInstance().getValue('Ok')!),
+                ),
         ],
       ),
     );

@@ -153,81 +153,66 @@ List<BoxShadow> kElevation5Dark = [
 // Material 3 Text styles
 TextStyle kTextStyleDisplayLarge = const TextStyle(
   fontSize: 57.0,
-  height: 64.0,
 );
 
 TextStyle kTextStyleDisplayMedium = const TextStyle(
   fontSize: 45.0,
-  height: 52.0,
 );
 
 TextStyle kTextStyleDisplaySmall = const TextStyle(
   fontSize: 36.0,
-  height: 44.0,
 );
 
 TextStyle kTextStyleHeadlineLarge = const TextStyle(
   fontSize: 32.0,
-  height: 40.0,
 );
 
 TextStyle kTextStyleHeadlineMedium = const TextStyle(
   fontSize: 28.0,
-  height: 36.0,
 );
 
 TextStyle kTextStyleHeadlineSmall = const TextStyle(
   fontSize: 24.0,
-  height: 32.0,
 );
 
 TextStyle kTextStyleTitleLarge = const TextStyle(
   fontSize: 22.0,
-  height: 28.0,
 );
 
 TextStyle kTextStyleTitleMedium = const TextStyle(
   fontSize: 16.0,
-  height: 24.0,
   fontWeight: FontWeight.w300,
 );
 
 TextStyle kTextStyleTitleSmall = const TextStyle(
   fontSize: 14.0,
-  height: 20.0,
   fontWeight: FontWeight.w300,
 );
 
 TextStyle kTextStyleBodyLarge = const TextStyle(
   fontSize: 16.0,
-  height: 24.0,
 );
 
 TextStyle kTextStyleBodyMedium = const TextStyle(
   fontSize: 14.0,
-  height: 20.0,
 );
 
 TextStyle kTextStyleBodySmall = const TextStyle(
   fontSize: 12.0,
-  height: 16.0,
 );
 
 TextStyle kTextStyleLabelLarge = const TextStyle(
   fontSize: 14.0,
-  height: 20.0,
   fontWeight: FontWeight.w300,
 );
 
 TextStyle kTextStyleLabelMedium = const TextStyle(
   fontSize: 12.0,
-  height: 16.0,
   fontWeight: FontWeight.w300,
 );
 
 TextStyle kTextStyleLabelSmall = const TextStyle(
   fontSize: 11.0,
-  height: 16.0,
   fontWeight: FontWeight.w300,
 );
 

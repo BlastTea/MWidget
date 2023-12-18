@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) => MWidgetThemeBuilder(
+  Widget build(BuildContext context) => MWidgetDynamicColorBuilder(
         builder: (context, theme, darkTheme, themeMode) => MaterialApp(
           navigatorKey: navigatorKey,
           scaffoldMessengerKey: scaffoldMessengerKey,
