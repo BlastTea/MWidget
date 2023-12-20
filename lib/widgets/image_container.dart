@@ -66,6 +66,7 @@ class ImageContainer extends StatefulWidget {
     this.sheetTitleText,
     this.icon,
     this.iconSize,
+    this.iconColor,
     this.enabled,
     this.onImageChanged,
     this.containerGradient,
@@ -111,6 +112,7 @@ class ImageContainer extends StatefulWidget {
     this.sheetTitleText,
     this.icon,
     this.iconSize,
+    this.iconColor,
     this.enabled,
     this.extendedAppBar,
     this.useDynamicColor = false,
@@ -151,6 +153,8 @@ class ImageContainer extends StatefulWidget {
 
   /// The size of the icon when displayed in the container.
   final double? iconSize;
+
+  final Color? iconColor;
 
   /// Callback function to determine whether the container's interaction is enabled.
   final bool Function()? enabled;
@@ -536,6 +540,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
       : Icon(
           widget.icon ?? Icons.business,
           size: iconSize ?? 96.0,
+          color: widget.iconColor,
         );
 }
 
