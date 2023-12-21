@@ -43,6 +43,8 @@ class TextEditingControllerThousandFormat extends TextEditingController {
     num? number,
     this.includeNegative = false,
     this.includeDouble = false,
+    this.fractionalDigits,
+    this.invertThousandSeparator,
   }) {
     bool ignoreChanges = false;
     _isFirstTime = true;
@@ -62,8 +64,11 @@ class TextEditingControllerThousandFormat extends TextEditingController {
         return;
       }
 
+      String thousandSeparator = (invertThousandSeparator ?? (navigatorKey.currentContext != null ? MWidgetTheme.of(navigatorKey.currentContext!)?.invertThousandSeparator : null) ?? false) ? '.' : ',';
+      String decimalSeparator = (invertThousandSeparator ?? (navigatorKey.currentContext != null ? MWidgetTheme.of(navigatorKey.currentContext!)?.invertThousandSeparator : null) ?? false) ? ',' : '.';
+
       String prefix = '';
-      String numString = text.replaceAll(',', '');
+      String numString = text.replaceAll(thousandSeparator, '');
       String formattedString = '';
       String decimalPart = '';
       String afterDot = '';
@@ -72,39 +77,39 @@ class TextEditingControllerThousandFormat extends TextEditingController {
         prefix = '-';
       }
 
-      if (numString.contains('.')) {
-        int dotIndex = numString.indexOf('.');
+      if (numString.contains(decimalSeparator)) {
+        int dotIndex = numString.indexOf(decimalSeparator);
         decimalPart = numString.substring(dotIndex);
 
         if (decimalPart.length > 1) {
           afterDot = decimalPart.substring(1);
           numString = numString.substring(0, dotIndex);
         } else {
-          decimalPart = '.';
+          decimalPart = decimalSeparator;
         }
       }
 
       int? numStringInt = numString.extractNumber();
 
       if (numStringInt != null) {
-        formattedString = numStringInt.toThousandFormat(includeDecimalPart: false);
+        formattedString = numStringInt.toThousandFormat(includeDecimalPart: false, fractionalDigits: fractionalDigits, invertThousandSeparator: invertThousandSeparator);
       }
 
       if (numString[0] == '-' && numStringInt == null) {
         formattedString = prefix;
       }
 
-      if (decimalPart.count('.') == 1 && afterDot.isEmpty && includeDouble) {
+      if (decimalPart.count(decimalPart) == 1 && afterDot.isEmpty && includeDouble) {
         formattedString += decimalPart;
       } else if (afterDot.isNotEmpty) {
-        formattedString += '.${afterDot.extractNumberString() ?? ''}';
+        formattedString += '$decimalPart${afterDot.extractNumberString() ?? ''}';
       }
 
-      if (formattedString.contains('.') && _isFirstTime && afterDot.extractNumber() == 0) {
-        formattedString = formattedString.substring(0, formattedString.indexOf('.'));
+      if (formattedString.contains(decimalPart) && _isFirstTime && afterDot.extractNumber() == 0) {
+        formattedString = formattedString.substring(0, formattedString.indexOf(decimalPart));
       }
 
-      if (_previousText != formattedString || text != formattedString || text.contains('.')) {
+      if (_previousText != formattedString || text != formattedString || text.contains(decimalPart)) {
         ignoreChanges = true;
 
         final newSelection = TextSelection.collapsed(
@@ -125,7 +130,7 @@ class TextEditingControllerThousandFormat extends TextEditingController {
     });
 
     if (number != null) {
-      text = number.toThousandFormat(includeDecimalPart: false);
+      text = number.toThousandFormat(includeDecimalPart: false, fractionalDigits: fractionalDigits, invertThousandSeparator: invertThousandSeparator);
     }
   }
 
@@ -134,6 +139,10 @@ class TextEditingControllerThousandFormat extends TextEditingController {
 
   /// If `true`, numbers with decimal parts will display the decimal point and digits after it.
   final bool includeDouble;
+
+  final int? fractionalDigits;
+
+  final bool? invertThousandSeparator;
 
   bool _isFirstTime = false;
 

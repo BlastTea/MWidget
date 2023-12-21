@@ -45,6 +45,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _textController = TextEditingController();
+  final TextEditingControllerThousandFormat _textControllerThousandFormat = TextEditingControllerThousandFormat(invertThousandSeparator: true);
 
   final double imageHeight = 400.0;
 
@@ -117,6 +118,9 @@ class _MyHomePageState extends State<MyHomePage> {
             body: ListView(
               padding: responsivePadding(MediaQuery.sizeOf(context)),
               children: [
+                TextField(
+                  controller: _textControllerThousandFormat,
+                ),
                 FilledButton(
                   onPressed: () => showErrorDialog('Hello', useFilledButton: true),
                   child: const Text('Hello'),
