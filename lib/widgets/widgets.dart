@@ -34,3 +34,4 @@ part 'dropdown_field.dart';
 part 'date_range_field.dart';
 part 'date_field.dart';
 part 'modal_draggable_scrollable_sheet.dart';
+part 'password_criteria.dart';

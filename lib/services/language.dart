@@ -313,5 +313,29 @@ final class Language {
       LanguageType.unitedStatesEnglish: 'No',
       LanguageType.indonesiaIndonesian: 'Tidak',
     },
+    'Minimum {0} characters': {
+      LanguageType.unitedStatesEnglish: 'Minimum {0} characters',
+      LanguageType.indonesiaIndonesian: 'Minimal {0} karakter',
+    },
+    'Contains lowercase letters': {
+      LanguageType.unitedStatesEnglish: 'Contains lowercase letters',
+      LanguageType.indonesiaIndonesian: 'Berisi huruf kecil',
+    },
+    'Contains uppercase letters': {
+      LanguageType.unitedStatesEnglish: 'Contains uppercase letters',
+      LanguageType.indonesiaIndonesian: 'Berisi huruf besar',
+    },
+    'Contains numbers': {
+      LanguageType.unitedStatesEnglish: 'Contains numbers',
+      LanguageType.indonesiaIndonesian: 'Berisi angka',
+    },
+    'Contains special characters': {
+      LanguageType.unitedStatesEnglish: 'Contains special characters',
+      LanguageType.indonesiaIndonesian: 'Berisi karakter spesial',
+    },
+    'Password does not meet criteria': {
+      LanguageType.unitedStatesEnglish: 'Password does not meet criteria',
+      LanguageType.indonesiaIndonesian: 'Kata sandi tidak memenuhi kriteria',
+    },
   };
 }
