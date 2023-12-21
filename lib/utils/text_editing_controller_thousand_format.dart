@@ -64,11 +64,10 @@ class TextEditingControllerThousandFormat extends TextEditingController {
         return;
       }
 
-      String thousandSeparator = (invertThousandSeparator ?? (navigatorKey.currentContext != null ? MWidgetTheme.of(navigatorKey.currentContext!)?.invertThousandSeparator : null) ?? false) ? '.' : ',';
       String decimalSeparator = (invertThousandSeparator ?? (navigatorKey.currentContext != null ? MWidgetTheme.of(navigatorKey.currentContext!)?.invertThousandSeparator : null) ?? false) ? ',' : '.';
 
       String prefix = '';
-      String numString = text.replaceAll(thousandSeparator, '');
+      String numString = text.replaceAll(_thousandSeparator, '');
       String formattedString = '';
       String decimalPart = '';
       String afterDot = '';
@@ -153,4 +152,9 @@ class TextEditingControllerThousandFormat extends TextEditingController {
     _isFirstTime = true;
     super.text = newText;
   }
+
+  String get _thousandSeparator => (invertThousandSeparator ?? (navigatorKey.currentContext != null ? MWidgetTheme.of(navigatorKey.currentContext!)?.invertThousandSeparator : null) ?? false) ? '.' : ',';
+
+  // TODO: Also implements for floating points or double
+  num? get number => text.replaceAll(_thousandSeparator, '').extractNumber();
 }
