@@ -51,6 +51,7 @@ class PasswordCriteriaInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: criterias
             .map(
