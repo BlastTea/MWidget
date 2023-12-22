@@ -56,7 +56,7 @@ class LanguageSwitcher extends StatelessWidget {
                                 value: e,
                                 searchValue: e.language,
                                 title: Text(e.language),
-                                isSelected: languageType == e,
+                                // isSelected: languageType == e,
                               ),
                             )
                             .toList(),
