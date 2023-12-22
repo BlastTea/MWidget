@@ -251,7 +251,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
                             title: _chooseData[index].title,
                             subtitle: _chooseData[index].subtitle,
                             isThreeLine: _chooseData[index].isThreeLine,
-                            selected: !widget.multiple ? _chooseData[index].isSelected : false,
+                            selected: false,
                             trailing: _chooseData[index].trailing,
                             onTap: () => !widget.multiple ? NavigationHelper.back<T>(_chooseData[index].value) : _setIsSelected(index, !_chooseData[index].isSelected),
                           ),
