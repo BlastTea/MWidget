@@ -2,13 +2,22 @@ part of 'utils.dart';
 
 /// Displays an error dialog with the provided message.
 ///
-/// The [message] parameter is the error message to display.
-Future<void> showErrorDialog(String message, {String? titleText, bool? useFilledButton}) => NavigationHelper.showDialog(
+/// The [messageText] parameter is the error message to display.
+Future<void> showErrorDialog(
+  String messageText, {
+  String? titleText,
+  TextStyle? titleTextStyle,
+  TextStyle? messageTextStyle,
+  bool? primaryFilledButton,
+}) =>
+    NavigationHelper.showDialog(
       builder: (context) => AlertDialog(
-        title: Text(titleText ?? MWidgetTheme.of(context)?.errorDialogTheme.titleText ?? Language.getInstance().getValue('Error')!),
-        content: SelectableText(message),
+        title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.errorTitleText ?? Language.getInstance().getValue('Error')!),
+        titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
+        content: SelectableText(messageText),
+        contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
-          (useFilledButton ?? MWidgetTheme.of(context)?.errorDialogTheme.useFilledButton ?? false)
+          (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
               ? FilledButton(
                   autofocus: true,
                   onPressed: () => NavigationHelper.back(),
@@ -25,31 +34,61 @@ Future<void> showErrorDialog(String message, {String? titleText, bool? useFilled
 
 /// Displays a warning dialog with the provided message.
 ///
-/// The [message] parameter is the warning message to display.
-Future<void> showWarningDialog(String message) => NavigationHelper.showDialog(
+/// The [messageText] parameter is the warning message to display.
+Future<void> showWarningDialog(
+  String messageText, {
+  String? titleText,
+  TextStyle? titleTextStyle,
+  TextStyle? messageTextStyle,
+  bool? primaryFilledButton,
+}) =>
+    NavigationHelper.showDialog(
       builder: (context) => AlertDialog(
-        title: Text(Language.getInstance().getValue('Warning')!),
-        content: SelectableText(message),
+        title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.warningTitleText ?? Language.getInstance().getValue('Warning')!),
+        titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
+        content: SelectableText(messageText),
+        contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
-          TextButton(
-            autofocus: true,
-            onPressed: () => NavigationHelper.back(),
-            child: Text(Language.getInstance().getValue('Ok')!),
-          ),
+          (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
+              ? FilledButton(
+                  autofocus: true,
+                  onPressed: () => NavigationHelper.back(),
+                  child: Text(Language.getInstance().getValue('Ok')!),
+                )
+              : TextButton(
+                  autofocus: true,
+                  onPressed: () => NavigationHelper.back(),
+                  child: Text(Language.getInstance().getValue('Ok')!),
+                ),
         ],
       ),
     );
 
-Future<void> showInformationDialog(String message) => NavigationHelper.showDialog(
+Future<void> showInformationDialog(
+  String messageText, {
+  String? titleText,
+  TextStyle? titleTextStyle,
+  TextStyle? messageTextStyle,
+  bool? primaryFilledButton,
+}) =>
+    NavigationHelper.showDialog(
       builder: (context) => AlertDialog(
-        title: Text(Language.getInstance().getValue('Information')!),
-        content: SelectableText(message),
+        title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.informationTitleText ?? Language.getInstance().getValue('Information')!),
+        titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
+        content: SelectableText(messageText),
+        contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
-          TextButton(
-            autofocus: true,
-            onPressed: () => NavigationHelper.back(),
-            child: Text(Language.getInstance().getValue('Ok')!),
-          ),
+          (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
+              ? FilledButton(
+                  autofocus: true,
+                  onPressed: () => NavigationHelper.back(),
+                  child: Text(Language.getInstance().getValue('Ok')!),
+                )
+              : TextButton(
+                  autofocus: true,
+                  onPressed: () => NavigationHelper.back(),
+                  child: Text(Language.getInstance().getValue('Ok')!),
+                ),
         ],
       ),
     );
@@ -68,39 +107,59 @@ Future<void> showLoadingDialog() => NavigationHelper.showDialog(
 /// Displays a dialog asking whether to save changes.
 ///
 /// Returns the user's decision (true for Save, false for Don't Save, null if the user close the dialog).
-Future<bool?> showSaveChangesDialog() => NavigationHelper.showDialog(
+Future<bool?> showSaveChangesDialog({
+  String? titleText,
+  TextStyle? titleTextStyle,
+  bool? primaryFilledButton,
+}) =>
+    NavigationHelper.showDialog(
       builder: (context) => AlertDialog(
-        title: Text(Language.getInstance().getValue('Save changes?')!),
+        title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.saveChangesTitleText ?? Language.getInstance().getValue('Save changes?')!),
         actions: [
           TextButton(
             onPressed: () => NavigationHelper.back(false),
             child: Text(Language.getInstance().getValue('Don\'t save')!),
           ),
-          TextButton(
-            onPressed: () => NavigationHelper.back(true),
-            child: Text(Language.getInstance().getValue('Save')!),
-          ),
+          (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
+              ? FilledButton(
+                  onPressed: () => NavigationHelper.back(true),
+                  child: Text(Language.getInstance().getValue('Save')!),
+                )
+              : TextButton(
+                  onPressed: () => NavigationHelper.back(true),
+                  child: Text(Language.getInstance().getValue('Save')!),
+                ),
         ],
       ),
     );
 
 Future<bool?> showYesOrNoDialog({
   String? titleText,
-  String? contentText,
+  String? messageText,
+  TextStyle? titleTextStyle,
+  TextStyle? messageTextStyle,
+  bool? primaryFilledButton,
 }) =>
     NavigationHelper.showDialog(
       builder: (context) => AlertDialog(
         title: titleText != null ? Text(titleText) : null,
-        content: contentText != null ? Text(contentText) : null,
+        titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
+        content: messageText != null ? Text(messageText) : null,
+        contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
           TextButton(
             onPressed: () => NavigationHelper.back(false),
             child: Text(Language.getInstance().getValue('No')!),
           ),
-          TextButton(
-            onPressed: () => NavigationHelper.back(true),
-            child: Text(Language.getInstance().getValue('Yes')!),
-          ),
+          (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
+              ? FilledButton(
+                  onPressed: () => NavigationHelper.back(true),
+                  child: Text(Language.getInstance().getValue('Yes')!),
+                )
+              : TextButton(
+                  onPressed: () => NavigationHelper.back(true),
+                  child: Text(Language.getInstance().getValue('Yes')!),
+                ),
         ],
       ),
     );

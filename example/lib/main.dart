@@ -122,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   controller: _textControllerThousandFormat,
                 ),
                 FilledButton(
-                  onPressed: () => showErrorDialog('Hello', useFilledButton: true),
+                  onPressed: () => showErrorDialog('Hello', primaryFilledButton: true),
                   child: const Text('Hello'),
                 ),
                 ListTile(

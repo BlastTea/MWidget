@@ -4,28 +4,38 @@ class MWidgetTheme extends InheritedWidget {
   const MWidgetTheme({
     super.key,
     required super.child,
-    this.errorDialogTheme = const MWidgetErrorDialogThemeData(),
+    this.dialogTheme = const MWidgetDialogThemeData(),
     this.invertThousandSeparator = false,
   });
 
-  final MWidgetErrorDialogThemeData errorDialogTheme;
+  final MWidgetDialogThemeData dialogTheme;
   final bool invertThousandSeparator;
 
   static MWidgetTheme? of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<MWidgetTheme>();
 
   @override
-  bool updateShouldNotify(MWidgetTheme oldWidget) => errorDialogTheme.updateShouldNotify(oldWidget.errorDialogTheme);
+  bool updateShouldNotify(MWidgetTheme oldWidget) => dialogTheme.updateShouldNotify(oldWidget.dialogTheme);
 }
 
 @immutable
-class MWidgetErrorDialogThemeData {
-  const MWidgetErrorDialogThemeData({
-    this.titleText,
-    this.useFilledButton = false,
+class MWidgetDialogThemeData {
+  const MWidgetDialogThemeData({
+    this.errorTitleText,
+    this.warningTitleText,
+    this.informationTitleText,
+    this.saveChangesTitleText,
+    this.titleTextStyle,
+    this.messageTextStyle,
+    this.primaryFilledButton = false,
   });
 
-  final String? titleText;
-  final bool useFilledButton;
+  final String? errorTitleText;
+  final String? warningTitleText;
+  final String? informationTitleText;
+  final String? saveChangesTitleText;
+  final TextStyle? titleTextStyle;
+  final TextStyle? messageTextStyle;
+  final bool primaryFilledButton;
 
-  bool updateShouldNotify(MWidgetErrorDialogThemeData oldWidget) => oldWidget.titleText != titleText || oldWidget.useFilledButton != useFilledButton;
+  bool updateShouldNotify(MWidgetDialogThemeData oldWidget) => oldWidget.errorTitleText != errorTitleText || oldWidget.primaryFilledButton != primaryFilledButton;
 }
