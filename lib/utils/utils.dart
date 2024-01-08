@@ -51,15 +51,15 @@ TextInputFormatter textFormatterLetterDigitsOnly = FilteringTextInputFormatter.a
 /// The [size] parameter is the current screen size.
 ///
 /// Returns the appropriate [EdgeInsets] for horizontal padding.
-EdgeInsets responsivePadding(Size size) {
+EdgeInsets responsivePadding(Size size, {double minimumHorizontalPadding = 16.0}) {
   if (size.width < kCompactSize) {
-    return const EdgeInsets.symmetric(horizontal: 16.0);
+    return EdgeInsets.symmetric(horizontal: minimumHorizontalPadding);
   }
   if (size.width <= kMediumSize) {
-    return EdgeInsets.symmetric(horizontal: (size.width - kCompactSize) / 2 + 16.0);
+    return EdgeInsets.symmetric(horizontal: (size.width - kCompactSize) / 2 + minimumHorizontalPadding);
   }
 
-  return EdgeInsets.symmetric(horizontal: (size.width - kMediumSize) / 2 + 16.0);
+  return EdgeInsets.symmetric(horizontal: (size.width - kMediumSize) / 2 + minimumHorizontalPadding);
 }
 
 /// Calculates responsive width based on the screen size.
@@ -67,9 +67,9 @@ EdgeInsets responsivePadding(Size size) {
 /// The [size] parameter is the current screen size.
 ///
 /// Returns the appropriate width for responsive layouts.
-double responsiveWidth(Size size) {
+double responsiveWidth(Size size, {double minimumHorizontalPadding = 16.0}) {
   if (size.width < kCompactSize) {
-    return size.width - 32.0;
+    return size.width - minimumHorizontalPadding * 2.0;
   }
   if (size.width <= kMediumSize) {
     return kCompactSize;
@@ -83,11 +83,11 @@ double responsiveWidth(Size size) {
 /// The [size] parameter is the current screen size.
 ///
 /// Returns the appropriate width for responsive dialogs.
-double responsiveDialogWidth(Size size) {
+double responsiveDialogWidth(Size size, {double minimumHorizontalPadding = 16.0}) {
   if (size.width < kCompactSize) {
-    return size.width - 32.0;
+    return size.width - minimumHorizontalPadding * 2.0;
   }
-  return kCompactSize - 32.0;
+  return kCompactSize - minimumHorizontalPadding * 2.0;
 }
 
 /// Determines the color for a selected tile based on the theme mode.
