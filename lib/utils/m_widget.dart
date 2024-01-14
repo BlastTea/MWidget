@@ -51,6 +51,7 @@ class MWidgetDynamicColorBuilder extends StatelessWidget {
     ThemeData theme,
     ThemeData darkTheme,
     ThemeMode themeMode,
+    ColorScheme? colorScheme,
   ) builder;
 
   @override
@@ -101,6 +102,13 @@ class MWidgetDynamicColorBuilder extends StatelessWidget {
                     )
                   : ThemeData.dark(useMaterial3: true),
               themeValue.themeMode,
+              themeValue.themeMode == ThemeMode.dark
+                  ? darkColorScheme
+                  : themeValue.themeMode == ThemeMode.light
+                      ? lightColorScheme
+                      : Theme.of(context).brightness == Brightness.dark
+                          ? darkColorScheme
+                          : lightColorScheme,
             );
           },
         ),
