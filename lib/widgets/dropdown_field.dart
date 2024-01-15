@@ -148,7 +148,7 @@ class DropdownField extends StatelessWidget {
       position: position,
       items: items,
       constraints: BoxConstraints.tightFor(
-        width: overlay.constraints.minWidth,
+        width: overlay.constraints.maxWidth,
       ),
     ).then((value) {
       if (value == null) {

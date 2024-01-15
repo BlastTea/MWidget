@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MWidgetDynamicColorBuilder(
-        builder: (context, theme, darkTheme, themeMode) => MaterialApp(
+        builder: (context, theme, darkTheme, themeMode, colorScheme) => MaterialApp(
           navigatorKey: navigatorKey,
           scaffoldMessengerKey: scaffoldMessengerKey,
           title: 'MWidget',
