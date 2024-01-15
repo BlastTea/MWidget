@@ -163,3 +163,34 @@ Future<bool?> showYesOrNoDialog({
         ],
       ),
     );
+
+Future<bool?> showDeleteDialog({
+  String? titleText,
+  String? messageText,
+  TextStyle? titleTextStyle,
+  TextStyle? messageTextStyle,
+  bool? primaryFilledButton,
+}) =>
+    NavigationHelper.showDialog(
+      builder: (context) => AlertDialog(
+        title: titleText != null ? Text(titleText) : null,
+        titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
+        content: messageText != null ? Text(messageText) : null,
+        contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
+        actions: [
+          TextButton(
+            onPressed: () => NavigationHelper.back(false),
+            child: Text(Language.getInstance().getValue('Cancel')!),
+          ),
+          (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
+              ? FilledButton(
+                  onPressed: () => NavigationHelper.back(true),
+                  child: Text(Language.getInstance().getValue('Delete')!),
+                )
+              : TextButton(
+                  onPressed: () => NavigationHelper.back(true),
+                  child: Text(Language.getInstance().getValue('Delete')!),
+                ),
+        ],
+      ),
+    );
