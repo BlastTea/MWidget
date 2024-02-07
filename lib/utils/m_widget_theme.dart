@@ -27,6 +27,7 @@ class MWidgetDialogThemeData {
     this.titleTextStyle,
     this.messageTextStyle,
     this.primaryFilledButton = false,
+    this.onRenderMessage,
   });
 
   final String? errorTitleText;
@@ -36,6 +37,7 @@ class MWidgetDialogThemeData {
   final TextStyle? titleTextStyle;
   final TextStyle? messageTextStyle;
   final bool primaryFilledButton;
+  final Widget Function(BuildContext context, String message)? onRenderMessage;
 
   bool updateShouldNotify(MWidgetDialogThemeData oldWidget) => oldWidget.errorTitleText != errorTitleText || oldWidget.primaryFilledButton != primaryFilledButton;
 }

@@ -14,7 +14,7 @@ Future<void> showErrorDialog(
       builder: (context) => AlertDialog(
         title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.errorTitleText ?? Language.getInstance().getValue('Error')!),
         titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
-        content: SelectableText(messageText),
+        content: MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(navigatorKey.currentContext!, messageText) ?? SelectableText(messageText),
         contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
           (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
@@ -46,7 +46,7 @@ Future<void> showWarningDialog(
       builder: (context) => AlertDialog(
         title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.warningTitleText ?? Language.getInstance().getValue('Warning')!),
         titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
-        content: SelectableText(messageText),
+        content: MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(navigatorKey.currentContext!, messageText) ?? SelectableText(messageText),
         contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
           (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
@@ -75,7 +75,7 @@ Future<void> showInformationDialog(
       builder: (context) => AlertDialog(
         title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.informationTitleText ?? Language.getInstance().getValue('Information')!),
         titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
-        content: SelectableText(messageText),
+        content: MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(navigatorKey.currentContext!, messageText) ?? SelectableText(messageText),
         contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
           (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
@@ -144,7 +144,7 @@ Future<bool?> showYesOrNoDialog({
       builder: (context) => AlertDialog(
         title: titleText != null ? Text(titleText) : null,
         titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
-        content: messageText != null ? Text(messageText) : null,
+        content: messageText != null ? MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(navigatorKey.currentContext!, messageText) ?? Text(messageText) : null,
         contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
           TextButton(
@@ -175,7 +175,7 @@ Future<bool?> showDeleteDialog({
       builder: (context) => AlertDialog(
         title: titleText != null ? Text(titleText) : null,
         titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
-        content: messageText != null ? Text(messageText) : null,
+        content: messageText != null ? MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(navigatorKey.currentContext!, messageText) ?? Text(messageText) : null,
         contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
           TextButton(
