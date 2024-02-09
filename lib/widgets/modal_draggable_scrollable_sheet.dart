@@ -28,7 +28,7 @@ class ModalDraggableScrollableSheet extends StatelessWidget {
   final Duration? snapAnimationDuration;
   final List<double>? snapSizes;
 
-  static show({
+  static Future<T?> show<T>({
     required Widget Function(BuildContext context) builder,
     Color backgroundColor = Colors.transparent,
     double elevation = 0.0,
@@ -46,7 +46,7 @@ class ModalDraggableScrollableSheet extends StatelessWidget {
     AnimationController? transitionAnimationController,
     Offset? anchorPoint,
   }) =>
-      NavigationHelper.showModalBottomSheet(
+      NavigationHelper.showModalBottomSheet<T>(
         builder: builder,
         backgroundColor: backgroundColor,
         elevation: elevation,
@@ -67,7 +67,7 @@ class ModalDraggableScrollableSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: () async => NavigationHelper.back(),
+        onTap: () => NavigationHelper.back(),
         child: Container(
           color: const Color.fromRGBO(0, 0, 0, 0.001),
           child: DraggableScrollableSheet(
