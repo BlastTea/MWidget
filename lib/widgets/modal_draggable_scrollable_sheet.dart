@@ -5,6 +5,7 @@ class ModalDraggableScrollableSheet extends StatelessWidget {
     super.key,
     this.controller,
     required this.builder,
+    this.bottoms,
     this.withDragHandle = true,
     this.expand = true,
     this.initialChildSize = 0.5,
@@ -18,6 +19,7 @@ class ModalDraggableScrollableSheet extends StatelessWidget {
 
   final DraggableScrollableController? controller;
   final Widget Function(BuildContext context, ScrollController scrollController) builder;
+  final List<Widget>? bottoms;
   final bool withDragHandle;
   final bool expand;
   final double initialChildSize;
@@ -87,20 +89,20 @@ class ModalDraggableScrollableSheet extends StatelessWidget {
                   top: Radius.circular(kShapeExtraLarge),
                 ),
               ),
-              child: withDragHandle
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SingleChildScrollView(
-                          controller: scrollController,
-                          child: const DragHandle(),
-                        ),
-                        Expanded(
-                          child: builder(context, scrollController),
-                        ),
-                      ],
-                    )
-                  : builder(context, scrollController),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (withDragHandle)
+                    SingleChildScrollView(
+                      controller: scrollController,
+                      child: const DragHandle(),
+                    ),
+                  Expanded(
+                    child: builder(context, scrollController),
+                  ),
+                  if (bottoms != null) ...bottoms!,
+                ],
+              ),
             ),
           ),
         ),
