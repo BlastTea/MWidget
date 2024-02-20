@@ -283,7 +283,7 @@ abstract class NavigationHelper {
   ///
   /// See also:
   ///   * [showModalBottomSheet], [showDialog], and [showGeneralDialog]
-  static material.PersistentBottomSheetController<T> showBottomSheet<T>({
+  static material.PersistentBottomSheetController showBottomSheet<T>({
     required material.Widget Function(material.BuildContext context) builder,
     material.Color? backgroundColor,
     double? elevation,
@@ -293,7 +293,7 @@ abstract class NavigationHelper {
     bool? enableDrag,
     material.AnimationController? transitionAnimationController,
   }) =>
-      material.showBottomSheet<T>(
+      material.showBottomSheet(
         context: navigatorKey.currentContext!,
         builder: builder,
         backgroundColor: backgroundColor,
