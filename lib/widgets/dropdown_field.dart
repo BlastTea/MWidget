@@ -174,7 +174,7 @@ class DropdownField extends StatelessWidget {
                   ),
             ),
         autocorrect: autocorrect,
-        autofillHints: autoFillHints ?? items.map((e) => e.value ?? ''),
+        autofillHints: autoFillHints,
         autofocus: autofocus,
         buildCounter: buildCounter,
         canRequestFocus: canRequestFocus,
