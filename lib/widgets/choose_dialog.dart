@@ -247,7 +247,7 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
                             )
                       : ListView.builder(
                           itemBuilder: (context, index) => ListTile(
-                            leading: widget.multiple ? Checkbox(value: _chooseData[index].isSelected, onChanged: (value) => _setIsSelected(index, value!)) : _chooseData[index].leading ?? Radio(value: _chooseData[index].searchValue, groupValue: _chooseData.trySingleWhere((element) => element.isSelected)?.searchValue, onChanged: (value) => NavigationHelper.back<T>(_chooseData[index].value)),
+                            leading: widget.multiple ? Checkbox(value: _chooseData[index].isSelected, onChanged: (value) => _setIsSelected(index, value!)) : _chooseData[index].leading ?? (_chooseData.any((element) => element.isSelected) ? Radio(value: _chooseData[index].searchValue, groupValue: _chooseData.trySingleWhere((element) => element.isSelected)?.searchValue, onChanged: (value) => NavigationHelper.back<T>(_chooseData[index].value)) : null),
                             title: _chooseData[index].title,
                             subtitle: _chooseData[index].subtitle,
                             isThreeLine: _chooseData[index].isThreeLine,

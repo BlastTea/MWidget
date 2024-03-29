@@ -65,17 +65,22 @@ class ImageContainer extends StatefulWidget {
     this.image,
     this.sheetTitleText,
     this.icon,
-    this.iconSize,
-    this.iconColor,
+    this.containerIconSize,
+    this.containerIconColor,
     this.enabled,
     this.onImageChanged,
     this.containerGradient,
+    this.containerBackgroundColor,
     this.allowPickImageFromGallery = true,
+    this.child,
   })  : _isHero = false,
         extendedAppBar = null,
-        dialogGradient = null,
         useDynamicColor = false,
-        disuseDynamicColor = false;
+        disuseDynamicColor = false,
+        dialogBackgroundColor = null,
+        dialogGradient = null,
+        dialogIconSize = null,
+        dialogIconColor = null;
 
   /// Creates an `ImageContainer` widget with a hero animation and support for full-screen mode.
   ///
@@ -111,15 +116,21 @@ class ImageContainer extends StatefulWidget {
     this.image,
     this.sheetTitleText,
     this.icon,
-    this.iconSize,
-    this.iconColor,
+    this.containerIconSize,
+    this.dialogIconSize,
+    this.containerIconColor,
+    this.dialogIconColor,
     this.enabled,
     this.extendedAppBar,
     this.useDynamicColor = false,
     this.disuseDynamicColor = false,
+    this.containerBackgroundColor,
+    this.dialogBackgroundColor,
     this.containerGradient,
     this.dialogGradient,
+    this.child,
   })  : assert((containerGradient == null && dialogGradient == null) || (containerGradient != null && dialogGradient != null)),
+        assert((containerIconColor == null && dialogIconColor == null) || (containerIconColor != null && dialogIconColor != null)),
         onImageChanged = null,
         _isHero = true,
         allowPickImageFromGallery = false;
@@ -152,9 +163,13 @@ class ImageContainer extends StatefulWidget {
   final IconData? icon;
 
   /// The size of the icon when displayed in the container.
-  final double? iconSize;
+  final double? containerIconSize;
 
-  final Color? iconColor;
+  final double? dialogIconSize;
+
+  final Color? containerIconColor;
+
+  final Color? dialogIconColor;
 
   /// Callback function to determine whether the container's interaction is enabled.
   final bool Function()? enabled;
@@ -182,9 +197,15 @@ class ImageContainer extends StatefulWidget {
   /// By default, this value is set to `true`.
   final bool allowPickImageFromGallery;
 
+  final Color? containerBackgroundColor;
+
+  final Color? dialogBackgroundColor;
+
   final Gradient? containerGradient;
 
   final Gradient? dialogGradient;
+
+  final Widget? child;
 
   /// Displays a bottom sheet to handle image selection and returns the result.
   ///
@@ -231,9 +252,11 @@ class ImageContainer extends StatefulWidget {
 class _ImageContainerState extends State<ImageContainer> with SingleTickerProviderStateMixin {
   bool _onHover = false;
 
+  static Color? _toBackgroundColor;
   static Gradient? _toGradient;
   static late BorderRadiusGeometry _toBorderRadius;
   static late double _toIconSize;
+  static Color? _toIconColor;
 
   @override
   void initState() {
@@ -241,7 +264,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
 
     _toGradient = widget.dialogGradient;
     _toBorderRadius = widget.borderRadius ?? BorderRadius.circular(kShapeLarge);
-    _toIconSize = widget.iconSize ?? 96.0;
+    _toIconSize = widget.dialogIconSize ?? 24.0;
   }
 
   Future<void> _fullScreenDialog() => NavigationHelper.to(
@@ -261,8 +284,10 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                   animation: animation,
                   builder: (context, child) {
                     _toGradient = widget.dialogGradient;
+                    _toBackgroundColor = widget.dialogBackgroundColor ?? Theme.of(context).colorScheme.surface;
                     _toBorderRadius = BorderRadius.circular(kShapeExtraLarge);
-                    _toIconSize = 96.0;
+                    _toIconSize = widget.dialogIconSize ?? 24.0;
+                    _toIconColor = widget.dialogIconColor;
                     return _container(
                       context: context,
                       width: responsiveDialogWidth(MediaQuery.sizeOf(context)),
@@ -275,8 +300,12 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                               fit: BoxFit.cover,
                             )
                           : null,
-                      color: Color.lerp(Colors.transparent, Theme.of(context).colorScheme.surface, animation.value),
-                      child: _icon(context: context, iconSize: Tween(begin: widget.iconSize ?? 96.0, end: 96.0).animate(animation).value),
+                      color: Color.lerp(widget.containerBackgroundColor ?? Colors.transparent, widget.dialogBackgroundColor ?? Theme.of(context).colorScheme.surface, animation.value),
+                      child: _icon(
+                        context: context,
+                        iconSize: Tween(begin: widget.containerIconSize ?? 24.0, end: widget.dialogIconSize ?? 24.0).animate(animation).value,
+                        iconColor: Color.lerp(widget.containerIconColor, widget.dialogIconColor, animation.value),
+                      ),
                     );
                   },
                 ),
@@ -293,7 +322,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                           fit: BoxFit.cover,
                         )
                       : null,
-                  color: Theme.of(context).colorScheme.surface,
+                  color: widget.dialogBackgroundColor ?? Theme.of(context).colorScheme.surface,
                   child: Material(
                     borderRadius: BorderRadius.circular(kShapeExtraLarge),
                     color: Colors.transparent,
@@ -301,9 +330,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                       borderRadius: BorderRadius.circular(kShapeExtraLarge),
                       onTap: widget.extendedAppBar != null
                           ? () {
-                              if (widget.useDynamicColor) {
-                                MWidget.themeValue.fromImageProvider(widget.image);
-                              }
+                              if (widget.useDynamicColor) MWidget.themeValue.fromImageProvider(widget.image);
                               NavigationHelper.toReplacement(
                                 MaterialPageRoute(
                                   builder: (context) => Theme(
@@ -320,31 +347,38 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                                           flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => AnimatedBuilder(
                                             animation: animation,
                                             builder: (context, child) {
-                                              _toGradient = const RadialGradient(colors: [Colors.transparent, Colors.transparent]);
+                                              _toGradient = widget.dialogGradient ?? const RadialGradient(colors: [Colors.transparent, Colors.transparent]);
+                                              _toBackgroundColor = widget.containerBackgroundColor;
                                               _toBorderRadius = BorderRadius.zero;
-                                              _toIconSize = 96.0;
+                                              _toIconSize = widget.dialogIconSize ?? 24.0;
+                                              _toIconColor = widget.dialogIconColor;
                                               return _container(
                                                 context: context,
                                                 width: double.infinity,
                                                 height: null,
                                                 borderRadius: BorderRadiusGeometry.lerp(BorderRadius.circular(kShapeExtraLarge), BorderRadius.zero, animation.value),
                                                 gradient: Gradient.lerp(
-                                                    widget.dialogGradient,
-                                                    const RadialGradient(
-                                                      colors: [
-                                                        Colors.transparent,
-                                                        Colors.transparent,
-                                                      ],
-                                                    ),
-                                                    animation.value),
+                                                  widget.dialogGradient,
+                                                  const RadialGradient(
+                                                    colors: [
+                                                      Colors.transparent,
+                                                      Colors.transparent,
+                                                    ],
+                                                  ),
+                                                  animation.value,
+                                                ),
                                                 image: widget.image != null
                                                     ? DecorationImage(
                                                         image: widget.image!,
                                                         fit: BoxFit.cover,
                                                       )
                                                     : null,
-                                                color: Color.lerp(Colors.transparent, Theme.of(context).colorScheme.surface, animation.value),
-                                                child: _icon(context: context, iconSize: Tween(begin: 96.0, end: 96.0).animate(animation).value),
+                                                color: Color.lerp(widget.dialogBackgroundColor ?? Theme.of(context).colorScheme.surface, Colors.transparent, animation.value),
+                                                child: _icon(
+                                                  context: context,
+                                                  iconSize: widget.dialogIconSize,
+                                                  iconColor: widget.dialogIconColor,
+                                                ),
                                               );
                                             },
                                           ),
@@ -353,7 +387,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                                               ? ExtendedImage(
                                                   image: widget.image!,
                                                   fit: BoxFit.contain,
-                                                  //enableLoadState: false,
+                                                  // enableLoadState: false,
                                                   mode: ExtendedImageMode.gesture,
                                                   initGestureConfigHandler: (state) => GestureConfig(
                                                     minScale: 0.9,
@@ -373,6 +407,8 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                                                   height: 400.0,
                                                   child: _icon(
                                                     context: context,
+                                                    iconSize: widget.dialogIconSize,
+                                                    iconColor: widget.dialogIconColor,
                                                   ),
                                                 ),
                                         ),
@@ -380,15 +416,13 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                                     ),
                                   ),
                                 ),
-                              ).then((value) {
-                                if (widget.disuseDynamicColor) {
-                                  MWidget.themeValue.fromImageProvider(null);
-                                }
-                              });
+                              ).then((value) => widget.disuseDynamicColor ? MWidget.themeValue.fromImageProvider(null) : null);
                             }
                           : null,
                       child: _icon(
                         context: context,
+                        iconSize: widget.dialogIconSize,
+                        iconColor: widget.dialogIconColor,
                       ),
                     ),
                   ),
@@ -427,8 +461,12 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                           )
                         : null,
                     borderRadius: BorderRadiusGeometry.lerp(widget.borderRadius ?? BorderRadius.circular(kShapeLarge), _toBorderRadius, animation.value),
-                    color: Color.lerp(Colors.transparent, Theme.of(context).colorScheme.surface, animation.value),
-                    child: _icon(context: context, iconSize: Tween(begin: widget.iconSize ?? 96.0, end: _toIconSize).animate(animation).value),
+                    color: Color.lerp(_toBackgroundColor ?? Theme.of(context).colorScheme.surface, Colors.transparent, animation.value),
+                    child: _icon(
+                      context: context,
+                      iconSize: Tween(begin: widget.containerIconSize ?? 24.0, end: _toIconSize).animate(animation).value,
+                      iconColor: Color.lerp(widget.containerIconColor, _toIconColor, animation.value),
+                    ),
                   ),
                 ),
                 tag: widget.tag,
@@ -447,17 +485,13 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                       : null,
                   child: Material(
                     borderRadius: widget.borderRadius ?? BorderRadius.circular(kShapeLarge),
-                    color: Colors.transparent,
+                    color: widget.containerBackgroundColor ?? Colors.transparent,
                     child: InkWell(
                       borderRadius: widget.borderRadius as BorderRadius? ?? BorderRadius.circular(kShapeLarge),
                       onTap: () async {
-                        if (widget._isHero) {
-                          _fullScreenDialog();
-                          return;
-                        }
-                        if (!(widget.enabled?.call() ?? true)) {
-                          return;
-                        }
+                        if (widget._isHero) return _fullScreenDialog();
+
+                        if (!(widget.enabled?.call() ?? true)) return;
 
                         widget.onImageChanged?.call(
                           await ImageContainer.handleChangeImage(
@@ -469,7 +503,8 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                       },
                       child: _icon(
                         context: context,
-                        iconSize: widget.iconSize,
+                        iconSize: widget.containerIconSize,
+                        iconColor: widget.containerIconColor,
                       ),
                     ),
                   ),
@@ -509,10 +544,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
             height: height,
             margin: margin,
             decoration: BoxDecoration(
-              border: widget.border ??
-                  Border.all(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+              border: widget.border,
               color: color,
               borderRadius: borderRadius ?? BorderRadius.circular(kShapeLarge),
               image: image,
@@ -523,10 +555,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
             height: height,
             margin: margin,
             decoration: BoxDecoration(
-              border: widget.border ??
-                  Border.all(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+              border: widget.border,
               gradient: gradient,
               borderRadius: borderRadius ?? BorderRadius.circular(kShapeLarge),
             ),
@@ -535,12 +564,12 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
         ],
       );
 
-  Widget? _icon({required BuildContext context, double? iconSize}) => widget.image != null
+  Widget? _icon({required BuildContext context, double? iconSize, Color? iconColor}) => widget.image != null
       ? null
       : Icon(
           widget.icon ?? Icons.business,
-          size: iconSize ?? 96.0,
-          color: widget.iconColor,
+          size: iconSize ?? 24.0,
+          color: iconColor,
         );
 }
 

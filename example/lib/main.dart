@@ -51,16 +51,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final SubmitFocusNode _submitFocusNode = SubmitFocusNode();
 
-  final NumberPickerController _controller = NumberPickerController()
-    ..addListener(() {
-      debugPrint('controllerListener');
-    });
+  final NumberPickerController _controller = NumberPickerController()..addListener(() => debugPrint('controllerListener'));
 
   DateTimeRange currentDateRange = DateTimeRange(start: DateTime.now(), end: DateTime.now().add(const Duration(days: 30)));
 
   @override
   Widget build(BuildContext context) {
-    timeDilation = 1.0;
+    timeDilation = 10.0;
 
     return SizedBox(
       width: MediaQuery.sizeOf(context).width,
@@ -163,8 +160,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   tag: 'hero',
                   width: double.infinity,
                   height: 400.0,
-                  border: const Border(),
-                  iconSize: 24.0,
                   // borderRadius: BorderRadius.zero,
                   containerGradient: const LinearGradient(
                     begin: AlignmentDirectional.topCenter,
@@ -190,6 +185,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     title: const Text('Detail image'),
                   ),
                   useDynamicColor: true,
+                ),
+                const SizedBox(height: 16.0),
+                ImageContainer.hero(
+                  tag: 'ASDF',
+                  height: 400.0,
+                  icon: Icons.abc,
+                  containerIconColor: Theme.of(context).colorScheme.surface,
+                  dialogIconColor: Colors.red,
+                  containerIconSize: 48.0,
+                  dialogIconSize: 96.0,
+                  containerBackgroundColor: Theme.of(context).colorScheme.onSurface,
+                  dialogBackgroundColor: Colors.blue,
+                  extendedAppBar: AppBar(
+                    title: const Text('Hello'),
+                  ),
                 ),
                 const SizedBox(height: 16.0),
                 ConstrainedBox(
