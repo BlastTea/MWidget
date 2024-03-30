@@ -547,7 +547,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
               border: widget.border,
               color: color,
               borderRadius: borderRadius ?? BorderRadius.circular(kShapeLarge),
-              image: image,
+              image: widget.child == null ? image : null,
             ),
           ),
           Container(
