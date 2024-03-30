@@ -566,11 +566,12 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
 
   Widget? _icon({required BuildContext context, double? iconSize, Color? iconColor}) => widget.image != null
       ? null
-      : Icon(
-          widget.icon ?? Icons.business,
-          size: iconSize ?? 24.0,
-          color: iconColor,
-        );
+      : widget.child ??
+          Icon(
+            widget.icon ?? Icons.business,
+            size: iconSize ?? 24.0,
+            color: iconColor,
+          );
 }
 
 /// Represents the result of changing the image in the `ImageContainer`.
