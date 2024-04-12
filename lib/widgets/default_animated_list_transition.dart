@@ -28,13 +28,16 @@ class DefaultAnimatedListTransition extends StatelessWidget {
     super.key,
     required this.animation,
     required this.builder,
+    this.curve = Curves.fastOutSlowIn,
   });
 
   /// The animation controlling the transition.
-  final Animation<double> animation;
+  final Animation<double>? animation;
 
   /// A function that constructs the child widget with the given context and animation.
-  final Widget Function(BuildContext context, Animation<double> animation) builder;
+  final Widget Function(BuildContext context, Animation<double>? animation) builder;
+
+  final Curve curve;
 
   /// Inserts an item into a [SliverAnimatedList] with a sliding and fading animation.
   ///
@@ -53,7 +56,7 @@ class DefaultAnimatedListTransition extends StatelessWidget {
   /// The [state] is the [SliverAnimatedListState] of the list.
   ///
   /// The [builder] is a function that constructs the transition for the removed item.
-  static Future<void> removeItemSliver({required int index, required SliverAnimatedListState state, required Widget Function(BuildContext context, Animation<double> animation) builder}) async {
+  static Future<void> removeItemSliver({required int index, required SliverAnimatedListState state, required Widget Function(BuildContext context, Animation<double>? animation) builder}) async {
     state.removeItem(
       index,
       (context, animation) => DefaultAnimatedListTransition(
@@ -82,7 +85,7 @@ class DefaultAnimatedListTransition extends StatelessWidget {
   /// The [state] is the [AnimatedListState] of the list.
   ///
   /// The [builder] is a function that constructs the transition for the removed item.
-  static Future<void> removeItemList({required int index, required AnimatedListState state, required Widget Function(BuildContext context, Animation<double> animation) builder}) async {
+  static Future<void> removeItemList({required int index, required AnimatedListState state, required Widget Function(BuildContext context, Animation<double>? animation) builder}) async {
     state.removeItem(
       index,
       (context, animation) => DefaultAnimatedListTransition(
@@ -95,14 +98,19 @@ class DefaultAnimatedListTransition extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => FadeTransition(
-        opacity: animation,
-        child: SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(-0.25, 0.0),
-            end: Offset.zero,
-          ).animate(animation),
-          child: builder(context, animation),
-        ),
-      );
+  Widget build(BuildContext context) => animation != null
+      ? FadeTransition(
+          opacity: animation!,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(-0.25, 0.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: curve)).animate(animation!),
+            child: builder(context, animation),
+          ),
+        )
+      : builder(
+          context,
+          animation,
+        );
 }
