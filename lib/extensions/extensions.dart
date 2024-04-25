@@ -7,3 +7,4 @@ part 'timeofday_extension.dart';
 part 'string_extension.dart';
 part 'iterable_extension.dart';
 part 'list_extensions.dart';
+part 'duration_extension.dart';

@@ -19,30 +19,15 @@ class PasswordCriteriaInfo extends StatelessWidget {
     for (PasswordCriteria criteria in criterias) {
       switch (criteria) {
         case _PasswordCriteriaMinimunChacater value:
-          if (text.length >= value.minLength) {
-            results.add(value);
-          }
-          break;
+          if (text.length >= value.minLength) results.add(value);
         case _PasswordCriteriaContainsLowerCaseLetters value:
-          if (text.contains(RegExp(r'[a-z]'))) {
-            results.add(value);
-          }
-          break;
+          if (text.contains(RegExp(r'[a-z]'))) results.add(value);
         case _PasswordCriteriaContainsUpperCaseLetters value:
-          if (text.contains(RegExp(r'[A-Z]'))) {
-            results.add(value);
-          }
-          break;
+          if (text.contains(RegExp(r'[A-Z]'))) results.add(value);
         case _PasswordCriteriaContainsNumber value:
-          if (text.contains(RegExp(r'[0-9]'))) {
-            results.add(value);
-          }
-          break;
+          if (text.contains(RegExp(r'[0-9]'))) results.add(value);
         case _PasswordCriteriaContainsSpecialCharacters value:
-          if (text.contains(RegExp(r'[!@#\$%^&*()_+{}[\]:;<>,.?~\\-]'))) {
-            results.add(value);
-          }
-          break;
+          if (text.contains(RegExp(r'[!@#\$%^&*()_+{}[\]:;<>,.?~\\-]'))) results.add(value);
       }
     }
 

@@ -45,8 +45,8 @@ class DefaultAnimatedListTransition extends StatelessWidget {
   ///
   /// The [state] is the [SliverAnimatedListState] of the list.
   static Future<void> insertItemSliver({required int index, required SliverAnimatedListState state}) async {
-    state.insertItem(index, duration: kDurationShort4);
-    await Future.delayed(kDurationMedium1);
+    state.insertItem(index, duration: Durations.short4);
+    await Future.delayed(Durations.medium1);
   }
 
   /// Removes an item from a [SliverAnimatedList] with a sliding and fading animation.
@@ -63,9 +63,9 @@ class DefaultAnimatedListTransition extends StatelessWidget {
         animation: animation,
         builder: builder,
       ),
-      duration: kDurationShort4,
+      duration: Durations.short4,
     );
-    await Future.delayed(kDurationMedium1);
+    await Future.delayed(Durations.medium1);
   }
 
   /// Inserts an item into an [AnimatedList] with a sliding and fading animation.
@@ -74,8 +74,8 @@ class DefaultAnimatedListTransition extends StatelessWidget {
   ///
   /// The [state] is the [AnimatedListState] of the list.
   static Future<void> insertItemList({required int index, required AnimatedListState state}) async {
-    state.insertItem(index, duration: kDurationShort4);
-    await Future.delayed(kDurationMedium1);
+    state.insertItem(index, duration: Durations.short4);
+    await Future.delayed(Durations.medium1);
   }
 
   /// Removes an item from an [AnimatedList] with a sliding and fading animation.
@@ -92,9 +92,9 @@ class DefaultAnimatedListTransition extends StatelessWidget {
         animation: animation,
         builder: builder,
       ),
-      duration: kDurationShort4,
+      duration: Durations.short4,
     );
-    await Future.delayed(Duration(milliseconds: kDurationMedium1.inMilliseconds * timeDilation.toInt()));
+    await Future.delayed(Duration(milliseconds: Durations.medium1.inMilliseconds * timeDilation.toInt()));
   }
 
   @override

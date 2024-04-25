@@ -50,7 +50,7 @@ class AdaptiveScaffold extends StatelessWidget {
   /// when a new destination is selected. The lengths of [smallPages] and [pages] should be equal, and
   /// they should also match the length of the [destinations] list.
   const AdaptiveScaffold({
-    Key? key,
+    super.key,
     this.scaffoldKey,
     required this.destinations,
     this.selectedIndex = 0,
@@ -58,8 +58,7 @@ class AdaptiveScaffold extends StatelessWidget {
     required this.smallPages,
     required this.pages,
   })  : assert(smallPages.length == pages.length, 'smallPages.length must be equal to pages.length'),
-        assert(destinations.length == pages.length),
-        super(key: key);
+        assert(destinations.length == pages.length);
 
   final GlobalKey<ScaffoldState>? scaffoldKey;
   final List<NavigationRailDestination> destinations;

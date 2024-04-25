@@ -49,13 +49,13 @@ class NumberPicker extends StatefulWidget {
   /// )
   /// ```
   const NumberPicker({
-    Key? key,
+    super.key,
     this.controller,
     this.minValue,
     this.maxValue,
     this.onChanged,
     this.step = 1,
-  }) : super(key: key);
+  });
 
   /// The controller for the number picker.
   ///
