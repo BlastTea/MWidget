@@ -1,11 +1,11 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=C:\flutter\flutter
-FLUTTER_APPLICATION_PATH=C:\dev\project-flutter\packages\m_widget
+FLUTTER_ROOT=C:\flutter
+FLUTTER_APPLICATION_PATH=D:\dev\project-flutter\m_widget
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_TARGET=lib\main.dart
 FLUTTER_BUILD_DIR=build
-FLUTTER_BUILD_NAME=2.17.1
-FLUTTER_BUILD_NUMBER=2.17.1
+FLUTTER_BUILD_NAME=3.4.0
+FLUTTER_BUILD_NUMBER=3.4.0
 EXCLUDED_ARCHS[sdk=iphonesimulator*]=i386
 EXCLUDED_ARCHS[sdk=iphoneos*]=armv7
 DART_OBFUSCATION=false

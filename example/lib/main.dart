@@ -181,10 +181,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   // image: const NetworkImage('https://plus.unsplash.com/premium_photo-1691338312403-e9f7f7984eeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80'),
                   image: const AssetImage('assets/purple-image.jpg'),
+                  dialogFit: BoxFit.contain,
                   extendedAppBar: AppBar(
                     title: const Text('Detail image'),
                   ),
                   useDynamicColor: true,
+                  skipDialog: true,
                 ),
                 const SizedBox(height: 16.0),
                 ImageContainer.hero(
