@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
 
+import 'package:cached_network_image/cached_network_image.dart' as cached;
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

@@ -73,6 +73,7 @@ class ImageContainer extends StatefulWidget {
     this.containerFit,
     this.containerBackgroundColor,
     this.allowPickImageFromGallery = true,
+    this.cachedNetworkImageError,
     this.child,
   })  : _isHero = false,
         extendedAppBar = null,
@@ -134,6 +135,7 @@ class ImageContainer extends StatefulWidget {
     this.containerFit,
     this.dialogFit,
     this.skipDialog = false,
+    this.cachedNetworkImageError,
     this.child,
   })  : assert((containerGradient == null && dialogGradient == null) || (containerGradient != null && dialogGradient != null)),
         assert((containerIconColor == null && dialogIconColor == null) || (containerIconColor != null && dialogIconColor != null)),
@@ -218,6 +220,8 @@ class ImageContainer extends StatefulWidget {
 
   final bool skipDialog;
 
+  final ImageProvider? Function(dynamic e)? cachedNetworkImageError;
+
   final Widget? child;
 
   /// Displays a bottom sheet to handle image selection and returns the result.
@@ -263,6 +267,7 @@ class ImageContainer extends StatefulWidget {
 }
 
 class _ImageContainerState extends State<ImageContainer> with SingleTickerProviderStateMixin {
+  bool _isError = false;
   bool _onHover = false;
 
   static Color? _toBackgroundColor;
@@ -272,6 +277,12 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
   static Color? _toIconColor;
   static BoxFit? _toFit;
 
+  ImageProvider? _image;
+
+  Object? e;
+
+  ImageProvider? get image => _isError ? widget.cachedNetworkImageError?.call(e) : _image;
+
   @override
   void initState() {
     super.initState();
@@ -280,6 +291,24 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
     _toBorderRadius = widget.borderRadius ?? BorderRadius.circular(kShapeLarge);
     _toIconSize = widget.dialogIconSize ?? 24.0;
     _toFit = widget.dialogFit;
+
+    if (widget.image != null && widget.image is cached.CachedNetworkImageProvider) {
+      cached.CachedNetworkImageProvider widgetImage = (widget.image as cached.CachedNetworkImageProvider);
+      _image = cached.CachedNetworkImageProvider(
+        widgetImage.url,
+        cacheKey: widgetImage.cacheKey,
+        cacheManager: widgetImage.cacheManager,
+        errorListener: (e) => setState(() {
+          this.e = e;
+          _isError = true;
+        }),
+        headers: widgetImage.headers,
+        imageRenderMethodForWeb: widgetImage.imageRenderMethodForWeb,
+        maxHeight: widgetImage.maxHeight,
+        maxWidth: widgetImage.maxWidth,
+        scale: widgetImage.scale,
+      );
+    }
   }
 
   Future<void> _goToDialog() => NavigationHelper.to(
@@ -310,10 +339,10 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                       height: responsiveDialogWidth(MediaQuery.sizeOf(context)),
                       borderRadius: BorderRadiusGeometry.lerp(widget.borderRadius ?? BorderRadius.circular(kShapeLarge), BorderRadius.circular(kShapeExtraLarge), animation.value),
                       gradient: Gradient.lerp(widget.containerGradient, widget.dialogGradient, animation.value),
-                      image: widget.image != null
+                      image: image != null
                           ? DecorationImage.lerp(
-                              DecorationImage(image: widget.image!, fit: widget.containerFit ?? BoxFit.cover),
-                              DecorationImage(image: widget.image!, fit: widget.dialogFit ?? BoxFit.cover),
+                              DecorationImage(image: image!, fit: widget.containerFit ?? BoxFit.cover),
+                              DecorationImage(image: image!, fit: widget.dialogFit ?? BoxFit.cover),
                               animation.value,
                             )
                           : null,
@@ -333,9 +362,9 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                   context: context,
                   borderRadius: BorderRadius.circular(kShapeExtraLarge),
                   gradient: widget.dialogGradient,
-                  image: widget.image != null
+                  image: image != null
                       ? DecorationImage(
-                          image: widget.image!,
+                          image: image!,
                           fit: widget.dialogFit ?? BoxFit.cover,
                         )
                       : null,
@@ -361,7 +390,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
       );
 
   Future<void>? _goToFullScreen({bool replaceCurrentScreen = true}) {
-    if (widget.useDynamicColor) MWidget.themeValue.fromImageProvider(widget.image);
+    if (widget.useDynamicColor) MWidget.themeValue.fromImageProvider(image);
 
     handleAfterRoute(dynamic value) => widget.disuseDynamicColor ? MWidget.themeValue.fromImageProvider(null) : null;
 
@@ -401,14 +430,14 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                       ),
                       animation.value,
                     ),
-                    image: widget.image != null
+                    image: image != null
                         ? DecorationImage.lerp(
                             DecorationImage(
-                              image: widget.image!,
+                              image: image!,
                               fit: (widget.skipDialog ? widget.containerFit : widget.dialogFit) ?? BoxFit.cover,
                             ),
                             DecorationImage(
-                              image: widget.image!,
+                              image: image!,
                               fit: BoxFit.contain,
                             ),
                             animation.value,
@@ -424,9 +453,9 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                 },
               ),
               tag: widget.tag,
-              child: widget.image != null
+              child: image != null
                   ? ExtendedImage(
-                      image: widget.image!,
+                      image: image!,
                       fit: BoxFit.contain,
                       // enableLoadState: false,
                       mode: ExtendedImageMode.gesture,
@@ -484,14 +513,14 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                     width: widget.width,
                     height: widget.height,
                     gradient: Gradient.lerp(widget.containerGradient, _toGradient, animation.value),
-                    image: widget.image != null
+                    image: image != null
                         ? DecorationImage.lerp(
                             DecorationImage(
-                              image: widget.image!,
+                              image: image!,
                               fit: widget.containerFit ?? BoxFit.cover,
                             ),
                             DecorationImage(
-                              image: widget.image!,
+                              image: image!,
                               fit: _toFit ?? BoxFit.cover,
                             ),
                             animation.value,
@@ -514,9 +543,9 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                   borderRadius: widget.borderRadius,
                   gradient: widget.containerGradient,
                   margin: widget.margin,
-                  image: widget.image != null
+                  image: image != null
                       ? DecorationImage(
-                          image: widget.image!,
+                          image: image!,
                           fit: widget.containerFit ?? BoxFit.cover,
                         )
                       : null,
@@ -534,7 +563,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
 
                         widget.onImageChanged?.call(
                           await ImageContainer.handleChangeImage(
-                            showDelete: widget.image != null,
+                            showDelete: image != null,
                             sheetTitleText: widget.sheetTitleText,
                             allowPickImageFromGallery: widget.allowPickImageFromGallery,
                           ),
@@ -549,7 +578,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                   ),
                 ),
               ),
-              if (_onHover && widget.image != null && !widget._isHero)
+              if (_onHover && image != null && !widget._isHero)
                 Positioned(
                   top: 16.0,
                   right: 16.0,
@@ -605,7 +634,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
 
   Widget? _icon({required BuildContext context, double? iconSize, Color? iconColor}) =>
       widget.child ??
-      (widget.image != null
+      (image != null
           ? null
           : Icon(
               widget.icon ?? Icons.business,
