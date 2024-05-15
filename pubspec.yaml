@@ -1,6 +1,6 @@
 name: m_widget
 description: A new Flutter package project.
-version: 3.5.0
+version: 3.5.1
 homepage: null
 publish_to: 'none'
 
@@ -14,7 +14,10 @@ dependencies:
   extended_image: ^8.2.0
   flutter:
     sdk: flutter
-  flutter_colorpicker: ^1.0.3
+  flutter_colorpicker:
+    git:
+      url: https://github.com/mchome/flutter_colorpicker.git
+      ref: 92bdb69a313a56c391ef148c12ef6539bd31253d
   image_picker: ^1.0.7
   shared_preferences: ^2.2.2
   universal_io: ^2.2.2

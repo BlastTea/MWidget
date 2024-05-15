@@ -220,6 +220,7 @@ class ImageContainer extends StatefulWidget {
 
   final bool skipDialog;
 
+  // TODO: remove this attribute
   final ImageProvider? Function(dynamic e)? cachedNetworkImageError;
 
   final Widget? child;
@@ -292,6 +293,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
     _toIconSize = widget.dialogIconSize ?? 24.0;
     _toFit = widget.dialogFit;
 
+    // TODO: remove below code, and implements a cache using https://pub.dev/packages/flutter_cache_manager using https://pub.dev/packages/cached_network_image as reference
     if (widget.image != null && widget.image is cached.CachedNetworkImageProvider) {
       cached.CachedNetworkImageProvider widgetImage = (widget.image as cached.CachedNetworkImageProvider);
       _image = cached.CachedNetworkImageProvider(
