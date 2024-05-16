@@ -253,9 +253,9 @@ class ImageContainer extends StatefulWidget {
     ImagePicker picker = ImagePicker();
     switch (imageSourceResult) {
       case ImageSourceResult.gallery:
-        return ChangeImageResult(image: await picker.pickImage(source: ImageSource.gallery));
+        return ChangeImageResult(image: await picker.pickImage(source: ImageSource.gallery), imagePicker: picker);
       case ImageSourceResult.camera:
-        return ChangeImageResult(image: await picker.pickImage(source: ImageSource.camera));
+        return ChangeImageResult(image: await picker.pickImage(source: ImageSource.camera), imagePicker: picker);
       case ImageSourceResult.delete:
         return ChangeImageResult(isDelete: true);
       default:
@@ -654,11 +654,14 @@ class ChangeImageResult {
   /// The [isDelete] flag indicates whether the image was deleted.
   ChangeImageResult({
     this.image,
+    this.imagePicker,
     this.isDelete = false,
   });
 
   /// The selected image.
   final XFile? image;
+
+  final ImagePicker? imagePicker;
 
   /// Indicates whether the image was deleted.
   final bool isDelete;
