@@ -91,6 +91,7 @@ class MWidgetDynamicColorBuilder extends StatelessWidget {
                   ? ThemeData(
                       colorScheme: lightColorScheme,
                       extensions: [lightCustomColors],
+                      fontFamily: themeValue.fontFamily,
                       useMaterial3: true,
                     )
                   : ThemeData.light(useMaterial3: true),
@@ -98,6 +99,7 @@ class MWidgetDynamicColorBuilder extends StatelessWidget {
                   ? ThemeData(
                       colorScheme: darkColorScheme,
                       extensions: [darkCustomColors],
+                      fontFamily: themeValue.fontFamily,
                       useMaterial3: true,
                     )
                   : ThemeData.dark(useMaterial3: true),
@@ -121,10 +123,12 @@ class ThemeValue extends ChangeNotifier implements ValueListenable<ThemeValue> {
     Color? color,
     bool withCustomColors = false,
     bool useDynamicColors = false,
+    String? fontFamily,
   })  : _themeMode = themeMode,
         _color = color,
         _withCustomColors = withCustomColors,
-        _useDynamicColors = useDynamicColors;
+        _useDynamicColors = useDynamicColors,
+        _fontFamily = fontFamily;
 
   ThemeMode _themeMode = ThemeMode.system;
   Color? _color;
@@ -132,6 +136,7 @@ class ThemeValue extends ChangeNotifier implements ValueListenable<ThemeValue> {
   ColorScheme? _imageProviderDarkColorScheme;
   bool _withCustomColors;
   bool _useDynamicColors;
+  String? _fontFamily;
 
   @override
   ThemeValue get value => this;
@@ -141,6 +146,7 @@ class ThemeValue extends ChangeNotifier implements ValueListenable<ThemeValue> {
     _color = value.color;
     _withCustomColors = value.withCustomColors;
     _useDynamicColors = value.useDynamicColors;
+    _fontFamily = value.fontFamily;
     notifyListeners();
   }
 
@@ -163,9 +169,7 @@ class ThemeValue extends ChangeNotifier implements ValueListenable<ThemeValue> {
   ThemeMode get themeMode => _themeMode;
 
   set themeMode(ThemeMode value) {
-    if (_themeMode == value) {
-      return;
-    }
+    if (_themeMode == value) return;
     _themeMode = value;
     notifyListeners();
   }
@@ -173,9 +177,7 @@ class ThemeValue extends ChangeNotifier implements ValueListenable<ThemeValue> {
   Color? get color => _color;
 
   set color(Color? value) {
-    if (_color == value) {
-      return;
-    }
+    if (_color == value) return;
     _color = value;
     notifyListeners();
   }
@@ -201,9 +203,7 @@ class ThemeValue extends ChangeNotifier implements ValueListenable<ThemeValue> {
   bool get withCustomColors => _withCustomColors;
 
   set withCustomColors(bool value) {
-    if (_withCustomColors == value) {
-      return;
-    }
+    if (_withCustomColors == value) return;
     _withCustomColors = value;
     notifyListeners();
   }
@@ -211,10 +211,16 @@ class ThemeValue extends ChangeNotifier implements ValueListenable<ThemeValue> {
   bool get useDynamicColors => _useDynamicColors;
 
   set useDynamicColors(bool value) {
-    if (_useDynamicColors == value) {
-      return;
-    }
+    if (_useDynamicColors == value) return;
     _useDynamicColors = value;
+    notifyListeners();
+  }
+
+  String? get fontFamily => _fontFamily;
+
+  set fontFamily(String? value) {
+    if (_fontFamily == value) return;
+    _fontFamily = value;
     notifyListeners();
   }
 
@@ -232,7 +238,7 @@ class ThemeValue extends ChangeNotifier implements ValueListenable<ThemeValue> {
       );
 
   @override
-  String toString() => 'ThemeValue($_themeMode, $_color, $_useDynamicColors, $_withCustomColors)';
+  String toString() => 'ThemeValue($_themeMode, $_color, $_useDynamicColors, $_withCustomColors, $_fontFamily)';
 }
 
 @immutable
