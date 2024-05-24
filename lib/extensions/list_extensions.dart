@@ -11,18 +11,19 @@ extension ListExtension<T> on List<T> {
   /// List<String> list2 = ['cherry', 'banana', 'apple'];
   /// print(list1.areEqualTo(list2)); // Should print true
   /// ```
-  bool areEqualTo(List<T> other, [dynamic Function(int index, T element)? a, dynamic Function(int index, T element)? b]) {
-    if (length != other.length) {
-      return false;
-    }
+  bool areEqualTo(
+    List<T> other, {
+    int Function(T a, T b)? compare,
+    dynamic Function(int index, T element)? a,
+    dynamic Function(int index, T element)? b,
+  }) {
+    if (length != other.length) return false;
 
-    sort();
-    other.sort();
+    sort(compare);
+    other.sort(compare);
 
     for (int i = 0; i < length; i++) {
-      if ((a?.call(i, this[i]) ?? this[i]) != (b?.call(i, this[i]) ?? other[i])) {
-        return false;
-      }
+      if ((a?.call(i, this[i]) ?? this[i]) != (b?.call(i, this[i]) ?? other[i])) return false;
     }
 
     return true;
@@ -41,12 +42,10 @@ extension ListExtension<T> on List<T> {
   /// print(list2.areAllElementsSame());   // Should print true
   /// print(list3.areAllElementsSame());   // Should print false
   /// ```
-  bool areAllElementsSame() {
-    if (isEmpty) {
-      return false;
-    }
+  bool areAllElementsSame({int Function(T a, T b)? compare}) {
+    if (isEmpty) return false;
 
-    sort();
+    sort(compare);
 
     for (int i = 0; i < length; i++) {
       for (int j = 0; j < length; j++) {
