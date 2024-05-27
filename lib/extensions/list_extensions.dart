@@ -23,7 +23,7 @@ extension ListExtension<T> on List<T> {
     other.sort(compare);
 
     for (int i = 0; i < length; i++) {
-      if ((a?.call(i, this[i]) ?? this[i]) != (b?.call(i, this[i]) ?? other[i])) return false;
+      if ((a?.call(i, this[i]) ?? this[i]) != (b?.call(i, other[i]) ?? other[i])) return false;
     }
 
     return true;
@@ -42,7 +42,7 @@ extension ListExtension<T> on List<T> {
   /// print(list2.areAllElementsSame());   // Should print true
   /// print(list3.areAllElementsSame());   // Should print false
   /// ```
-  bool areAllElementsSame({int Function(T a, T b)? compare}) {
+  bool containSameElement({int Function(T a, T b)? compare}) {
     if (isEmpty) return false;
 
     sort(compare);
