@@ -609,10 +609,10 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
     required Widget? child,
   }) =>
       Stack(
+        key: UniqueKey(),
         fit: StackFit.expand,
         children: [
           Container(
-            key: UniqueKey(),
             width: width,
             height: height,
             margin: margin,
