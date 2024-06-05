@@ -562,7 +562,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
                       : null,
                   child: Material(
                     borderRadius: widget.borderRadius ?? BorderRadius.circular(kShapeLarge),
-                    color: widget.containerBackgroundColor ?? Colors.transparent,
+                    color: image == null ? (widget.containerBackgroundColor ?? Colors.transparent) : Colors.transparent,
                     child: InkWell(
                       borderRadius: widget.borderRadius as BorderRadius? ?? BorderRadius.circular(kShapeLarge),
                       onTap: () async {
@@ -619,13 +619,12 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
         fit: StackFit.expand,
         children: [
           Container(
-            key: UniqueKey(),
             width: width,
             height: height,
             margin: margin,
             decoration: BoxDecoration(
               border: widget.border,
-              color: color,
+              color: image == null ? color : null,
               borderRadius: borderRadius ?? BorderRadius.circular(kShapeLarge),
               image: image,
               // image: widget.child == null ? image : null,
