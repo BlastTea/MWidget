@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cached_network_image/cached_network_image.dart' as cached;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -56,6 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   DateTimeRange currentDateRange = DateTimeRange(start: DateTime.now(), end: DateTime.now().add(const Duration(days: 30)));
 
+  Uint8List? imageData;
+
   @override
   Widget build(BuildContext context) {
     timeDilation = 10.0;
@@ -98,7 +102,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     showDelete: false,
                     allowPickImageFromGallery: true,
                     forceUsingSheet: true,
-                  ),
+                  ).then((value) async {
+                    imageData = await value.image?.readAsBytes();
+                    setState(() {});
+                  }),
                   icon: const Icon(Icons.photo_camera),
                 ),
                 IconButton(
@@ -158,6 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 const SizedBox(height: 16.0),
                 ImageContainer.hero(
+                  key: UniqueKey(),
                   tag: 'hero',
                   width: double.infinity,
                   height: 400.0,
@@ -182,7 +190,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   // ),
                   // image: const NetworkImage('https://plus.unsplash.com/premium_photo-1691338312403-e9f7f7984eeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80'),
                   // image: const AssetImage('assets/purple-image.jpg'),
-                  image: const cached.CachedNetworkImageProvider('https://dev-sirama.properiideal.id/storage/profile/shark.png'),
+                  // image: const cached.CachedNetworkImageProvider('https://dev-sirama.properiideal.id/storage/profile/shark.png'),
+                  // image: const cached.CachedNetworkImageProvider('https://avatars.githubusercontent.com/u/116476102?v=4'),
+                  image: imageData != null ? MemoryImage(imageData!) : null,
+                  containerBackgroundColor: Colors.red,
                   // cachedNetworkImageError: (e) => const AssetImage('assets/purple-image.jpg'),
                   // dialogFit: BoxFit.contain,
                   extendedAppBar: AppBar(
@@ -255,6 +266,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   child: const Text('Show Choose Dialog'),
                 ),
+                SizedBox(height: 90),
               ],
             ),
           ),
