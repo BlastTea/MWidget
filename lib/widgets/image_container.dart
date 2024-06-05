@@ -609,7 +609,6 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
     required Widget? child,
   }) =>
       Stack(
-        key: UniqueKey(),
         fit: StackFit.expand,
         children: [
           Container(
@@ -620,7 +619,8 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
               border: widget.border,
               color: color,
               borderRadius: borderRadius ?? BorderRadius.circular(kShapeLarge),
-              image: widget.child == null ? image : null,
+              image: image,
+              // image: widget.child == null ? image : null,
             ),
           ),
           Container(
