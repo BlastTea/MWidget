@@ -238,7 +238,13 @@ class ImageContainer extends StatefulWidget {
   /// If set to `false`, only the camera option (if applicable) and delete option will be shown.
   ///
   /// Returns a [ChangeImageResult] indicating the result of the image selection process.
-  static Future<ChangeImageResult> handleChangeImage({required bool showDelete, bool forceUsingSheet = false, String? sheetTitleText, bool allowPickImageFromGallery = true}) async {
+  static Future<ChangeImageResult> handleChangeImage({
+    required bool showDelete,
+    bool forceUsingSheet = false,
+    String? sheetTitleText,
+    bool allowPickImageFromGallery = true,
+    double? sheetImageItemWidth,
+  }) async {
     ImageSourceResult? imageSourceResult = !(Platform.isAndroid || Platform.isIOS) ? ImageSourceResult.gallery : (!allowPickImageFromGallery && !showDelete ? ImageSourceResult.camera : null);
     if (((Platform.isAndroid || Platform.isIOS) && (allowPickImageFromGallery || showDelete)) || forceUsingSheet && (!(Platform.isAndroid || Platform.isIOS) && showDelete)) {
       imageSourceResult = await NavigationHelper.showModalBottomSheet(
@@ -246,6 +252,7 @@ class ImageContainer extends StatefulWidget {
           showGallery: allowPickImageFromGallery,
           showDelete: showDelete,
           title: Text(sheetTitleText ?? Language.getInstance().getValue('Change logo')!),
+          itemWidth: sheetImageItemWidth,
         ),
       ).then((value) => value ?? (!(Platform.isAndroid || Platform.isIOS) ? (showDelete ? null : ImageSourceResult.gallery) : null));
     }
@@ -612,6 +619,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
         fit: StackFit.expand,
         children: [
           Container(
+            key: UniqueKey(),
             width: width,
             height: height,
             margin: margin,

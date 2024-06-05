@@ -44,6 +44,7 @@ class SheetImageSource extends StatelessWidget {
     this.showGallery = true,
     this.showDelete = false,
     this.title,
+    this.itemWidth,
   });
 
   /// Determines whether the gallery option should be shown.
@@ -54,6 +55,8 @@ class SheetImageSource extends StatelessWidget {
 
   /// An optional title to display above the image source options.
   final Widget? title;
+
+  final double? itemWidth;
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder(
@@ -86,7 +89,7 @@ class SheetImageSource extends StatelessWidget {
                         borderRadius: BorderRadius.circular(kShapeLarge),
                         onTap: () => NavigationHelper.back((Platform.isAndroid || Platform.isIOS ? [if (showGallery) ImageSourceResult.gallery, ImageSourceResult.camera, ImageSourceResult.delete] : [ImageSourceResult.gallery, ImageSourceResult.delete])[index]),
                         child: SizedBox(
-                          width: 68.0,
+                          width: itemWidth ?? 68.0,
                           height: 68.0,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
