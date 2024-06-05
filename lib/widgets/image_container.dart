@@ -282,7 +282,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
 
   Object? e;
 
-  ImageProvider? get image => _isError ? widget.cachedNetworkImageError?.call(e) ?? _image : _image;
+  ImageProvider? get image => _isError ? widget.cachedNetworkImageError?.call(e) : _image;
 
   @override
   void initState() {
@@ -612,6 +612,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
         fit: StackFit.expand,
         children: [
           Container(
+            key: UniqueKey(),
             width: width,
             height: height,
             margin: margin,
