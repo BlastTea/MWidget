@@ -275,6 +275,8 @@ class ImageContainer extends StatefulWidget {
 }
 
 class _ImageContainerState extends State<ImageContainer> with SingleTickerProviderStateMixin {
+  Key _imageKey = GlobalKey();
+
   bool _isError = false;
   bool _onHover = false;
 
@@ -310,6 +312,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
         errorListener: (e) => setState(() {
           this.e = e;
           _isError = true;
+          _imageKey = GlobalKey();
         }),
         headers: widgetImage.headers,
         imageRenderMethodForWeb: widgetImage.imageRenderMethodForWeb,
@@ -616,6 +619,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
     required Widget? child,
   }) =>
       Stack(
+        key: _imageKey,
         fit: StackFit.expand,
         children: [
           Container(
