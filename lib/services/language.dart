@@ -337,5 +337,9 @@ final class Language {
       LanguageType.unitedStatesEnglish: 'Password does not meet criteria',
       LanguageType.indonesiaIndonesian: 'Kata sandi tidak memenuhi kriteria',
     },
+    'Continue': {
+      LanguageType.unitedStatesEnglish: 'Continue',
+      LanguageType.indonesiaIndonesian: 'Lanjutkan',
+    },
   };
 }

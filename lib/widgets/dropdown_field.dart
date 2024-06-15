@@ -1,6 +1,6 @@
 part of 'widgets.dart';
 
-@Deprecated('use \'DropdownMenu\' instead')
+@Deprecated('Use DropdownMenu instead. ')
 class DropdownField extends StatelessWidget {
   const DropdownField({
     super.key,

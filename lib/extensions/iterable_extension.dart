@@ -47,7 +47,7 @@ extension IterableExtension<E> on Iterable<E> {
     }
   }
 
-  @Deprecated('use [firstOrNull] instead')
+  @Deprecated('Use firstOrNull instead. ')
   E? get tryFirst {
     try {
       return first;

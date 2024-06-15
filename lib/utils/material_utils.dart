@@ -328,35 +328,35 @@ const double kElevationLevel4 = 8.0;
 const double kElevationLevel5 = 12.0;
 
 // Material 3 Durations (ms)
-@Deprecated('use \'Durations.short1\' instead')
+@Deprecated('Use Durations.short1 instead. ')
 const Duration kDurationShort1 = Duration(milliseconds: 50);
-@Deprecated('use \'Durations.short2\' instead')
+@Deprecated('Use Durations.short2 instead. ')
 const Duration kDurationShort2 = Duration(milliseconds: 100);
-@Deprecated('use \'Durations.short3\' instead')
+@Deprecated('Use Durations.short3 instead. ')
 const Duration kDurationShort3 = Duration(milliseconds: 150);
-@Deprecated('use \'Durations.short4\' instead')
+@Deprecated('Use Durations.short4 instead. ')
 const Duration kDurationShort4 = Duration(milliseconds: 200);
-@Deprecated('use \'Durations.medium1\' instead')
+@Deprecated('Use Durations.medium1 instead. ')
 const Duration kDurationMedium1 = Duration(milliseconds: 250);
-@Deprecated('use \'Durations.medium2\' instead')
+@Deprecated('Use Durations.medium2 instead. ')
 const Duration kDurationMedium2 = Duration(milliseconds: 300);
-@Deprecated('use \'Durations.medium3\' instead')
+@Deprecated('Use Durations.medium3 instead. ')
 const Duration kDurationMedium3 = Duration(milliseconds: 350);
-@Deprecated('use \'Durations.medium4\' instead')
+@Deprecated('Use Durations.medium4 instead. ')
 const Duration kDurationMedium4 = Duration(milliseconds: 400);
-@Deprecated('use \'Durations.long1\' instead')
+@Deprecated('Use Durations.long1 instead. ')
 const Duration kDurationLong1 = Duration(milliseconds: 450);
-@Deprecated('use \'Durations.long2\' instead')
+@Deprecated('Use Durations.long2 instead. ')
 const Duration kDurationLong2 = Duration(milliseconds: 500);
-@Deprecated('use \'Durations.long3\' instead')
+@Deprecated('Use Durations.long3 instead. ')
 const Duration kDurationLong3 = Duration(milliseconds: 550);
-@Deprecated('use \'Durations.long4\' instead')
+@Deprecated('Use Durations.long4 instead. ')
 const Duration kDurationLong4 = Duration(milliseconds: 600);
-@Deprecated('use \'Durations.extraLong1\' instead')
+@Deprecated('Use Durations.extraLong1 instead. ')
 const Duration kDurationExtraLong1 = Duration(milliseconds: 700);
-@Deprecated('use \'Durations.extraLong2\' instead')
+@Deprecated('Use Durations.extraLong2 instead. ')
 const Duration kDurationExtraLong2 = Duration(milliseconds: 800);
-@Deprecated('use \'Durations.extraLong3\' instead')
+@Deprecated('Use Durations.extraLong3 instead. ')
 const Duration kDurationExtraLong3 = Duration(milliseconds: 900);
-@Deprecated('use \'Durations.extraLong4\' instead')
+@Deprecated('Use Durations.extraLong4 instead. ')
 const Duration kDurationExtraLong4 = Duration(milliseconds: 1000);
