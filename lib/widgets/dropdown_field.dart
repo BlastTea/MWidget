@@ -1,14 +1,13 @@
 part of 'widgets.dart';
 
-@Deprecated('Use DropdownMenu instead. ')
-class DropdownField extends StatelessWidget {
+class DropdownField<T> extends StatelessWidget {
   const DropdownField({
     super.key,
     this.focusNode,
     required this.controller,
     required this.items,
     this.decoration,
-    this.onValueSelected,
+    this.onSelected,
     this.autocorrect = true,
     this.autoFillHints,
     this.autofocus = false,
@@ -71,9 +70,9 @@ class DropdownField extends StatelessWidget {
 
   final FocusNode? focusNode;
   final TextEditingController controller;
-  final List<PopupMenuItem<String>> items;
+  final List<PopupMenuItem<T>> items;
   final InputDecoration? decoration;
-  final void Function(String value)? onValueSelected;
+  final void Function(T value)? onSelected;
   final bool autocorrect;
   final Iterable<String>? autoFillHints;
   final bool autofocus;
@@ -144,21 +143,17 @@ class DropdownField extends StatelessWidget {
       offset.dy,
     );
 
-    showMenu<String>(
+    showMenu<T>(
       context: context,
       position: position,
       items: items,
-      constraints: BoxConstraints.tightFor(
-        width: overlay.constraints.maxWidth,
-      ),
+      constraints: BoxConstraints.tightFor(width: overlay.constraints.maxWidth),
     ).then((value) {
-      if (value == null) {
-        return;
-      }
+      if (value == null) return;
 
-      controller.text = value;
+      // controller.text = value;
 
-      onValueSelected?.call(value);
+      onSelected?.call(value);
     });
   }
 
@@ -207,7 +202,10 @@ class DropdownField extends StatelessWidget {
         onChanged: onChanged,
         onEditingComplete: onEditingComplete,
         onSubmitted: onSubmitted,
-        onTap: onTap,
+        onTap: () {
+          _handleShowDropdownMenu(context);
+          onTap?.call();
+        },
         onTapOutside: onTapOutside,
         readOnly: readOnly,
         restorationId: restorationId,

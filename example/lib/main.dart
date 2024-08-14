@@ -48,6 +48,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _textController = TextEditingController();
+  final TextEditingController _textControllerDropdownField = TextEditingController();
   final TextEditingControllerThousandFormat _textControllerThousandFormat = TextEditingControllerThousandFormat(invertThousandSeparator: true);
 
   final double imageHeight = 400.0;
@@ -62,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    timeDilation = 10.0;
+    timeDilation = 1.0;
 
     return SizedBox(
       width: MediaQuery.sizeOf(context).width,
@@ -123,6 +124,19 @@ class _MyHomePageState extends State<MyHomePage> {
             body: ListView(
               padding: responsivePadding(MediaQuery.sizeOf(context)),
               children: [
+                DropdownField(
+                  controller: _textControllerDropdownField,
+                  items: FieldItem.values
+                      .map(
+                        (e) => PopupMenuItem(
+                          value: e,
+                          child: Text(e.value),
+                        ),
+                      )
+                      .toList(),
+                  readOnly: true,
+                  onSelected: (value) => _textControllerDropdownField.text = value.value,
+                ),
                 TextField(
                   controller: _textControllerThousandFormat,
                 ),
@@ -411,4 +425,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+enum FieldItem {
+  sapi('sapi'),
+  kerbau('kerbau'),
+  kucing('kucing'),
+  harimau('harimau');
+
+  const FieldItem(this.value);
+  final String value;
 }
