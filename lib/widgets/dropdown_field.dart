@@ -72,7 +72,7 @@ class DropdownField<T> extends StatelessWidget {
   final TextEditingController controller;
   final List<PopupMenuItem<T>> items;
   final InputDecoration? decoration;
-  final void Function(T value)? onSelected;
+  final ValueChanged<T?>? onSelected;
   final bool autocorrect;
   final Iterable<String>? autoFillHints;
   final bool autofocus;
@@ -149,7 +149,7 @@ class DropdownField<T> extends StatelessWidget {
       items: items,
       constraints: BoxConstraints.tightFor(width: overlay.constraints.maxWidth),
     ).then((value) {
-      if (value == null) return;
+      // if (value == null) return;
 
       // controller.text = value;
 

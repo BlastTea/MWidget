@@ -135,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       )
                       .toList(),
                   readOnly: true,
-                  onSelected: (value) => _textControllerDropdownField.text = value.value,
+                  onSelected: (value) => _textControllerDropdownField.text = value?.value ?? '?',
                 ),
                 TextField(
                   controller: _textControllerThousandFormat,
