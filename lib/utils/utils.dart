@@ -156,11 +156,14 @@ String jsonToCorrectStringFormat(String jsonString) {
 Size getTextSize({
   required String text,
   required TextStyle style,
+  TextDirection textDirection = TextDirection.ltr,
+  double minWidth = 0.0,
+  double maxWidth = double.infinity,
 }) {
   final TextPainter textPainter = TextPainter(
     text: TextSpan(text: text, style: style),
-    textDirection: TextDirection.ltr,
+    textDirection: textDirection,
     // textScaleFactor: PlatformDispatcher.instance.textScaleFactor,
-  )..layout();
+  )..layout(minWidth: minWidth, maxWidth: maxWidth);
   return textPainter.size;
 }
