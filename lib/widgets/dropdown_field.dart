@@ -153,7 +153,7 @@ class DropdownField<T> extends StatelessWidget {
 
       // controller.text = value;
 
-      onSelected?.call(value);
+      if (onSelected != null) onSelected?.call(value);
     });
   }
 
@@ -203,8 +203,8 @@ class DropdownField<T> extends StatelessWidget {
         onEditingComplete: onEditingComplete,
         onSubmitted: onSubmitted,
         onTap: () {
-          _handleShowDropdownMenu(context);
-          onTap?.call();
+          if (readOnly) _handleShowDropdownMenu(context);
+          if (onTap != null) onTap?.call();
         },
         onTapOutside: onTapOutside,
         readOnly: readOnly,
