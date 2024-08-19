@@ -5,10 +5,12 @@ class TimerProgressIndicator extends StatefulWidget {
     super.key,
     required this.progressNotifier,
     this.messageNotifier,
+    this.width,
   });
 
   final ValueNotifier<double?> progressNotifier;
   final ValueNotifier<String?>? messageNotifier;
+  final double? width;
 
   @override
   State<TimerProgressIndicator> createState() => _TimerProgressIndicatorState();
@@ -46,7 +48,7 @@ class _TimerProgressIndicatorState extends State<TimerProgressIndicator> {
         child: Container(
           color: Theme.of(context).colorScheme.surface,
           child: SizedBox(
-            width: responsiveDialogWidth(MediaQuery.sizeOf(context)),
+            width: widget.width ?? responsiveDialogWidth(MediaQuery.sizeOf(context)),
             height: 44.0 + (widget.messageNotifier != null ? 20.0 : 0.0),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
