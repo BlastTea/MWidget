@@ -124,6 +124,10 @@ class _MyHomePageState extends State<MyHomePage> {
             body: ListView(
               padding: responsivePadding(MediaQuery.sizeOf(context)),
               children: [
+                TimerProgressIndicator(
+                  progressNotifier: ValueNotifier(0.35),
+                  messageNotifier: ValueNotifier('Hey'),
+                ),
                 DropdownField(
                   controller: _textControllerDropdownField,
                   items: FieldItem.values

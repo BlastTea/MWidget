@@ -47,7 +47,7 @@ class _TimerProgressIndicatorState extends State<TimerProgressIndicator> {
           color: Theme.of(context).colorScheme.surface,
           child: SizedBox(
             width: responsiveDialogWidth(MediaQuery.sizeOf(context)),
-            height: 64.0,
+            height: 44.0 + (widget.messageNotifier != null ? 20.0 : 0.0),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
@@ -68,10 +68,11 @@ class _TimerProgressIndicatorState extends State<TimerProgressIndicator> {
                     valueListenable: timeElapsedNotifier,
                     builder: (context, value, child) => Text(timeElapsedNotifier.value),
                   ),
-                  ValueListenableBuilder(
-                    valueListenable: widget.messageNotifier!,
-                    builder: (context, value, child) => Text(widget.messageNotifier!.value ?? ''),
-                  ),
+                  if (widget.messageNotifier != null)
+                    ValueListenableBuilder(
+                      valueListenable: widget.messageNotifier!,
+                      builder: (context, value, child) => Text(widget.messageNotifier!.value ?? ''),
+                    ),
                 ],
               ),
             ),
