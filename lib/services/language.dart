@@ -341,5 +341,9 @@ final class Language {
       LanguageType.unitedStatesEnglish: 'Continue',
       LanguageType.indonesiaIndonesian: 'Lanjutkan',
     },
+    '{0} Seconds': {
+      LanguageType.unitedStatesEnglish: '{0} Seconds',
+      LanguageType.indonesiaIndonesian: '{0} Detik',
+    },
   };
 }
