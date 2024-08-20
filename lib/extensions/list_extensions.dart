@@ -38,9 +38,9 @@ extension ListExtension<T> on List<T> {
   /// List<String> list1 = ['apple', 'apple', 'apple'];
   /// List<String> list2 = ['apple', 'banana', 'apple'];
   /// List<String> list3 = ['apple', 'banana', 'cherry'];
-  /// print(list1.areAllElementsSame());   // Should print true
-  /// print(list2.areAllElementsSame());   // Should print true
-  /// print(list3.areAllElementsSame());   // Should print false
+  /// print(list1.containSameElement());   // Should print true
+  /// print(list2.containSameElement());   // Should print true
+  /// print(list3.containSameElement());   // Should print false
   /// ```
   bool containSameElement({int Function(T a, T b)? compare}) {
     if (isEmpty) return false;
