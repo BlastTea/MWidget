@@ -49,7 +49,7 @@ final class Language {
 
   /// A private method that generates a map of localized strings based on the selected language.
   Map<String, String?> _getValue() {
-    if (onSetState != null) _data.addAll(onSetState!());
+    if (onSetState != null) _data.addAll(onSetState!.call());
     return _data.map((key, value) => MapEntry(key, _formatValue(value[languageTypeNotifier.value])));
   }
 
