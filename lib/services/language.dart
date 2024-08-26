@@ -48,7 +48,10 @@ final class Language {
   late ValueNotifier<Map<String, String?>> languageNotifier;
 
   /// A private method that generates a map of localized strings based on the selected language.
-  Map<String, String?> _getValue() => _data.map((key, value) => MapEntry(key, _formatValue(value[languageTypeNotifier.value])));
+  Map<String, String?> _getValue() {
+    if (onSetState != null) _data.addAll(onSetState!());
+    return _data.map((key, value) => MapEntry(key, _formatValue(value[languageTypeNotifier.value])));
+  }
 
   /// A private method that formats the [value] with the provided [arguments].
   ///
@@ -66,6 +69,8 @@ final class Language {
     }
     return formattedValue;
   }
+
+  Map<String, String?> getData() => _getValue();
 
   /// Retrieves the localized string for the given [key] based on the selected language.
   ///
@@ -105,6 +110,8 @@ final class Language {
 
     return null;
   }
+
+  static Map<String, Map<LanguageType, String>> Function()? onSetState;
 
   /// Adds new localization data to the language map.
   ///

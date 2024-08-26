@@ -37,3 +37,4 @@ part 'date_field.dart';
 part 'modal_draggable_scrollable_sheet.dart';
 part 'password_criteria.dart';
 part 'timer_progress_indicator.dart';
+part 'language_builder.dart';
