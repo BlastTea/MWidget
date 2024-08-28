@@ -356,5 +356,9 @@ final class Language {
       LanguageType.unitedStatesEnglish: '{0} Seconds',
       LanguageType.indonesiaIndonesian: '{0} Detik',
     },
+    'You are offline': {
+      LanguageType.unitedStatesEnglish: 'You are offline',
+      LanguageType.indonesiaIndonesian: 'Anda sedang offline',
+    },
   };
 }

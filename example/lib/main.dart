@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart' as cached;
@@ -61,6 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Uint8List? imageData;
 
+  TimerController timerController = TimerController(duration: const Duration(seconds: 1));
+
   @override
   Widget build(BuildContext context) {
     timeDilation = 1.0;
@@ -70,222 +73,242 @@ class _MyHomePageState extends State<MyHomePage> {
       height: MediaQuery.sizeOf(context).height,
       child: Stack(
         children: [
-          Scaffold(
-            appBar: AppBar(
-              title: const Text('MWidget'),
-              actions: [
-                const ThemeSwitcher.iconButton(),
-                IconButton(
-                  onPressed: () => NavigationHelper.to(
-                    AdaptiveDialogRoute(
-                      builder: (context) => ChooseDialog(
-                        data: () => [
-                          'Sapi',
-                          'Kerbau',
-                          'Kucing',
-                          'Harimau',
-                        ]
+          DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              appBar: AppBar(
+                title: const Text('MWidget'),
+                bottom: TabBar(tabs: ['First Tab', 'Second Tab'].map((e) => Tab(text: e)).toList()),
+                actions: [
+                  const ThemeSwitcher.iconButton(),
+                  IconButton(
+                    onPressed: () => NavigationHelper.to(
+                      AdaptiveDialogRoute(
+                        builder: (context) => ChooseDialog(
+                          data: () => [
+                            'Sapi',
+                            'Kerbau',
+                            'Kucing',
+                            'Harimau',
+                          ]
+                              .map(
+                                (e) => ChooseData(
+                                  value: e,
+                                  searchValue: e,
+                                  title: Text(e),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                    icon: const Icon(Icons.access_time),
+                  ),
+                  IconButton(
+                    onPressed: () => ImageContainer.handleChangeImage(
+                      showDelete: false,
+                      allowPickImageFromGallery: true,
+                      forceUsingSheet: true,
+                    ).then((value) async {
+                      imageData = await value.image?.readAsBytes();
+                      setState(() {});
+                    }),
+                    icon: const Icon(Icons.photo_camera),
+                  ),
+                  IconButton(
+                    onPressed: () => NavigationHelper.showModalBottomSheet(
+                      builder: (context) => SheetImageSource(
+                        showGallery: false,
+                        showDelete: false,
+                        title: Text(Language.getInstance().getValue('Change logo')!),
+                      ),
+                    ),
+                    icon: const Icon(Icons.question_mark),
+                  ),
+                ],
+              ),
+              body: TabBarView(
+                children: [
+                  // First Tab
+                  ListView(
+                    padding: responsivePadding(MediaQuery.sizeOf(context)),
+                    children: [
+                      TimerProgressIndicator(
+                        controller: timerController,
+                        progressNotifier: ValueNotifier(0.35),
+                        messageNotifier: ValueNotifier('Hey'),
+                      ),
+                      DropdownField(
+                        controller: _textControllerDropdownField,
+                        items: FieldItem.values
                             .map(
-                              (e) => ChooseData(
+                              (e) => PopupMenuItem(
                                 value: e,
-                                searchValue: e,
-                                title: Text(e),
+                                child: Text(e.value),
                               ),
                             )
                             .toList(),
+                        readOnly: true,
+                        onSelected: (value) => _textControllerDropdownField.text = value?.value ?? '?',
                       ),
-                    ),
-                  ),
-                  icon: const Icon(Icons.access_time),
-                ),
-                IconButton(
-                  onPressed: () => ImageContainer.handleChangeImage(
-                    showDelete: false,
-                    allowPickImageFromGallery: true,
-                    forceUsingSheet: true,
-                  ).then((value) async {
-                    imageData = await value.image?.readAsBytes();
-                    setState(() {});
-                  }),
-                  icon: const Icon(Icons.photo_camera),
-                ),
-                IconButton(
-                  onPressed: () => NavigationHelper.showModalBottomSheet(
-                    builder: (context) => SheetImageSource(
-                      showGallery: false,
-                      showDelete: false,
-                      title: Text(Language.getInstance().getValue('Change logo')!),
-                    ),
-                  ),
-                  icon: const Icon(Icons.question_mark),
-                ),
-              ],
-            ),
-            body: ListView(
-              padding: responsivePadding(MediaQuery.sizeOf(context)),
-              children: [
-                TimerProgressIndicator(
-                  progressNotifier: ValueNotifier(0.35),
-                  messageNotifier: ValueNotifier('Hey'),
-                ),
-                DropdownField(
-                  controller: _textControllerDropdownField,
-                  items: FieldItem.values
-                      .map(
-                        (e) => PopupMenuItem(
-                          value: e,
-                          child: Text(e.value),
-                        ),
-                      )
-                      .toList(),
-                  readOnly: true,
-                  onSelected: (value) => _textControllerDropdownField.text = value?.value ?? '?',
-                ),
-                TextField(
-                  controller: _textControllerThousandFormat,
-                ),
-                FilledButton(
-                  onPressed: () => showErrorDialog('Hello', primaryFilledButton: true),
-                  child: const Text('Hello'),
-                ),
-                ListTile(
-                  title: const Text('test'),
-                  selectedTileColor: Theme.of(context).colorScheme.secondaryContainer,
-                  selected: true,
-                  onTap: () {},
-                ),
-                const SizedBox(height: 16.0),
-                DateRangeField(
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime.now().add(const Duration(days: 30)),
-                  value: currentDateRange,
-                  onDateChanged: (value) => setState(() => value != null ? currentDateRange = value : null),
-                ),
-                const SizedBox(height: 16.0),
-                ButtonEdit(
-                  onCancelDisabledPressed: () => debugPrint('onCancelDisabledPressed'),
-                ),
-                const SizedBox(height: 16.0),
-                DropdownField(
-                  controller: _textController,
-                  items: ['Hello', 'World']
-                      .map(
-                        (e) => PopupMenuItem(
-                          value: e,
-                          child: Text(e),
-                        ),
-                      )
-                      .toList(),
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Dropdown field',
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                ImageContainer.hero(
-                  key: UniqueKey(),
-                  tag: 'hero',
-                  width: double.infinity,
-                  height: 400.0,
-                  // borderRadius: BorderRadius.zero,
-                  // containerGradient: const LinearGradient(
-                  //   begin: AlignmentDirectional.topCenter,
-                  //   end: AlignmentDirectional.bottomCenter,
-                  //   colors: [
-                  //     Colors.black,
-                  //     Colors.transparent,
-                  //     Colors.transparent,
-                  //   ],
-                  // ),
-                  // dialogGradient: const LinearGradient(
-                  //   begin: AlignmentDirectional.topCenter,
-                  //   end: AlignmentDirectional.bottomCenter,
-                  //   colors: [
-                  //     Colors.transparent,
-                  //     Colors.transparent,
-                  //     Colors.transparent,
-                  //   ],
-                  // ),
-                  // image: const NetworkImage('https://plus.unsplash.com/premium_photo-1691338312403-e9f7f7984eeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80'),
-                  // image: const AssetImage('assets/purple-image.jpg'),
-                  // image: const cached.CachedNetworkImageProvider('https://dev-sirama.properiideal.id/storage/profile/shark.png'),
-                  // image: const cached.CachedNetworkImageProvider('https://avatars.githubusercontent.com/u/116476102?v=4'),
-                  image: imageData != null ? MemoryImage(imageData!) : null,
-                  containerBackgroundColor: Colors.red,
-                  // cachedNetworkImageError: (e) => const AssetImage('assets/purple-image.jpg'),
-                  // dialogFit: BoxFit.contain,
-                  extendedAppBar: AppBar(
-                    title: const Text('Detail image'),
-                  ),
-                  // useDynamicColor: true,
-                  // skipDialog: true,
-                  child: Center(child: Text('Gambar kosong bro!')),
-                ),
-                const SizedBox(height: 16.0),
-                ImageContainer.hero(
-                  tag: 'ASDF',
-                  height: 400.0,
-                  icon: Icons.abc,
-                  containerIconColor: Theme.of(context).colorScheme.surface,
-                  dialogIconColor: Colors.red,
-                  containerIconSize: 48.0,
-                  dialogIconSize: 96.0,
-                  containerBackgroundColor: Theme.of(context).colorScheme.onSurface,
-                  dialogBackgroundColor: Colors.blue,
-                  extendedAppBar: AppBar(
-                    title: const Text('Hello'),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                ConstrainedBox(
-                  constraints: const BoxConstraints.tightFor(
-                    width: double.infinity,
-                    height: 200.0,
-                  ),
-                  child: TextField(
-                    focusNode: _submitFocusNode,
-                    expands: true,
-                    maxLines: null,
-                    decoration: const InputDecoration(border: OutlineInputBorder()),
-                    onSubmitted: (value) {
-                      debugPrint('submitted $value');
-                    },
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                NumberPicker(
-                  controller: _controller,
-                  onChanged: (value) => debugPrint('onChanged $value'),
-                ),
-                const SizedBox(height: 16.0),
-                NumberPicker(
-                  controller: _controller,
-                ),
-                const SizedBox(height: 16.0),
-                NumberPicker(
-                  controller: _controller,
-                ),
-                const SizedBox(height: 16.0),
-                NumberPicker(
-                  controller: _controller,
-                ),
-                const SizedBox(height: 16.0),
-                NumberPicker(
-                  controller: _controller,
-                ),
-                const SizedBox(height: 16.0),
-                FilledButton(
-                  onPressed: () => NavigationHelper.to(
-                    AdaptiveDialogRoute(
-                      builder: (context) => ChooseDialog(
-                        data: () => [],
+                      TextField(
+                        controller: _textControllerThousandFormat,
                       ),
-                    ),
+                      FilledButton(
+                        onPressed: () => showErrorDialog('Hello', primaryFilledButton: true),
+                        child: const Text('Hello'),
+                      ),
+                      ListTile(
+                        title: const Text('test'),
+                        selectedTileColor: Theme.of(context).colorScheme.secondaryContainer,
+                        selected: true,
+                        onTap: () {},
+                      ),
+                      const SizedBox(height: 16.0),
+                      DateRangeField(
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime.now().add(const Duration(days: 30)),
+                        value: currentDateRange,
+                        onDateChanged: (value) => setState(() => value != null ? currentDateRange = value : null),
+                      ),
+                      const SizedBox(height: 16.0),
+                      ButtonEdit(
+                        onCancelDisabledPressed: () => debugPrint('onCancelDisabledPressed'),
+                      ),
+                      const SizedBox(height: 16.0),
+                      DropdownField(
+                        controller: _textController,
+                        items: ['Hello', 'World']
+                            .map(
+                              (e) => PopupMenuItem(
+                                value: e,
+                                child: Text(e),
+                              ),
+                            )
+                            .toList(),
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Dropdown field',
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      ImageContainer.hero(
+                        key: UniqueKey(),
+                        tag: 'hero',
+                        width: double.infinity,
+                        height: 400.0,
+                        // borderRadius: BorderRadius.zero,
+                        // containerGradient: const LinearGradient(
+                        //   begin: AlignmentDirectional.topCenter,
+                        //   end: AlignmentDirectional.bottomCenter,
+                        //   colors: [
+                        //     Colors.black,
+                        //     Colors.transparent,
+                        //     Colors.transparent,
+                        //   ],
+                        // ),
+                        // dialogGradient: const LinearGradient(
+                        //   begin: AlignmentDirectional.topCenter,
+                        //   end: AlignmentDirectional.bottomCenter,
+                        //   colors: [
+                        //     Colors.transparent,
+                        //     Colors.transparent,
+                        //     Colors.transparent,
+                        //   ],
+                        // ),
+                        // image: const NetworkImage('https://plus.unsplash.com/premium_photo-1691338312403-e9f7f7984eeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80'),
+                        // image: const AssetImage('assets/purple-image.jpg'),
+                        // image: const cached.CachedNetworkImageProvider('https://dev-sirama.properiideal.id/storage/profile/shark.png'),
+                        // image: const cached.CachedNetworkImageProvider('https://avatars.githubusercontent.com/u/116476102?v=4'),
+                        image: imageData != null ? MemoryImage(imageData!) : null,
+                        containerBackgroundColor: Colors.red,
+                        // cachedNetworkImageError: (e) => const AssetImage('assets/purple-image.jpg'),
+                        // dialogFit: BoxFit.contain,
+                        extendedAppBar: AppBar(
+                          title: const Text('Detail image'),
+                        ),
+                        // useDynamicColor: true,
+                        // skipDialog: true,
+                        child: const Center(child: Text('Gambar kosong bro!')),
+                      ),
+                      const SizedBox(height: 16.0),
+                      ImageContainer.hero(
+                        tag: 'ASDF',
+                        height: 400.0,
+                        icon: Icons.abc,
+                        containerIconColor: Theme.of(context).colorScheme.surface,
+                        dialogIconColor: Colors.red,
+                        containerIconSize: 48.0,
+                        dialogIconSize: 96.0,
+                        containerBackgroundColor: Theme.of(context).colorScheme.onSurface,
+                        dialogBackgroundColor: Colors.blue,
+                        extendedAppBar: AppBar(
+                          title: const Text('Hello'),
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints.tightFor(
+                          width: double.infinity,
+                          height: 200.0,
+                        ),
+                        child: TextField(
+                          focusNode: _submitFocusNode,
+                          expands: true,
+                          maxLines: null,
+                          decoration: const InputDecoration(border: OutlineInputBorder()),
+                          onSubmitted: (value) {
+                            debugPrint('submitted $value');
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      NumberPicker(
+                        controller: _controller,
+                        onChanged: (value) => debugPrint('onChanged $value'),
+                      ),
+                      const SizedBox(height: 16.0),
+                      NumberPicker(
+                        controller: _controller,
+                      ),
+                      const SizedBox(height: 16.0),
+                      NumberPicker(
+                        controller: _controller,
+                      ),
+                      const SizedBox(height: 16.0),
+                      NumberPicker(
+                        controller: _controller,
+                      ),
+                      const SizedBox(height: 16.0),
+                      NumberPicker(
+                        controller: _controller,
+                      ),
+                      const SizedBox(height: 16.0),
+                      FilledButton(
+                        onPressed: () => NavigationHelper.to(
+                          AdaptiveDialogRoute(
+                            builder: (context) => ChooseDialog(
+                              data: () => [],
+                            ),
+                          ),
+                        ),
+                        child: const Text('Show Choose Dialog'),
+                      ),
+                      const SizedBox(height: 90),
+                    ],
                   ),
-                  child: const Text('Show Choose Dialog'),
-                ),
-                SizedBox(height: 90),
-              ],
+                  // Second Tab
+                  ListView(
+                    children: [
+                      TimerProgressIndicator(
+                        controller: timerController,
+                        progressNotifier: ValueNotifier(0.35),
+                      ),
+                      const SizedBox(height: 90),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           AnimatedDraggableScrollableSheet(

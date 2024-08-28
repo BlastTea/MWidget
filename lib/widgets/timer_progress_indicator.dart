@@ -3,12 +3,14 @@ part of 'widgets.dart';
 class TimerProgressIndicator extends StatefulWidget {
   const TimerProgressIndicator({
     super.key,
+    this.controller,
     required this.progressNotifier,
     this.messageNotifier,
     this.width,
     this.padding,
   });
 
+  final TimerController? controller;
   final ValueNotifier<double?> progressNotifier;
   final ValueNotifier<String?>? messageNotifier;
   final double? width;
@@ -21,27 +23,30 @@ class TimerProgressIndicator extends StatefulWidget {
 class _TimerProgressIndicatorState extends State<TimerProgressIndicator> {
   final ValueNotifier<String> timeElapsedNotifier = ValueNotifier(Language.getInstance().getValue('{0} Seconds', ['00'])!);
 
-  late Timer timer;
+  late TimerController controller;
 
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) => setState(
-        () {
-          Duration timeElapsed = Duration(seconds: timer.tick);
-          String formattedTime = formatDuration(timeElapsed);
-          timeElapsedNotifier.value = formattedTime;
-        },
-      ),
-    );
+    controller = widget.controller ?? TimerController(duration: const Duration(seconds: 1));
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => _onTimerCallback());
+    controller.addListener(_onTimerCallback);
   }
 
   @override
   void dispose() {
-    timer.cancel();
+    controller.removeListener(_onTimerCallback);
     super.dispose();
+  }
+
+  void _onTimerCallback() {
+    setState(
+      () {
+        Duration timeElapsed = Duration(seconds: controller.timer.tick);
+        String formattedTime = formatDuration(timeElapsed);
+        timeElapsedNotifier.value = formattedTime;
+      },
+    );
   }
 
   @override
@@ -83,4 +88,15 @@ class _TimerProgressIndicatorState extends State<TimerProgressIndicator> {
           ),
         ),
       );
+}
+
+class TimerController extends ChangeNotifier {
+  TimerController({Duration duration = const Duration(seconds: 1)}) {
+    timer = Timer.periodic(
+      duration,
+      (timer) => notifyListeners(),
+    );
+  }
+
+  late Timer timer;
 }
