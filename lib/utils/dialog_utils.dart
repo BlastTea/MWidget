@@ -10,23 +10,24 @@ Future<void> showErrorDialog(
   TextStyle? messageTextStyle,
   bool? primaryFilledButton,
 }) =>
-    NavigationHelper.showDialog(
+    showDialog(
+      context: Get.context!,
       builder: (context) => AlertDialog(
-        title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.errorTitleText ?? Language.getInstance().getValue('Error')!),
+        title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.errorTitleText ?? 'Error'.tr),
         titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
-        content: MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(navigatorKey.currentContext!, messageText) ?? SelectableText(messageText),
+        content: MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(context, messageText) ?? SelectableText(messageText),
         contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
           (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
               ? FilledButton(
                   autofocus: true,
-                  onPressed: () => NavigationHelper.back(),
-                  child: Text(Language.getInstance().getValue('Ok')!),
+                  onPressed: () => Get.back(),
+                  child: Text('Ok'.tr),
                 )
               : TextButton(
                   autofocus: true,
-                  onPressed: () => NavigationHelper.back(),
-                  child: Text(Language.getInstance().getValue('Ok')!),
+                  onPressed: () => Get.back(),
+                  child: Text('Ok'.tr),
                 ),
         ],
       ),
@@ -42,23 +43,24 @@ Future<void> showWarningDialog(
   TextStyle? messageTextStyle,
   bool? primaryFilledButton,
 }) =>
-    NavigationHelper.showDialog(
+    showDialog(
+      context: Get.context!,
       builder: (context) => AlertDialog(
-        title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.warningTitleText ?? Language.getInstance().getValue('Warning')!),
+        title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.warningTitleText ?? 'Warning'.tr),
         titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
-        content: MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(navigatorKey.currentContext!, messageText) ?? SelectableText(messageText),
+        content: MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(Get.context!, messageText) ?? SelectableText(messageText),
         contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
           (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
               ? FilledButton(
                   autofocus: true,
-                  onPressed: () => NavigationHelper.back(),
-                  child: Text(Language.getInstance().getValue('Ok')!),
+                  onPressed: () => Get.back(),
+                  child: Text('Ok'.tr),
                 )
               : TextButton(
                   autofocus: true,
-                  onPressed: () => NavigationHelper.back(),
-                  child: Text(Language.getInstance().getValue('Ok')!),
+                  onPressed: () => Get.back(),
+                  child: Text('Ok'.tr),
                 ),
         ],
       ),
@@ -71,30 +73,32 @@ Future<void> showInformationDialog(
   TextStyle? messageTextStyle,
   bool? primaryFilledButton,
 }) =>
-    NavigationHelper.showDialog(
+    showDialog(
+      context: Get.context!,
       builder: (context) => AlertDialog(
-        title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.informationTitleText ?? Language.getInstance().getValue('Information')!),
+        title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.informationTitleText ?? 'Information'.tr),
         titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
-        content: MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(navigatorKey.currentContext!, messageText) ?? SelectableText(messageText),
+        content: MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(context, messageText) ?? SelectableText(messageText),
         contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
           (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
               ? FilledButton(
                   autofocus: true,
-                  onPressed: () => NavigationHelper.back(),
-                  child: Text(Language.getInstance().getValue('Ok')!),
+                  onPressed: () => Get.back(),
+                  child: Text('Ok'.tr),
                 )
               : TextButton(
                   autofocus: true,
-                  onPressed: () => NavigationHelper.back(),
-                  child: Text(Language.getInstance().getValue('Ok')!),
+                  onPressed: () => Get.back(),
+                  child: Text('Ok'.tr),
                 ),
         ],
       ),
     );
 
 /// Displays a loading dialog with a progress indicator.
-Future<void> showLoadingDialog() => NavigationHelper.showDialog(
+Future<void> showLoadingDialog() => showDialog(
+      context: Get.context!,
       barrierDismissible: false,
       builder: (context) => const PopScope(
         canPop: false,
@@ -112,22 +116,23 @@ Future<bool?> showSaveChangesDialog({
   TextStyle? titleTextStyle,
   bool? primaryFilledButton,
 }) =>
-    NavigationHelper.showDialog(
+    showDialog(
+      context: Get.context!,
       builder: (context) => AlertDialog(
-        title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.saveChangesTitleText ?? Language.getInstance().getValue('Save changes?')!),
+        title: Text(titleText ?? MWidgetTheme.of(context)?.dialogTheme.saveChangesTitleText ?? 'Save changes?'.tr),
         actions: [
           TextButton(
-            onPressed: () => NavigationHelper.back(false),
-            child: Text(Language.getInstance().getValue('Don\'t save')!),
+            onPressed: () => Get.back(result: false),
+            child: Text('Don\'t save'.tr),
           ),
           (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
               ? FilledButton(
-                  onPressed: () => NavigationHelper.back(true),
-                  child: Text(Language.getInstance().getValue('Save')!),
+                  onPressed: () => Get.back(result: true),
+                  child: Text('Save'.tr),
                 )
               : TextButton(
-                  onPressed: () => NavigationHelper.back(true),
-                  child: Text(Language.getInstance().getValue('Save')!),
+                  onPressed: () => Get.back(result: true),
+                  child: Text('Save'.tr),
                 ),
         ],
       ),
@@ -140,25 +145,26 @@ Future<bool?> showYesOrNoDialog({
   TextStyle? messageTextStyle,
   bool? primaryFilledButton,
 }) =>
-    NavigationHelper.showDialog(
+    showDialog(
+      context: Get.context!,
       builder: (context) => AlertDialog(
         title: titleText != null ? Text(titleText) : null,
         titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
-        content: messageText != null ? MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(navigatorKey.currentContext!, messageText) ?? Text(messageText) : null,
+        content: messageText != null ? MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(context, messageText) ?? Text(messageText) : null,
         contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
           TextButton(
-            onPressed: () => NavigationHelper.back(false),
-            child: Text(Language.getInstance().getValue('No')!),
+            onPressed: () => Get.back(result: false),
+            child: Text('No'.tr),
           ),
           (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
               ? FilledButton(
-                  onPressed: () => NavigationHelper.back(true),
-                  child: Text(Language.getInstance().getValue('Yes')!),
+                  onPressed: () => Get.back(result: true),
+                  child: Text('Yes'.tr),
                 )
               : TextButton(
-                  onPressed: () => NavigationHelper.back(true),
-                  child: Text(Language.getInstance().getValue('Yes')!),
+                  onPressed: () => Get.back(result: true),
+                  child: Text('Yes'.tr),
                 ),
         ],
       ),
@@ -171,25 +177,26 @@ Future<bool?> showDeleteDialog({
   TextStyle? messageTextStyle,
   bool? primaryFilledButton,
 }) =>
-    NavigationHelper.showDialog(
+    showDialog(
+      context: Get.context!,
       builder: (context) => AlertDialog(
         title: titleText != null ? Text(titleText) : null,
         titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
-        content: messageText != null ? MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(navigatorKey.currentContext!, messageText) ?? Text(messageText) : null,
+        content: messageText != null ? MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(context, messageText) ?? Text(messageText) : null,
         contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
           TextButton(
-            onPressed: () => NavigationHelper.back(false),
-            child: Text(Language.getInstance().getValue('Cancel')!),
+            onPressed: () => Get.back(result: false),
+            child: Text('Cancel'.tr),
           ),
           (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
               ? FilledButton(
-                  onPressed: () => NavigationHelper.back(true),
-                  child: Text(Language.getInstance().getValue('Delete')!),
+                  onPressed: () => Get.back(result: true),
+                  child: Text('Delete'.tr),
                 )
               : TextButton(
-                  onPressed: () => NavigationHelper.back(true),
-                  child: Text(Language.getInstance().getValue('Delete')!),
+                  onPressed: () => Get.back(result: true),
+                  child: Text('Delete'.tr),
                 ),
         ],
       ),
@@ -202,25 +209,26 @@ Future<bool?> showContinueOrCancelDialog({
   TextStyle? messageTextStyle,
   bool? primaryFilledButton,
 }) =>
-    NavigationHelper.showDialog(
+    showDialog(
+      context: Get.context!,
       builder: (context) => AlertDialog(
         title: titleText != null ? Text(titleText) : null,
         titleTextStyle: titleTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.titleTextStyle,
-        content: messageText != null ? MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(navigatorKey.currentContext!, messageText) ?? Text(messageText) : null,
+        content: messageText != null ? MWidgetTheme.of(context)?.dialogTheme.onRenderMessage?.call(context, messageText) ?? Text(messageText) : null,
         contentTextStyle: messageTextStyle ?? MWidgetTheme.of(context)?.dialogTheme.messageTextStyle,
         actions: [
           TextButton(
-            onPressed: () => NavigationHelper.back(false),
-            child: Text(Language.getInstance().getValue('Cancel')!),
+            onPressed: () => Get.back(result: false),
+            child: Text('Cancel'.tr),
           ),
           (primaryFilledButton ?? MWidgetTheme.of(context)?.dialogTheme.primaryFilledButton ?? false)
               ? FilledButton(
-                  onPressed: () => NavigationHelper.back(true),
-                  child: Text(Language.getInstance().getValue('Continue')!),
+                  onPressed: () => Get.back(result: true),
+                  child: Text('Continue'.tr),
                 )
               : TextButton(
-                  onPressed: () => NavigationHelper.back(true),
-                  child: Text(Language.getInstance().getValue('Continue')!),
+                  onPressed: () => Get.back(result: true),
+                  child: Text('Continue'.tr),
                 ),
         ],
       ),

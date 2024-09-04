@@ -167,8 +167,6 @@ class DateRangeField extends StatelessWidget {
     //   ),
     // );
 
-    Language language = Language.getInstance();
-
     showDateRangePicker(
       context: context,
       firstDate: firstDate,
@@ -193,7 +191,7 @@ class DateRangeField extends StatelessWidget {
       fieldStartHintText: null,
       fieldStartLabelText: null,
       helpText: null,
-      saveText: language.getValue('Save'),
+      saveText: 'Save'.tr,
     ).then((value) => onDateChanged?.call(value != null ? DateTimeRange(start: value.start, end: DateTime(value.end.year, value.end.month, value.end.day, 23, 59, 59)) : null));
   }
 

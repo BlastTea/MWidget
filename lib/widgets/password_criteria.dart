@@ -28,6 +28,8 @@ class PasswordCriteriaInfo extends StatelessWidget {
           if (text.contains(RegExp(r'[0-9]'))) results.add(value);
         case _PasswordCriteriaContainsSpecialCharacters value:
           if (text.contains(RegExp(r'[!@#\$%^&*()_+{}[\]:;<>,.?~\\-]'))) results.add(value);
+        case _PasswordCriteriaNotInOrder value:
+          if (text.containsSequential()) results.add(value);
       }
     }
 
@@ -64,12 +66,15 @@ sealed class PasswordCriteria {
 
   factory PasswordCriteria.containsSpecialCharacters() = _PasswordCriteriaContainsSpecialCharacters;
 
+  factory PasswordCriteria.notInOrder() = _PasswordCriteriaNotInOrder;
+
   static List<PasswordCriteria> getAllvalues({required int minLength}) => [
         PasswordCriteria.minimumCharacters(minLength: minLength),
         PasswordCriteria.containsLowerCaseLetters(),
         PasswordCriteria.containsUpperCaseLetters(),
         PasswordCriteria.containsNumber(),
         PasswordCriteria.containsSpecialCharacters(),
+        PasswordCriteria.notInOrder(),
       ];
 
   String get text;
@@ -81,25 +86,30 @@ class _PasswordCriteriaMinimunChacater extends PasswordCriteria {
   final int minLength;
 
   @override
-  String get text => Language.getInstance().getValue('Minimum {0} characters', [minLength])!;
+  String get text => 'Minimum %s characters'.trArgs([minLength.toString()]);
 }
 
 class _PasswordCriteriaContainsLowerCaseLetters extends PasswordCriteria {
   @override
-  String get text => Language.getInstance().getValue('Contains lowercase letters')!;
+  String get text => 'Contains lowercase letters'.tr;
 }
 
 class _PasswordCriteriaContainsUpperCaseLetters extends PasswordCriteria {
   @override
-  String get text => Language.getInstance().getValue('Contains uppercase letters')!;
+  String get text => 'Contains uppercase letters'.tr;
 }
 
 class _PasswordCriteriaContainsNumber extends PasswordCriteria {
   @override
-  String get text => Language.getInstance().getValue('Contains numbers')!;
+  String get text => 'Contains numbers'.tr;
 }
 
 class _PasswordCriteriaContainsSpecialCharacters extends PasswordCriteria {
   @override
-  String get text => Language.getInstance().getValue('Contains special characters')!;
+  String get text => 'Contains special characters'.tr;
+}
+
+class _PasswordCriteriaNotInOrder extends PasswordCriteria {
+  @override
+  String get text => 'Not in order (123, abc, ABC)'.tr;
 }

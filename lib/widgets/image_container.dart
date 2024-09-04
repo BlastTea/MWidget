@@ -247,11 +247,12 @@ class ImageContainer extends StatefulWidget {
   }) async {
     ImageSourceResult? imageSourceResult = !(Platform.isAndroid || Platform.isIOS) ? ImageSourceResult.gallery : (!allowPickImageFromGallery && !showDelete ? ImageSourceResult.camera : null);
     if (((Platform.isAndroid || Platform.isIOS) && (allowPickImageFromGallery || showDelete)) || forceUsingSheet && (!(Platform.isAndroid || Platform.isIOS) && showDelete)) {
-      imageSourceResult = await NavigationHelper.showModalBottomSheet(
+      imageSourceResult = await showModalBottomSheet(
+        context: Get.context!,
         builder: (context) => SheetImageSource(
           showGallery: allowPickImageFromGallery,
           showDelete: showDelete,
-          title: Text(sheetTitleText ?? Language.getInstance().getValue('Change logo')!),
+          title: Text('Change logo'.tr),
           itemWidth: sheetImageItemWidth,
         ),
       ).then((value) => value ?? (!(Platform.isAndroid || Platform.isIOS) ? (showDelete ? null : ImageSourceResult.gallery) : null));
@@ -277,6 +278,7 @@ class ImageContainer extends StatefulWidget {
 class _ImageContainerState extends State<ImageContainer> with SingleTickerProviderStateMixin {
   Key _imageKey = UniqueKey();
 
+  // ignore: unused_field
   bool _isError = false;
   bool _onHover = false;
 
@@ -328,7 +330,7 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
     }
   }
 
-  Future<void> _goToDialog() => NavigationHelper.to(
+  Future<void>? _goToDialog() => navigator!.push(
         PageRouteBuilder(
           barrierColor: Colors.black54,
           barrierDismissible: true,
@@ -504,9 +506,9 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
       ),
     );
 
-    if (replaceCurrentScreen) return NavigationHelper.toReplacement(route).then(handleAfterRoute);
+    if (replaceCurrentScreen) return navigator!.pushReplacement(route).then(handleAfterRoute);
 
-    return NavigationHelper.to(route).then(handleAfterRoute);
+    return navigator!.push(route).then(handleAfterRoute);
   }
 
   @override

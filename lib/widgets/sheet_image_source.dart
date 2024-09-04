@@ -59,48 +59,45 @@ class SheetImageSource extends StatelessWidget {
   final double? itemWidth;
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder(
-        valueListenable: Language.getInstance().languageNotifier,
-        builder: (context, language, child) => Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (title != null) ...[
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-                  child: DefaultTextStyle(
-                    style: Theme.of(context).textTheme.bodyLarge!,
-                    child: title!,
-                  ),
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (title != null) ...[
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+                child: DefaultTextStyle(
+                  style: Theme.of(context).textTheme.bodyLarge!,
+                  child: title!,
                 ),
-                const SizedBox(height: 8.0),
-              ],
-              Row(
-                children: List.generate(
-                  _index,
-                  (index) => Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Material(
+              ),
+              const SizedBox(height: 8.0),
+            ],
+            Row(
+              children: List.generate(
+                _index,
+                (index) => Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Material(
+                    borderRadius: BorderRadius.circular(kShapeLarge),
+                    color: Colors.transparent,
+                    child: InkWell(
                       borderRadius: BorderRadius.circular(kShapeLarge),
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(kShapeLarge),
-                        onTap: () => NavigationHelper.back((Platform.isAndroid || Platform.isIOS ? [if (showGallery) ImageSourceResult.gallery, ImageSourceResult.camera, ImageSourceResult.delete] : [ImageSourceResult.gallery, ImageSourceResult.delete])[index]),
-                        child: SizedBox(
-                          width: itemWidth ?? 68.0,
-                          height: 68.0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon((Platform.isAndroid || Platform.isIOS ? [if (showGallery) Icons.photo, Icons.camera, Icons.delete] : [Icons.folder, Icons.delete])[index]),
-                                const SizedBox(height: 8.0),
-                                Text(language[(Platform.isAndroid || Platform.isIOS ? [if (showGallery) 'Gallery', 'Camera', 'Delete'] : ['File', 'Delete'])[index]]!),
-                              ],
-                            ),
+                      onTap: () => Get.back(result: (Platform.isAndroid || Platform.isIOS ? [if (showGallery) ImageSourceResult.gallery, ImageSourceResult.camera, ImageSourceResult.delete] : [ImageSourceResult.gallery, ImageSourceResult.delete])[index]),
+                      child: SizedBox(
+                        width: itemWidth ?? 68.0,
+                        height: 68.0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon((Platform.isAndroid || Platform.isIOS ? [if (showGallery) Icons.photo, Icons.camera, Icons.delete] : [Icons.folder, Icons.delete])[index]),
+                              const SizedBox(height: 8.0),
+                              Text((Platform.isAndroid || Platform.isIOS ? [if (showGallery) 'Gallery', 'Camera', 'Delete'] : ['File', 'Delete'])[index].tr),
+                            ],
                           ),
                         ),
                       ),
@@ -108,8 +105,8 @@ class SheetImageSource extends StatelessWidget {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
 

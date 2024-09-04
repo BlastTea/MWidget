@@ -171,45 +171,42 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
   void _setIsSelected(index, bool value) => setState(() => _chooseData[index].isSelected = value);
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder(
-        valueListenable: Language.getInstance().languageNotifier,
-        builder: (context, language, child) => AdaptiveFullScreenDialog(
-          alwaysFullScreen: widget.alwaysFullScreen,
-          alwaysDialog: widget.alwaysDialog,
-          fullScreenFab: widget.multiple && widget.useFullScreenFab
-              ? FloatingActionButton(
-                  onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
-                  child: const Icon(Icons.done),
-                )
-              : null,
-          title: widget.title,
-          body: _body,
-          dialogBody: SizedBox(
-            width: kCompactSize,
-            height: kCompactSize,
-            child: _body,
-          ),
-          actions: widget.multiple && !widget.useFullScreenFab
-              ? [
-                  TextButton(
-                    onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
-                    child: Text(language['Ok']!),
-                  ),
-                ]
-              : null,
-          dialogActions: widget.multiple
-              ? [
-                  TextButton(
-                    onPressed: () => NavigationHelper.back(),
-                    child: Text(language['Cancel']!),
-                  ),
-                  TextButton(
-                    onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
-                    child: Text(language['Ok']!),
-                  ),
-                ]
-              : null,
+  Widget build(BuildContext context) => AdaptiveFullScreenDialog(
+        alwaysFullScreen: widget.alwaysFullScreen,
+        alwaysDialog: widget.alwaysDialog,
+        fullScreenFab: widget.multiple && widget.useFullScreenFab
+            ? FloatingActionButton(
+                onPressed: () => Get.back<Iterable<T?>>(result: _originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
+                child: const Icon(Icons.done),
+              )
+            : null,
+        title: widget.title,
+        body: _body,
+        dialogBody: SizedBox(
+          width: kCompactSize,
+          height: kCompactSize,
+          child: _body,
         ),
+        actions: widget.multiple && !widget.useFullScreenFab
+            ? [
+                TextButton(
+                  onPressed: () => Get.back<Iterable<T?>>(result: _originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
+                  child: Text('Ok'.tr),
+                ),
+              ]
+            : null,
+        dialogActions: widget.multiple
+            ? [
+                TextButton(
+                  onPressed: () => Get.back(),
+                  child: Text('Cancel'.tr),
+                ),
+                TextButton(
+                  onPressed: () => Get.back<Iterable<T?>>(result: _originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
+                  child: Text('Ok'.tr),
+                ),
+              ]
+            : null,
       );
 
   Widget get _body => FutureBuilder(
@@ -236,24 +233,24 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
                           ? DefaultTextStyle(
                               style: Theme.of(context).textTheme.bodyLarge!,
                               child: Center(
-                                child: widget.onDataEmpty?.call(_retry) ?? Text(Language.getInstance().getValue('No data')!),
+                                child: widget.onDataEmpty?.call(_retry) ?? Text('No data'.tr),
                               ),
                             )
                           : DefaultTextStyle(
                               style: Theme.of(context).textTheme.bodyLarge!,
                               child: Center(
-                                child: widget.onDataNotFound ?? Text(Language.getInstance().getValue('Data not found')!),
+                                child: widget.onDataNotFound ?? Text('Data not found'.tr),
                               ),
                             )
                       : ListView.builder(
                           itemBuilder: (context, index) => ListTile(
-                            leading: widget.multiple ? Checkbox(value: _chooseData[index].isSelected, onChanged: (value) => _setIsSelected(index, value!)) : _chooseData[index].leading ?? (_chooseData.any((element) => element.isSelected) ? Radio(value: _chooseData[index].searchValue, groupValue: _chooseData.trySingleWhere((element) => element.isSelected)?.searchValue, onChanged: (value) => NavigationHelper.back<T>(_chooseData[index].value)) : null),
+                            leading: widget.multiple ? Checkbox(value: _chooseData[index].isSelected, onChanged: (value) => _setIsSelected(index, value!)) : _chooseData[index].leading ?? (_chooseData.any((element) => element.isSelected) ? Radio(value: _chooseData[index].searchValue, groupValue: _chooseData.trySingleWhere((element) => element.isSelected)?.searchValue, onChanged: (value) => Get.back<T>(result: _chooseData[index].value)) : null),
                             title: _chooseData[index].title,
                             subtitle: _chooseData[index].subtitle,
                             isThreeLine: _chooseData[index].isThreeLine,
                             selected: false,
                             trailing: _chooseData[index].trailing,
-                            onTap: () => !widget.multiple ? NavigationHelper.back<T>(_chooseData[index].value) : _setIsSelected(index, !_chooseData[index].isSelected),
+                            onTap: () => !widget.multiple ? Get.back<T>(result: _chooseData[index].value) : _setIsSelected(index, !_chooseData[index].isSelected),
                           ),
                           itemCount: _chooseData.length,
                         ),

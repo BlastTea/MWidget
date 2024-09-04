@@ -65,7 +65,7 @@ class AdaptiveAppBar extends AppBar {
     super.toolbarOpacity,
     super.toolbarTextStyle,
   }) : super(
-          leading: leading ?? (MediaQuery.sizeOf(navigatorKey.currentContext!).width < kMediumSize ? IconButton(onPressed: () => scaffoldKey?.currentState?.openDrawer(), icon: const Icon(Icons.menu)) : null),
+          leading: leading ?? (MediaQuery.sizeOf(Get.context!).width < kMediumSize ? IconButton(onPressed: () => scaffoldKey?.currentState?.openDrawer(), icon: const Icon(Icons.menu)) : null),
           notificationPredicate: notificationPredicate ?? defaultScrollNotificationPredicate,
         );
 }

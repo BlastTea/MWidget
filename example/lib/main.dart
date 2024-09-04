@@ -1,17 +1,25 @@
-import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:cached_network_image/cached_network_image.dart' as cached;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:get/get.dart';
 import 'package:m_widget/m_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await MWidget.initialize(
-    defaultLanguage: LanguageType.indonesiaIndonesian,
+    defaultLocale: const Locale('id', 'ID'),
   );
+
+  Language.addData({
+    'en_US': {
+      'Hello World': 'Hello World',
+    },
+    'id_ID': {
+      'Hello World': 'Halo Dunia',
+    }
+  });
 
   runApp(const MyApp());
 }
@@ -21,9 +29,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MWidgetDynamicColorBuilder(
-        builder: (context, theme, darkTheme, themeMode, colorScheme) => MaterialApp(
-          navigatorKey: navigatorKey,
-          scaffoldMessengerKey: scaffoldMessengerKey,
+        builder: (context, theme, darkTheme, themeMode, colorScheme) => GetMaterialApp(
           title: 'MWidget',
           theme: theme.copyWith(
             filledButtonTheme: FilledButtonThemeData(
@@ -35,6 +41,8 @@ class MyApp extends StatelessWidget {
           ),
           darkTheme: darkTheme,
           themeMode: themeMode,
+          locale: MWidget.locale,
+          translations: Language(),
           home: const MyHomePage(),
         ),
       );
@@ -82,26 +90,28 @@ class _MyHomePageState extends State<MyHomePage> {
                 actions: [
                   const ThemeSwitcher.iconButton(),
                   IconButton(
-                    onPressed: () => NavigationHelper.to(
-                      AdaptiveDialogRoute(
-                        builder: (context) => ChooseDialog(
-                          data: () => [
-                            'Sapi',
-                            'Kerbau',
-                            'Kucing',
-                            'Harimau',
-                          ]
-                              .map(
-                                (e) => ChooseData(
-                                  value: e,
-                                  searchValue: e,
-                                  title: Text(e),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    ),
+                    onPressed: () => navigator!
+                        .push(
+                          AdaptiveDialogRoute(
+                            builder: (context) => ChooseDialog(
+                              data: () => [
+                                'Sapi',
+                                'Kerbau',
+                                'Kucing',
+                                'Harimau',
+                              ]
+                                  .map(
+                                    (e) => ChooseData(
+                                      value: e,
+                                      searchValue: e,
+                                      title: Text(e),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        )
+                        .then((value) => debugPrint('chooseDialog result :$value')),
                     icon: const Icon(Icons.access_time),
                   ),
                   IconButton(
@@ -116,11 +126,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     icon: const Icon(Icons.photo_camera),
                   ),
                   IconButton(
-                    onPressed: () => NavigationHelper.showModalBottomSheet(
+                    onPressed: () => showModalBottomSheet(
+                      context: Get.context!,
                       builder: (context) => SheetImageSource(
                         showGallery: false,
                         showDelete: false,
-                        title: Text(Language.getInstance().getValue('Change logo')!),
+                        title: Text('Change logo'.tr),
                       ),
                     ),
                     icon: const Icon(Icons.question_mark),
@@ -133,6 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ListView(
                     padding: responsivePadding(MediaQuery.sizeOf(context)),
                     children: [
+                      Text('Hello World'.tr),
                       TimerProgressIndicator(
                         controller: timerController,
                         progressNotifier: ValueNotifier(0.35),
@@ -285,7 +297,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       const SizedBox(height: 16.0),
                       FilledButton(
-                        onPressed: () => NavigationHelper.to(
+                        onPressed: () => navigator!.push(
                           AdaptiveDialogRoute(
                             builder: (context) => ChooseDialog(
                               data: () => [],

@@ -1,6 +1,7 @@
 part of 'enums.dart';
 
 /// An enumeration representing the available language types in the application.
+@Deprecated('Use Locale instead')
 enum LanguageType {
   afghanistanPashto('Afghanistan', 'Pashto', 'ps', 'AF', 'ps', 'AFG'),
   afghanistanPersian('Afghanistan', 'Persian', 'fa', 'AF', 'fa', 'AFG'),

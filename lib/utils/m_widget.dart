@@ -1,19 +1,20 @@
 part of 'utils.dart';
 
 class MWidget {
-  static List<LanguageType> availableLanguages = [
-    LanguageType.unitedStatesEnglish,
-    LanguageType.indonesiaIndonesian,
+  static List<Locale> availableLanguages = [
+    const Locale('en', 'US'),
+    const Locale('id', 'ID'),
   ];
 
   static ThemeValue themeValue = ThemeValue();
 
+  static Locale locale = availableLanguages.first;
+
   static Future<void> initialize({
     ThemeValue? defaultTheme,
-    LanguageType? defaultLanguage,
+    Locale? defaultLocale,
   }) async {
     debugPrint('initialize MWidget');
-    Language language = Language.initialize();
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
@@ -22,6 +23,8 @@ class MWidget {
       themeValue.themeMode = ThemeMode.dark;
     } else if (themeValueString == ThemeMode.light.toString()) {
       themeValue.themeMode = ThemeMode.light;
+    } else if (themeValueString == ThemeMode.system.toString()) {
+      themeValue.themeMode = ThemeMode.system;
     } else {
       themeValue.themeMode = defaultTheme?.themeMode ?? ThemeMode.system;
     }
@@ -35,8 +38,14 @@ class MWidget {
     bool? useDynamicColors = sharedPreferences.getBool(keyUseDynamicColors);
     themeValue.useDynamicColors = useDynamicColors ?? defaultTheme?.useDynamicColors ?? false;
 
-    String? languageValue = sharedPreferences.getString(keyLanguage);
-    language.languageType = languageValue != null ? LanguageType.fromFormattedString(languageValue) : defaultLanguage ?? LanguageType.unitedStatesEnglish;
+    String? localeValue = sharedPreferences.getString(keyLocale);
+    if (localeValue != null) {
+      List<String> splittedLocale = localeValue.split('_');
+
+      locale = Locale(splittedLocale[0], splittedLocale[1]);
+    } else {
+      locale = defaultLocale ?? availableLanguages.first;
+    }
   }
 }
 

@@ -24,16 +24,16 @@ extension DateTimeExtension on DateTime {
     bool withHour = false,
     bool withSeconds = true,
     String dateHourSeparator = ',',
-    Language? language,
+    Locale? locale,
   }) {
-    switch (language?.languageType ?? Language.getInstance().languageType) {
-      case LanguageType.indonesiaIndonesian:
-        return '${withWeekday ? '${getWeekday(language)}, ' : ''}${day.toString().padLeft(2, '0')} ${withMonthName ? getMonthName(language) : month.toString().padLeft(2, '0')}${withYear ? ' $year' : ''}${withHour ? '$dateHourSeparator ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}${withSeconds ? ':${second.toString().padLeft(2, '0')}' : ''}' : ''}';
+    switch (locale ?? '${Get.locale?.languageCode ?? 'en'}_${Get.locale?.countryCode ?? 'US'}') {
+      case 'id_ID':
+        return '${withWeekday ? '${getWeekday()}, ' : ''}${day.toString().padLeft(2, '0')} ${withMonthName ? getMonthName() : month.toString().padLeft(2, '0')}${withYear ? ' $year' : ''}${withHour ? '$dateHourSeparator ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}${withSeconds ? ':${second.toString().padLeft(2, '0')}' : ''}' : ''}';
       default:
         String period = (hour < 12) ? 'AM' : 'PM';
         int hour12 = (hour > 12) ? hour - 12 : hour;
 
-        return '${withWeekday ? '${getWeekday(language)}, ' : ''}${withMonthName ? getMonthName(language) : month.toString().padLeft(2, '0')} ${day.toString().padLeft(2, '0')}${withYear ? ', $year' : ''}${withHour ? '$dateHourSeparator ${hour12.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}${withSeconds ? ':${second.toString().padLeft(2, '0')} $period' : ''}' : ''}';
+        return '${withWeekday ? '${getWeekday()}, ' : ''}${withMonthName ? getMonthName() : month.toString().padLeft(2, '0')} ${day.toString().padLeft(2, '0')}${withYear ? ', $year' : ''}${withHour ? '$dateHourSeparator ${hour12.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}${withSeconds ? ':${second.toString().padLeft(2, '0')} $period' : ''}' : ''}';
     }
   }
 
@@ -47,22 +47,23 @@ extension DateTimeExtension on DateTime {
   /// Example:
   ///   - `getWeekday()`: 'Wednesday'
   ///   - `getWeekday(language)`: 'Rabu' (Indonesian)
-  String getWeekday([Language? language]) {
+  String getWeekday() {
+    // TODO : add locale
     switch (weekday) {
       case DateTime.sunday:
-        return language?.getValue('Sunday') ?? Language.getInstance().getValue('Sunday')!;
+        return 'Sunday'.tr;
       case DateTime.monday:
-        return language?.getValue('Monday') ?? Language.getInstance().getValue('Monday')!;
+        return 'Monday'.tr;
       case DateTime.tuesday:
-        return language?.getValue('Tuesday') ?? Language.getInstance().getValue('Tuesday')!;
+        return 'Tuesday'.tr;
       case DateTime.wednesday:
-        return language?.getValue('Wednesday') ?? Language.getInstance().getValue('Wednesday')!;
+        return 'Wednesday'.tr;
       case DateTime.thursday:
-        return language?.getValue('Thursday') ?? Language.getInstance().getValue('Thursday')!;
+        return 'Thursday'.tr;
       case DateTime.friday:
-        return language?.getValue('Friday') ?? Language.getInstance().getValue('Friday')!;
+        return 'Friday'.tr;
       default:
-        return language?.getValue('Saturday') ?? Language.getInstance().getValue('Saturday')!;
+        return 'Saturday'.tr;
     }
   }
 
@@ -76,32 +77,33 @@ extension DateTimeExtension on DateTime {
   /// Example:
   ///   - `getMonthName()`: 'August'
   ///   - `getMonthName(language)`: 'Agustus' (Indonesian)
-  String getMonthName([Language? language]) {
+  String getMonthName() {
+    // TODO : add locale
     switch (month) {
       case DateTime.january:
-        return language?.getValue('January') ?? Language.getInstance().getValue('January')!;
+        return 'January'.tr;
       case DateTime.february:
-        return language?.getValue('February') ?? Language.getInstance().getValue('February')!;
+        return 'February'.tr;
       case DateTime.march:
-        return language?.getValue('March') ?? Language.getInstance().getValue('March')!;
+        return 'March'.tr;
       case DateTime.april:
-        return language?.getValue('April') ?? Language.getInstance().getValue('April')!;
+        return 'April'.tr;
       case DateTime.may:
-        return language?.getValue('May') ?? Language.getInstance().getValue('May')!;
+        return 'May'.tr;
       case DateTime.june:
-        return language?.getValue('June') ?? Language.getInstance().getValue('June')!;
+        return 'June'.tr;
       case DateTime.july:
-        return language?.getValue('July') ?? Language.getInstance().getValue('July')!;
+        return 'July'.tr;
       case DateTime.august:
-        return language?.getValue('August') ?? Language.getInstance().getValue('August')!;
+        return 'August'.tr;
       case DateTime.september:
-        return language?.getValue('September') ?? Language.getInstance().getValue('September')!;
+        return 'September'.tr;
       case DateTime.october:
-        return language?.getValue('October') ?? Language.getInstance().getValue('October')!;
+        return 'October'.tr;
       case DateTime.november:
-        return language?.getValue('November') ?? Language.getInstance().getValue('November')!;
+        return 'November'.tr;
       default:
-        return language?.getValue('December') ?? Language.getInstance().getValue('December')!;
+        return 'December'.tr;
     }
   }
 }

@@ -39,31 +39,28 @@ class RetryButton extends StatelessWidget {
   final String? additionalMessage;
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder(
-        valueListenable: Language.getInstance().languageNotifier,
-        builder: (context, language, child) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+  Widget build(BuildContext context) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              titleText,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            if (additionalMessage != null) ...[
+              const SizedBox(height: 8.0),
               Text(
-                titleText,
+                additionalMessage!,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
-              if (additionalMessage != null) ...[
-                const SizedBox(height: 8.0),
-                Text(
-                  additionalMessage!,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ],
-              const SizedBox(height: 8.0),
-              FilledButton.icon(
-                onPressed: onRetryPressed,
-                label: Text(language['Retry']!),
-                icon: const Icon(Icons.refresh),
-              ),
             ],
-          ),
+            const SizedBox(height: 8.0),
+            FilledButton.icon(
+              onPressed: onRetryPressed,
+              label: Text('Retry'.tr),
+              icon: const Icon(Icons.refresh),
+            ),
+          ],
         ),
       );
 }

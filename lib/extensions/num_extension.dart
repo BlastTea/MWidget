@@ -69,7 +69,7 @@ extension NumExtension on num {
       count++;
 
       if (count % 3 == 0 && i != 0) {
-        formattedString = '${(invertThousandSeparator ?? (navigatorKey.currentContext != null ? MWidgetTheme.of(navigatorKey.currentContext!)?.invertThousandSeparator : null) ?? false) ? '.' : ','}$formattedString';
+        formattedString = '${(invertThousandSeparator ?? (Get.context != null ? MWidgetTheme.of(Get.context!)?.invertThousandSeparator : null) ?? false) ? '.' : ','}$formattedString';
       }
     }
 
@@ -77,6 +77,6 @@ extension NumExtension on num {
       return (isNegative ? '-' : '') + formattedString;
     }
 
-    return (isNegative ? '-' : '') + formattedString + decimalPart.replaceFirst('.', (invertThousandSeparator ?? (navigatorKey.currentContext != null ? MWidgetTheme.of(navigatorKey.currentContext!)?.invertThousandSeparator : null) ?? false) ? ',' : '.');
+    return (isNegative ? '-' : '') + formattedString + decimalPart.replaceFirst('.', (invertThousandSeparator ?? (Get.context != null ? MWidgetTheme.of(Get.context!)?.invertThousandSeparator : null) ?? false) ? ',' : '.');
   }
 }

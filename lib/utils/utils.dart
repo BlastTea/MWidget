@@ -1,10 +1,11 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:m_widget/m_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,7 +19,7 @@ part 'dialog_utils.dart';
 part 'm_widget.dart';
 part 'm_widget_theme.dart';
 
-const keyLanguage = 'language';
+const keyLocale = 'locale';
 const keyThemeMode = 'theme_mode';
 const keyColor = 'color';
 const keyWithCustomColors = 'with_custom_colors';
@@ -97,7 +98,7 @@ double responsiveDialogWidth(Size size, {double minimumHorizontalPadding = 16.0}
 /// The [animation] parameter is an optional animation value for color transition.
 ///
 /// Returns the selected tile color for the specified theme mode.
-Color selectedTileColor({Animation<double>? animation}) => animation != null ? Color.lerp(Colors.transparent, Theme.of(navigatorKey.currentContext!).colorScheme.secondaryContainer, animation.value)! : Theme.of(navigatorKey.currentContext!).colorScheme.secondaryContainer;
+Color selectedTileColor({Animation<double>? animation}) => animation != null ? Color.lerp(Colors.transparent, Theme.of(Get.context!).colorScheme.secondaryContainer, animation.value)! : Theme.of(Get.context!).colorScheme.secondaryContainer;
 
 /// Animates the given [scrollController] to a specified [offset].
 ///
@@ -177,6 +178,6 @@ String formatDuration(Duration duration) {
   } else if (duration.inMinutes > 0) {
     return '$twoDigitMinutes:$twoDigitSeconds';
   } else {
-    return Language.getInstance().getValue('{0} Seconds', [twoDigitSeconds])!;
+    return '%s Seconds'.trArgs([twoDigitSeconds]);
   }
 }

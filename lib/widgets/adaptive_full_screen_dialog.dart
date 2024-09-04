@@ -185,7 +185,7 @@ class AdaptiveFullScreenDialog extends StatelessWidget {
           leading: fullScreenLeading ??
               (automaticallyImplyLeading
                   ? IconButton(
-                      onPressed: () => NavigationHelper.back(),
+                      onPressed: () => Get.back(),
                       icon: const Icon(Icons.close),
                     )
                   : null),

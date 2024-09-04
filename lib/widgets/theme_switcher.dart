@@ -26,42 +26,39 @@ class ThemeSwitcher extends StatelessWidget {
   /// Determines the current theme brightness and updates the theme accordingly
   /// using [SharedPreferences] and [themeNotifier].
   Future<void> _handleThemeChanged() async {
-    ThemeValue? themeValue = await NavigationHelper.to(
+    ThemeValue? themeValue = await navigator!.push(
       AdaptiveDialogRoute(
         builder: (context) {
           ThemeValue currentValue = MWidget.themeValue.copyWith();
           currentValue.color ??= Colors.red;
 
           return ValueListenableBuilder(
-            valueListenable: Language.getInstance().languageNotifier,
-            builder: (context, language, child) => ValueListenableBuilder(
-              valueListenable: currentValue,
-              builder: (context, themeValue, child) {
-                return AdaptiveFullScreenDialog(
-                  title: Text(language['Change theme']!),
-                  body: _themeChangeBody(themeValue: currentValue, language: language),
-                  dialogBody: SizedBox(
-                    width: kCompactSize,
-                    height: kCompactSize,
-                    child: _themeChangeBody(themeValue: currentValue, language: language),
+            valueListenable: currentValue,
+            builder: (context, themeValue, child) {
+              return AdaptiveFullScreenDialog(
+                title: Text('Change theme'.tr),
+                body: _themeChangeBody(themeValue: currentValue),
+                dialogBody: SizedBox(
+                  width: kCompactSize,
+                  height: kCompactSize,
+                  child: _themeChangeBody(themeValue: currentValue),
+                ),
+                fullScreenFab: FloatingActionButton(
+                  onPressed: () => Get.back(result: currentValue),
+                  child: const Icon(Icons.done),
+                ),
+                dialogActions: [
+                  TextButton(
+                    onPressed: () => Get.back(),
+                    child: Text('Cancel'.tr),
                   ),
-                  fullScreenFab: FloatingActionButton(
-                    onPressed: () => NavigationHelper.back(currentValue),
-                    child: const Icon(Icons.done),
+                  TextButton(
+                    onPressed: () => Get.back(result: currentValue),
+                    child: Text('Ok'.tr),
                   ),
-                  dialogActions: [
-                    TextButton(
-                      onPressed: () => NavigationHelper.back(),
-                      child: Text(language['Cancel']!),
-                    ),
-                    TextButton(
-                      onPressed: () => NavigationHelper.back(currentValue),
-                      child: Text(language['Ok']!),
-                    ),
-                  ],
-                );
-              },
-            ),
+                ],
+              );
+            },
           );
         },
       ),
@@ -76,6 +73,7 @@ class ThemeSwitcher extends StatelessWidget {
       themeValue.color = null;
     }
 
+    // Get.changeThemeMode(themeValue.themeMode);
     MWidget.themeValue.value = themeValue;
     await MWidget.themeValue.saveToSharedPreferences();
 
@@ -90,7 +88,7 @@ class ThemeSwitcher extends StatelessWidget {
     // }
   }
 
-  Widget _themeChangeBody({required ThemeValue themeValue, required Map<String, String?> language}) => ListView(
+  Widget _themeChangeBody({required ThemeValue themeValue}) => ListView(
         children: [
           ...List.generate(
             3,
@@ -98,7 +96,7 @@ class ThemeSwitcher extends StatelessWidget {
               value: const [ThemeMode.system, ThemeMode.light, ThemeMode.dark][index],
               groupValue: themeValue.themeMode,
               onChanged: (value) => themeValue.themeMode = value!,
-              title: Text(language[['System', 'Light', 'Dark'][index]]!),
+              title: Text(['System', 'Light', 'Dark'][index].tr),
             ),
           ),
           if (showDynamicColorOptions) ...[
@@ -109,14 +107,14 @@ class ThemeSwitcher extends StatelessWidget {
                 value: const [false, true][index],
                 groupValue: themeValue.useDynamicColors,
                 onChanged: (value) => themeValue.useDynamicColors = value!,
-                title: Text(language[['Don\'t use dynamic colors', 'Use dynamic colors'][index]]!),
+                title: Text(['Don\'t use dynamic colors', 'Use dynamic colors'][index].tr),
               ),
             ),
             SwitchListTile(
               value: themeValue.withCustomColors,
               onChanged: themeValue.value.useDynamicColors ? (value) => themeValue.withCustomColors = value : null,
               controlAffinity: ListTileControlAffinity.leading,
-              title: Text(language['With custom colors']!),
+              title: Text('With custom colors'.tr),
             ),
             if (themeValue.useDynamicColors && themeValue.withCustomColors)
               Padding(
@@ -143,7 +141,7 @@ class ThemeSwitcher extends StatelessWidget {
   ///
   /// This widget displays an animated switcher with an icon button that triggers
   /// the [_handleThemeChanged] function on press.
-  Widget _iconButton({required Map<String, String?> language, required Brightness brightness}) => AnimatedSwitcher(
+  Widget _iconButton({required Brightness brightness}) => AnimatedSwitcher(
         duration: Durations.long4,
         transitionBuilder: (child, animation) => FadeTransition(
           opacity: animation,
@@ -162,7 +160,7 @@ class ThemeSwitcher extends StatelessWidget {
           key: ValueKey(brightness),
           onPressed: _handleThemeChanged,
           icon: Icon(_getIconData(brightness: brightness)),
-          tooltip: language['Change theme']!,
+          tooltip: 'Change theme'.tr,
         ),
       );
 
@@ -170,27 +168,16 @@ class ThemeSwitcher extends StatelessWidget {
   ///
   /// This widget displays a list tile with an icon and texts for the current theme,
   /// allowing the user to tap and switch the theme.
-  Widget _listTile({required Map<String, String?> language, required Brightness brightness}) => ListTile(
+  Widget _listTile({required Brightness brightness}) => ListTile(
         leading: Icon(_getIconData(brightness: brightness)),
-        title: Text(language['Change theme']!),
-        subtitle: Text(language[brightness == Brightness.light ? 'Light' : 'Dark']!),
+        title: Text('Change theme'.tr),
+        subtitle: Text((brightness == Brightness.light ? 'Light' : 'Dark').tr),
         onTap: _handleThemeChanged,
       );
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder(
-        valueListenable: Language.getInstance().languageNotifier,
-        builder: (context, language, child) => ValueListenableBuilder(
-          valueListenable: MWidget.themeValue,
-          builder: (context, themeValue, child) => _isIconButton
-              ? _iconButton(
-                  language: language,
-                  brightness: Theme.of(context).brightness,
-                )
-              : _listTile(
-                  language: language,
-                  brightness: Theme.of(context).brightness,
-                ),
-        ),
+        valueListenable: MWidget.themeValue,
+        builder: (context, themeValue, child) => _isIconButton ? _iconButton(brightness: Theme.of(context).brightness) : _listTile(brightness: Theme.of(context).brightness),
       );
 }

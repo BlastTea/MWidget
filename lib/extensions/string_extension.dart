@@ -259,4 +259,14 @@ extension StringExtension on String {
     if (word.isEmpty) return '';
     return word[0].toUpperCase() + word.substring(1);
   }
+
+  bool containsSequential() {
+    List<int> charCodes = codeUnits;
+
+    for (int i = 0; i < charCodes.length - 1; i++) {
+      if (i + 2 < charCodes.length && (charCodes[i + 1] == charCodes[i] + 1) && (charCodes[i + 2] == charCodes[i] + 2)) return true;
+    }
+
+    return false;
+  }
 }

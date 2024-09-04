@@ -18,59 +18,55 @@ class LanguageSwitcher extends StatelessWidget {
   ///
   /// Updates the [Language] instance with the new language and saves it to
   /// [SharedPreferences] using the [keyLanguage] key.
-  static Future<void> handleLanguageChanged(LanguageType? language) async {
-    if (language != null) {
-      Language.getInstance().languageType = language;
-      await SharedPreferences.getInstance().then((value) => value.setString(keyLanguage, language.toFormattedString()));
+  static Future<void> handleLanguageChanged(Locale? locale) async {
+    if (locale != null) {
+      await Get.updateLocale(locale);
+      await SharedPreferences.getInstance().then((value) => value.setString(keyLocale, '${locale.languageCode}_${locale.countryCode}'));
     }
   }
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder(
-        valueListenable: Language.getInstance().languageTypeNotifier,
-        builder: (context, languageType, child) => _isDropdownButton
-            ? DropdownButton(
-                value: languageType,
-                items: MWidget.availableLanguages
-                    .map(
-                      (e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(e.language),
-                      ),
-                    )
-                    .toList(),
-                onChanged: handleLanguageChanged,
-              )
-            : ValueListenableBuilder(
-                valueListenable: Language.getInstance().languageNotifier,
-                builder: (context, language, child) => ListTile(
-                  leading: const Icon(Icons.language),
-                  title: Text(language['Language']!),
-                  subtitle: Text(languageType.language),
-                  onTap: () => NavigationHelper.to(
-                    AdaptiveDialogRoute(
-                      builder: (context) => ChooseDialog(
-                        data: () => MWidget.availableLanguages
-                            .map(
-                              (e) => ChooseData(
-                                value: e,
-                                searchValue: e.language,
-                                title: Text(e.language),
-                                isSelected: languageType == e,
-                              ),
-                            )
-                            .toList(),
-                        title: Text(language['Choose language']!),
-                        onDataEmpty: (retry) => RetryButton(
-                          titleText: language['No data']!,
-                          onRetryPressed: retry,
-                        ),
-                        onDataNotFound: Text(language['Data not found']!),
-                        labelTextSearch: language['Search language']!,
-                      ),
-                    ),
-                  ).then((value) => handleLanguageChanged(value)),
+  Widget build(BuildContext context) => _isDropdownButton
+      ? DropdownButton(
+          value: Get.locale,
+          items: MWidget.availableLanguages
+              .map(
+                (e) => DropdownMenuItem(
+                  value: e,
+                  child: Text(e.displayName ?? '?'),
                 ),
-              ),
-      );
+              )
+              .toList(),
+          onChanged: handleLanguageChanged,
+        )
+      : ListTile(
+          leading: const Icon(Icons.language),
+          title: Text('Language'.tr),
+          subtitle: Text(Get.locale?.displayName ?? ''),
+          onTap: () => navigator!
+              .push(
+                AdaptiveDialogRoute(
+                  builder: (context) => ChooseDialog(
+                    data: () => MWidget.availableLanguages
+                        .map(
+                          (e) => ChooseData(
+                            value: e,
+                            searchValue: e.displayName,
+                            title: Text(e.displayName ?? ''),
+                            isSelected: Get.locale == e,
+                          ),
+                        )
+                        .toList(),
+                    title: Text('Choose language'.tr),
+                    onDataEmpty: (retry) => RetryButton(
+                      titleText: 'No data'.tr,
+                      onRetryPressed: retry,
+                    ),
+                    onDataNotFound: Text('Data not found'.tr),
+                    labelTextSearch: 'Search language'.tr,
+                  ),
+                ),
+              )
+              .then((value) => handleLanguageChanged(value)),
+        );
 }

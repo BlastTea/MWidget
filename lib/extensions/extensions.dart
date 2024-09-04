@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:m_widget/m_widget.dart';
 import 'package:path/path.dart' as path;
 import 'package:universal_io/io.dart';
@@ -11,3 +12,4 @@ part 'iterable_extension.dart';
 part 'list_extensions.dart';
 part 'duration_extension.dart';
 part 'file_extension.dart';
+part 'locale_extension.dart';

@@ -1,6 +1,8 @@
 part of 'services.dart';
 
+@Deprecated('Use Get instead')
 final material.GlobalKey<material.NavigatorState> navigatorKey = material.GlobalKey<material.NavigatorState>();
+@Deprecated('Use Get instead')
 final material.GlobalKey<material.ScaffoldMessengerState> scaffoldMessengerKey = material.GlobalKey<material.ScaffoldMessengerState>();
 
 /// The `NavigationHelper` class provides a set of static methods to facilitate navigation
@@ -8,6 +10,7 @@ final material.GlobalKey<material.ScaffoldMessengerState> scaffoldMessengerKey =
 /// without requiring access to the `BuildContext` directly. It centralizes the handling of
 /// navigation-related functionalities within the Flutter app, making it easier to manage
 /// and reuse navigation and UI interactions across different parts of the application.
+@Deprecated('Use Get instead')
 abstract class NavigationHelper {
   /// Navigates to a new route and returns a result when the route is popped.
   ///

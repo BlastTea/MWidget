@@ -104,7 +104,7 @@ class AdaptiveScaffold extends StatelessWidget {
             : Row(
                 children: [
                   NavigationRail(
-                    key: ValueKey(Language.getInstance().languageType),
+                    key: ValueKey('${Get.locale?.toLanguageTag() ?? Get.fallbackLocale?.toLanguageTag()}'),
                     destinations: destinations,
                     selectedIndex: selectedIndex,
                     labelType: NavigationRailLabelType.all,

@@ -83,7 +83,7 @@ class ButtonEdit extends StatelessWidget {
                 child: IconButton.outlined(
                   onPressed: onCancelPressed,
                   icon: const Icon(Icons.clear),
-                  tooltip: Language.getInstance().getValue('Cancel'),
+                  tooltip: 'Cancel'.tr,
                 ),
               ),
               GestureDetector(
@@ -91,7 +91,7 @@ class ButtonEdit extends StatelessWidget {
                 child: IconButton.outlined(
                   onPressed: onDeletePressed,
                   icon: const Icon(Icons.delete),
-                  tooltip: Language.getInstance().getValue('Delete'),
+                  tooltip: 'Delete'.tr,
                 ),
               ),
               GestureDetector(
@@ -99,7 +99,7 @@ class ButtonEdit extends StatelessWidget {
                 child: IconButton.outlined(
                   onPressed: onSavePressed,
                   icon: const Icon(Icons.save),
-                  tooltip: Language.getInstance().getValue('Save'),
+                  tooltip: 'Save'.tr,
                 ),
               ),
             ],

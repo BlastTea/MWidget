@@ -37,7 +37,7 @@ class AdaptiveDialogRoute<T> extends DialogRoute<T> implements PageRoute<T> {
     super.anchorPoint,
     super.traversalEdgeBehavior,
   }) : super(
-          context: navigatorKey.currentContext!,
+          context: Get.context!,
           builder: builder,
         );
 

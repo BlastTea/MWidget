@@ -32,14 +32,9 @@ class ErrorOccuredButton extends StatelessWidget {
   final String? errorMessage;
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder(
-        valueListenable: Language.getInstance().languageNotifier,
-        builder: (context, language, child) {
-          return RetryButton(
-            titleText: language['An error occured!']!,
-            additionalMessage: errorMessage,
-            onRetryPressed: onRetryPressed,
-          );
-        },
+  Widget build(BuildContext context) => RetryButton(
+        titleText: 'An error occured!'.tr,
+        additionalMessage: errorMessage,
+        onRetryPressed: onRetryPressed,
       );
 }

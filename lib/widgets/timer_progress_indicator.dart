@@ -21,7 +21,7 @@ class TimerProgressIndicator extends StatefulWidget {
 }
 
 class _TimerProgressIndicatorState extends State<TimerProgressIndicator> {
-  final ValueNotifier<String> timeElapsedNotifier = ValueNotifier(Language.getInstance().getValue('{0} Seconds', ['00'])!);
+  final ValueNotifier<String> timeElapsedNotifier = ValueNotifier('%s Seconds'.trArgs(['00']));
 
   late TimerController controller;
 
@@ -39,15 +39,13 @@ class _TimerProgressIndicatorState extends State<TimerProgressIndicator> {
     super.dispose();
   }
 
-  void _onTimerCallback() {
-    setState(
-      () {
-        Duration timeElapsed = Duration(seconds: controller.timer.tick);
-        String formattedTime = formatDuration(timeElapsed);
-        timeElapsedNotifier.value = formattedTime;
-      },
-    );
-  }
+  void _onTimerCallback() => setState(
+        () {
+          Duration timeElapsed = Duration(seconds: controller.timer.tick);
+          String formattedTime = formatDuration(timeElapsed);
+          timeElapsedNotifier.value = formattedTime;
+        },
+      );
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
@@ -68,7 +66,7 @@ class _TimerProgressIndicatorState extends State<TimerProgressIndicator> {
                       children: [
                         Expanded(child: LinearProgressIndicator(value: value)),
                         const SizedBox(width: 8.0),
-                        Text(Language.getInstance().getValue('{0}%', [((value ?? 0.0) * 100.0).round()])!),
+                        Text('%s%'.trArgs([((value ?? 0.0) * 100.0).round().toString()])),
                       ],
                     ),
                   ),
