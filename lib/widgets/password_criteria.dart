@@ -54,34 +54,34 @@ class PasswordCriteriaInfo extends StatelessWidget {
 }
 
 sealed class PasswordCriteria {
-  PasswordCriteria();
+  const PasswordCriteria();
 
-  factory PasswordCriteria.minimumCharacters({required int minLength}) => PasswordCriteriaMinimunCharacters(minLength: minLength);
+  const factory PasswordCriteria.minimumCharacters({required int minLength}) = PasswordCriteriaMinimunCharacters;
 
-  factory PasswordCriteria.containsLowerCaseLetters() = PasswordCriteriaContainsLowerCaseLetters;
+  const factory PasswordCriteria.containsLowerCaseLetters() = PasswordCriteriaContainsLowerCaseLetters;
 
-  factory PasswordCriteria.containsUpperCaseLetters() = PasswordCriteriaContainsUpperCaseLetters;
+  const factory PasswordCriteria.containsUpperCaseLetters() = PasswordCriteriaContainsUpperCaseLetters;
 
-  factory PasswordCriteria.containsNumber() = PasswordCriteriaContainsNumber;
+  const factory PasswordCriteria.containsNumber() = PasswordCriteriaContainsNumber;
 
-  factory PasswordCriteria.containsSpecialCharacters() = PasswordCriteriaContainsSpecialCharacters;
+  const factory PasswordCriteria.containsSpecialCharacters() = PasswordCriteriaContainsSpecialCharacters;
 
-  factory PasswordCriteria.notInOrder() = PasswordCriteriaNotInOrder;
+  const factory PasswordCriteria.notInOrder() = PasswordCriteriaNotInOrder;
 
   static List<PasswordCriteria> getAllvalues({required int minLength}) => [
         PasswordCriteria.minimumCharacters(minLength: minLength),
-        PasswordCriteria.containsLowerCaseLetters(),
-        PasswordCriteria.containsUpperCaseLetters(),
-        PasswordCriteria.containsNumber(),
-        PasswordCriteria.containsSpecialCharacters(),
-        PasswordCriteria.notInOrder(),
+        const PasswordCriteria.containsLowerCaseLetters(),
+        const PasswordCriteria.containsUpperCaseLetters(),
+        const PasswordCriteria.containsNumber(),
+        const PasswordCriteria.containsSpecialCharacters(),
+        const PasswordCriteria.notInOrder(),
       ];
 
   String get text;
 }
 
 class PasswordCriteriaMinimunCharacters extends PasswordCriteria {
-  PasswordCriteriaMinimunCharacters({required this.minLength});
+  const PasswordCriteriaMinimunCharacters({required this.minLength});
 
   final int minLength;
 
@@ -90,26 +90,36 @@ class PasswordCriteriaMinimunCharacters extends PasswordCriteria {
 }
 
 class PasswordCriteriaContainsLowerCaseLetters extends PasswordCriteria {
+  const PasswordCriteriaContainsLowerCaseLetters();
+
   @override
   String get text => 'Contains lowercase letters'.tr;
 }
 
 class PasswordCriteriaContainsUpperCaseLetters extends PasswordCriteria {
+  const PasswordCriteriaContainsUpperCaseLetters();
+
   @override
   String get text => 'Contains uppercase letters'.tr;
 }
 
 class PasswordCriteriaContainsNumber extends PasswordCriteria {
+  const PasswordCriteriaContainsNumber();
+
   @override
   String get text => 'Contains numbers'.tr;
 }
 
 class PasswordCriteriaContainsSpecialCharacters extends PasswordCriteria {
+  const PasswordCriteriaContainsSpecialCharacters();
+
   @override
   String get text => 'Contains special characters'.tr;
 }
 
 class PasswordCriteriaNotInOrder extends PasswordCriteria {
+  const PasswordCriteriaNotInOrder();
+
   @override
   String get text => 'Not in order (123, abc, ABC)'.tr;
 }
