@@ -18,17 +18,17 @@ class PasswordCriteriaInfo extends StatelessWidget {
 
     for (PasswordCriteria criteria in criterias) {
       switch (criteria) {
-        case _PasswordCriteriaMinimunChacater value:
+        case PasswordCriteriaMinimunCharacters value:
           if (text.length >= value.minLength) results.add(value);
-        case _PasswordCriteriaContainsLowerCaseLetters value:
+        case PasswordCriteriaContainsLowerCaseLetters value:
           if (text.contains(RegExp(r'[a-z]'))) results.add(value);
-        case _PasswordCriteriaContainsUpperCaseLetters value:
+        case PasswordCriteriaContainsUpperCaseLetters value:
           if (text.contains(RegExp(r'[A-Z]'))) results.add(value);
-        case _PasswordCriteriaContainsNumber value:
+        case PasswordCriteriaContainsNumber value:
           if (text.contains(RegExp(r'[0-9]'))) results.add(value);
-        case _PasswordCriteriaContainsSpecialCharacters value:
+        case PasswordCriteriaContainsSpecialCharacters value:
           if (text.contains(RegExp(r'[!@#\$%^&*()_+{}[\]:;<>,.?~\\-]'))) results.add(value);
-        case _PasswordCriteriaNotInOrder value:
+        case PasswordCriteriaNotInOrder value:
           if (text.containsSequential()) results.add(value);
       }
     }
@@ -56,17 +56,17 @@ class PasswordCriteriaInfo extends StatelessWidget {
 sealed class PasswordCriteria {
   PasswordCriteria();
 
-  factory PasswordCriteria.minimumCharacters({required int minLength}) => _PasswordCriteriaMinimunChacater(minLength: minLength);
+  factory PasswordCriteria.minimumCharacters({required int minLength}) => PasswordCriteriaMinimunCharacters(minLength: minLength);
 
-  factory PasswordCriteria.containsLowerCaseLetters() = _PasswordCriteriaContainsLowerCaseLetters;
+  factory PasswordCriteria.containsLowerCaseLetters() = PasswordCriteriaContainsLowerCaseLetters;
 
-  factory PasswordCriteria.containsUpperCaseLetters() = _PasswordCriteriaContainsUpperCaseLetters;
+  factory PasswordCriteria.containsUpperCaseLetters() = PasswordCriteriaContainsUpperCaseLetters;
 
-  factory PasswordCriteria.containsNumber() = _PasswordCriteriaContainsNumber;
+  factory PasswordCriteria.containsNumber() = PasswordCriteriaContainsNumber;
 
-  factory PasswordCriteria.containsSpecialCharacters() = _PasswordCriteriaContainsSpecialCharacters;
+  factory PasswordCriteria.containsSpecialCharacters() = PasswordCriteriaContainsSpecialCharacters;
 
-  factory PasswordCriteria.notInOrder() = _PasswordCriteriaNotInOrder;
+  factory PasswordCriteria.notInOrder() = PasswordCriteriaNotInOrder;
 
   static List<PasswordCriteria> getAllvalues({required int minLength}) => [
         PasswordCriteria.minimumCharacters(minLength: minLength),
@@ -80,8 +80,8 @@ sealed class PasswordCriteria {
   String get text;
 }
 
-class _PasswordCriteriaMinimunChacater extends PasswordCriteria {
-  _PasswordCriteriaMinimunChacater({required this.minLength});
+class PasswordCriteriaMinimunCharacters extends PasswordCriteria {
+  PasswordCriteriaMinimunCharacters({required this.minLength});
 
   final int minLength;
 
@@ -89,27 +89,27 @@ class _PasswordCriteriaMinimunChacater extends PasswordCriteria {
   String get text => 'Minimum %s characters'.trArgs([minLength.toString()]);
 }
 
-class _PasswordCriteriaContainsLowerCaseLetters extends PasswordCriteria {
+class PasswordCriteriaContainsLowerCaseLetters extends PasswordCriteria {
   @override
   String get text => 'Contains lowercase letters'.tr;
 }
 
-class _PasswordCriteriaContainsUpperCaseLetters extends PasswordCriteria {
+class PasswordCriteriaContainsUpperCaseLetters extends PasswordCriteria {
   @override
   String get text => 'Contains uppercase letters'.tr;
 }
 
-class _PasswordCriteriaContainsNumber extends PasswordCriteria {
+class PasswordCriteriaContainsNumber extends PasswordCriteria {
   @override
   String get text => 'Contains numbers'.tr;
 }
 
-class _PasswordCriteriaContainsSpecialCharacters extends PasswordCriteria {
+class PasswordCriteriaContainsSpecialCharacters extends PasswordCriteria {
   @override
   String get text => 'Contains special characters'.tr;
 }
 
-class _PasswordCriteriaNotInOrder extends PasswordCriteria {
+class PasswordCriteriaNotInOrder extends PasswordCriteria {
   @override
   String get text => 'Not in order (123, abc, ABC)'.tr;
 }

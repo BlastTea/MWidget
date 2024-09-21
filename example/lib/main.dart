@@ -10,6 +10,9 @@ void main() async {
 
   await MWidget.initialize(
     defaultLocale: const Locale('id', 'ID'),
+    defaultTheme: ThemeValue(
+      themeMode: ThemeMode.light,
+    ),
   );
 
   Language.addData({
