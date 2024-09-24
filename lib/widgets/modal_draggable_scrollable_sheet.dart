@@ -15,6 +15,7 @@ class ModalDraggableScrollableSheet extends StatelessWidget {
     this.snap = false,
     this.snapAnimationDuration,
     this.snapSizes,
+    this.containerBackgroundColor,
   });
 
   final DraggableScrollableController? controller;
@@ -29,6 +30,7 @@ class ModalDraggableScrollableSheet extends StatelessWidget {
   final bool snap;
   final Duration? snapAnimationDuration;
   final List<double>? snapSizes;
+  final Color? containerBackgroundColor;
 
   static Future<T?> show<T>({
     required Widget Function(BuildContext context) builder,
@@ -85,7 +87,7 @@ class ModalDraggableScrollableSheet extends StatelessWidget {
             snapSizes: snapSizes,
             builder: (context, scrollController) => Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
+                color: containerBackgroundColor ?? Theme.of(context).colorScheme.surface,
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(kShapeExtraLarge),
                 ),
