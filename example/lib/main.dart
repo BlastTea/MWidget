@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MWidgetDynamicColorBuilder(
-        builder: (context, theme, darkTheme, themeMode, colorScheme) => GetMaterialApp(
+        builder: (context, theme, darkTheme, themeMode, colorScheme, darkColorScheme) => GetMaterialApp(
           title: 'MWidget',
           theme: theme.copyWith(
             filledButtonTheme: FilledButtonThemeData(
