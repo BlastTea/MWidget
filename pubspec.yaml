@@ -18,7 +18,7 @@ dependencies:
     git:
       url: https://github.com/mchome/flutter_colorpicker.git
       ref: 92bdb69a313a56c391ef148c12ef6539bd31253d
-  get: ^5.0.0-release-candidate-9.2.1
+  get: ^4.6.6
   image_picker: ^1.1.1
   path: ^1.9.0
   shared_preferences: ^2.2.2
