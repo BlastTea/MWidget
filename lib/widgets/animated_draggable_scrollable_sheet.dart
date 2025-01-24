@@ -101,6 +101,8 @@ class _AnimatedDraggableScrollableSheetState extends State<AnimatedDraggableScro
         _snapSizes!.add(widget.minChildSize + snapSize);
       }
     }
+
+    _handleSheetSizeChanged(widget.initialChildSize ?? widget.minChildSize);
   }
 
   @override
