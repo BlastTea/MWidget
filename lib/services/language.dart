@@ -360,5 +360,9 @@ final class Language {
       LanguageType.unitedStatesEnglish: 'You are offline',
       LanguageType.indonesiaIndonesian: 'Anda sedang offline',
     },
+    'Not in order (123, abc, ABC)': {
+      LanguageType.unitedStatesEnglish: 'Not in order (123, abc, ABC)',
+      LanguageType.indonesiaIndonesian: 'Tidak berurutan (123, abc, ABC)',
+    },
   };
 }
