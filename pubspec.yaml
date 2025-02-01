@@ -1,6 +1,6 @@
 name: m_widget
 description: A new Flutter package project.
-version: 3.17.1-legacy
+version: 3.17.2-legacy
 homepage: null
 publish_to: 'none'
 
@@ -11,7 +11,7 @@ environment:
 dependencies:
   cached_network_image: ^3.3.1
   dynamic_color: ^1.7.0
-  extended_image: ^8.2.0
+  extended_image: ^9.1.0
   flutter:
     sdk: flutter
   flutter_colorpicker:
