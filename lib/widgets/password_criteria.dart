@@ -29,7 +29,7 @@ class PasswordCriteriaInfo extends StatelessWidget {
         case PasswordCriteriaContainsSpecialCharacters value:
           if (text.contains(RegExp(r'[!@#\$%^&*()_+{}[\]:;<>,.?~\\-]'))) results.add(value);
         case PasswordCriteriaNotInOrder value:
-          if (text.containsSequential()) results.add(value);
+          if (!text.containsSequential()) results.add(value);
       }
     }
 
