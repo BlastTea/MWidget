@@ -26,7 +26,7 @@ extension DateTimeExtension on DateTime {
     String dateHourSeparator = ',',
     Locale? locale,
   }) {
-    switch (locale ?? Get.locale?.languageCode ?? 'en') {
+    switch (locale?.languageCode ?? Get.locale?.languageCode ?? 'en') {
       case 'id':
         return '${withWeekday ? '${getWeekday()}, ' : ''}${day.toString().padLeft(2, '0')} ${withMonthName ? getMonthName() : month.toString().padLeft(2, '0')}${withYear ? ' $year' : ''}${withHour ? '$dateHourSeparator ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}${withSeconds ? ':${second.toString().padLeft(2, '0')}' : ''}' : ''}';
       default:
