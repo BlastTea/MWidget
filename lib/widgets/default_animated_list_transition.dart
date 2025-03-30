@@ -44,9 +44,9 @@ class DefaultAnimatedListTransition extends StatelessWidget {
   /// The [index] is the position at which to insert the item.
   ///
   /// The [state] is the [SliverAnimatedListState] of the list.
-  static Future<void> insertItemSliver({required int index, required SliverAnimatedListState state}) async {
-    state.insertItem(index, duration: Durations.short4);
-    await Future.delayed(Durations.medium1);
+  static Future<void> insertItemSliver({required int index, required SliverAnimatedListState state, Duration duration = Durations.short4}) async {
+    state.insertItem(index, duration: duration);
+    await Future.delayed(Duration(milliseconds: (duration.inMilliseconds + 50) * timeDilation.toInt()));
   }
 
   /// Removes an item from a [SliverAnimatedList] with a sliding and fading animation.
@@ -56,16 +56,16 @@ class DefaultAnimatedListTransition extends StatelessWidget {
   /// The [state] is the [SliverAnimatedListState] of the list.
   ///
   /// The [builder] is a function that constructs the transition for the removed item.
-  static Future<void> removeItemSliver({required int index, required SliverAnimatedListState state, required Widget Function(BuildContext context, Animation<double>? animation) builder}) async {
+  static Future<void> removeItemSliver({required int index, required SliverAnimatedListState state, required Widget Function(BuildContext context, Animation<double>? animation) builder, Duration duration = Durations.short4}) async {
     state.removeItem(
       index,
       (context, animation) => DefaultAnimatedListTransition(
         animation: animation,
         builder: builder,
       ),
-      duration: Durations.short4,
+      duration: duration,
     );
-    await Future.delayed(Durations.medium1);
+    await Future.delayed(Duration(milliseconds: (duration.inMilliseconds + 50) * timeDilation.toInt()));
   }
 
   /// Inserts an item into an [AnimatedList] with a sliding and fading animation.
@@ -73,9 +73,9 @@ class DefaultAnimatedListTransition extends StatelessWidget {
   /// The [index] is the position at which to insert the item.
   ///
   /// The [state] is the [AnimatedListState] of the list.
-  static Future<void> insertItemList({required int index, required AnimatedListState state}) async {
-    state.insertItem(index, duration: Durations.short4);
-    await Future.delayed(Durations.medium1);
+  static Future<void> insertItemList({required int index, required AnimatedListState state, Duration duration = Durations.short4}) async {
+    state.insertItem(index, duration: duration);
+    await Future.delayed(Duration(milliseconds: (duration.inMilliseconds + 50) * timeDilation.toInt()));
   }
 
   /// Removes an item from an [AnimatedList] with a sliding and fading animation.
@@ -85,16 +85,16 @@ class DefaultAnimatedListTransition extends StatelessWidget {
   /// The [state] is the [AnimatedListState] of the list.
   ///
   /// The [builder] is a function that constructs the transition for the removed item.
-  static Future<void> removeItemList({required int index, required AnimatedListState state, required Widget Function(BuildContext context, Animation<double>? animation) builder}) async {
+  static Future<void> removeItemList({required int index, required AnimatedListState state, required Widget Function(BuildContext context, Animation<double>? animation) builder, Duration duration = Durations.short4}) async {
     state.removeItem(
       index,
       (context, animation) => DefaultAnimatedListTransition(
         animation: animation,
         builder: builder,
       ),
-      duration: Durations.short4,
+      duration: duration,
     );
-    await Future.delayed(Duration(milliseconds: Durations.medium1.inMilliseconds * timeDilation.toInt()));
+    await Future.delayed(Duration(milliseconds: (duration.inMilliseconds + 50) * timeDilation.toInt()));
   }
 
   @override
