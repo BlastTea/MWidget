@@ -437,7 +437,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               height: 4.0,
                               margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
+                                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                                 borderRadius: BorderRadius.circular(2.0),
                               ),
                             ),

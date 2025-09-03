@@ -1,4 +1,4 @@
-library m_widget;
+library;
 
 export 'package:m_widget/utils/utils.dart';
 export 'package:m_widget/services/services.dart';

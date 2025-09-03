@@ -27,7 +27,7 @@ class AdaptiveDialogRoute<T> extends DialogRoute<T> implements PageRoute<T> {
   AdaptiveDialogRoute({
     required this.builder,
     this.maintainState = true,
-    this.fullscreenDialog = true,
+    super.fullscreenDialog = true,
     super.themes,
     super.barrierColor,
     super.barrierDismissible,
@@ -37,9 +37,9 @@ class AdaptiveDialogRoute<T> extends DialogRoute<T> implements PageRoute<T> {
     super.anchorPoint,
     super.traversalEdgeBehavior,
   }) : super(
-          context: Get.context!,
-          builder: builder,
-        );
+         context: Get.context!,
+         builder: builder,
+       );
 
   /// The builder that returns the widget tree for the dialog content.
   final WidgetBuilder builder;
@@ -60,7 +60,4 @@ class AdaptiveDialogRoute<T> extends DialogRoute<T> implements PageRoute<T> {
 
   @override
   final bool maintainState;
-
-  @override
-  final bool fullscreenDialog;
 }

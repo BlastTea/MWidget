@@ -1,19 +1,13 @@
 part of 'utils.dart';
 
 class MWidget {
-  static List<Locale> availableLanguages = [
-    const Locale('en', 'US'),
-    const Locale('id', 'ID'),
-  ];
+  static List<Locale> availableLanguages = [const Locale('en', 'US'), const Locale('id', 'ID')];
 
   static ThemeValue themeValue = ThemeValue();
 
   static Locale locale = availableLanguages.first;
 
-  static Future<void> initialize({
-    ThemeValue? defaultTheme,
-    Locale? defaultLocale,
-  }) async {
+  static Future<void> initialize({ThemeValue? defaultTheme, Locale? defaultLocale}) async {
     debugPrint('initialize MWidget');
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -50,97 +44,58 @@ class MWidget {
 }
 
 class MWidgetDynamicColorBuilder extends StatelessWidget {
-  const MWidgetDynamicColorBuilder({
-    super.key,
-    required this.builder,
-  });
+  const MWidgetDynamicColorBuilder({super.key, required this.builder});
 
-  final Widget Function(
-    BuildContext context,
-    ThemeData theme,
-    ThemeData darkTheme,
-    ThemeMode themeMode,
-    ColorScheme? colorScheme,
-    ColorScheme? darkColorScheme,
-  ) builder;
+  final Widget Function(BuildContext context, ThemeData theme, ThemeData darkTheme, ThemeMode themeMode, ColorScheme? colorScheme, ColorScheme? darkColorScheme) builder;
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder(
-        valueListenable: MWidget.themeValue,
-        builder: (context, themeValue, child) => DynamicColorBuilder(
-          builder: (lightDynamic, darkDynamic) {
-            CustomColors lightCustomColors = const CustomColors(danger: Color(0xFFE53935));
-            CustomColors darkCustomColors = const CustomColors(danger: Color(0xFFEF9A9A));
+    valueListenable: MWidget.themeValue,
+    builder: (context, themeValue, child) => DynamicColorBuilder(
+      builder: (lightDynamic, darkDynamic) {
+        CustomColors lightCustomColors = const CustomColors(danger: Color(0xFFE53935));
+        CustomColors darkCustomColors = const CustomColors(danger: Color(0xFFEF9A9A));
 
-            ColorScheme? lightColorScheme;
-            ColorScheme? darkColorScheme;
+        ColorScheme? lightColorScheme;
+        ColorScheme? darkColorScheme;
 
-            if (themeValue._imageProviderLightColorScheme != null && themeValue._imageProviderDarkColorScheme != null) {
-              lightColorScheme = themeValue._imageProviderLightColorScheme!;
-              darkColorScheme = themeValue._imageProviderDarkColorScheme!;
-            } else if (lightDynamic != null && darkDynamic != null && themeValue.useDynamicColors && !themeValue.withCustomColors && themeValue.color == null) {
-              lightColorScheme = lightDynamic.harmonized();
-              lightCustomColors = lightCustomColors.harmonized(lightColorScheme);
+        if (themeValue._imageProviderLightColorScheme != null && themeValue._imageProviderDarkColorScheme != null) {
+          lightColorScheme = themeValue._imageProviderLightColorScheme!;
+          darkColorScheme = themeValue._imageProviderDarkColorScheme!;
+        } else if (lightDynamic != null && darkDynamic != null && themeValue.useDynamicColors && !themeValue.withCustomColors && themeValue.color == null) {
+          lightColorScheme = lightDynamic.harmonized();
+          lightCustomColors = lightCustomColors.harmonized(lightColorScheme);
 
-              darkColorScheme = darkDynamic.harmonized();
-              darkCustomColors = darkCustomColors.harmonized(darkColorScheme);
-            } else if (themeValue.useDynamicColors && themeValue.withCustomColors && themeValue.color != null) {
-              lightColorScheme = ColorScheme.fromSeed(
-                seedColor: themeValue.color!,
-              )..harmonized();
+          darkColorScheme = darkDynamic.harmonized();
+          darkCustomColors = darkCustomColors.harmonized(darkColorScheme);
+        } else if (themeValue.useDynamicColors && themeValue.withCustomColors && themeValue.color != null) {
+          lightColorScheme = ColorScheme.fromSeed(seedColor: themeValue.color!)..harmonized();
 
-              darkColorScheme = ColorScheme.fromSeed(
-                seedColor: themeValue.color!,
-                brightness: Brightness.dark,
-              )..harmonized();
-            }
+          darkColorScheme = ColorScheme.fromSeed(seedColor: themeValue.color!, brightness: Brightness.dark)..harmonized();
+        }
 
-            return builder(
-              context,
-              themeValue.useDynamicColors
-                  ? ThemeData(
-                      colorScheme: lightColorScheme,
-                      extensions: [lightCustomColors],
-                      fontFamily: themeValue.fontFamily,
-                      useMaterial3: true,
-                    )
-                  : ThemeData.light(useMaterial3: true),
-              themeValue.useDynamicColors
-                  ? ThemeData(
-                      colorScheme: darkColorScheme,
-                      extensions: [darkCustomColors],
-                      fontFamily: themeValue.fontFamily,
-                      useMaterial3: true,
-                    )
-                  : ThemeData.dark(useMaterial3: true),
-              themeValue.themeMode,
-              lightColorScheme,
-              darkColorScheme,
-              // themeValue.themeMode == ThemeMode.dark
-              //     ? darkColorScheme
-              //     : themeValue.themeMode == ThemeMode.light
-              //         ? lightColorScheme
-              //         : Theme.of(context).brightness == Brightness.dark
-              //             ? darkColorScheme
-              //             : lightColorScheme,
-            );
-          },
-        ),
-      );
+        return builder(
+          context,
+          themeValue.useDynamicColors ? ThemeData(colorScheme: lightColorScheme, extensions: [lightCustomColors], fontFamily: themeValue.fontFamily, useMaterial3: true) : ThemeData.light(useMaterial3: true),
+          themeValue.useDynamicColors ? ThemeData(colorScheme: darkColorScheme, extensions: [darkCustomColors], fontFamily: themeValue.fontFamily, useMaterial3: true) : ThemeData.dark(useMaterial3: true),
+          themeValue.themeMode,
+          lightColorScheme,
+          darkColorScheme,
+          // themeValue.themeMode == ThemeMode.dark
+          //     ? darkColorScheme
+          //     : themeValue.themeMode == ThemeMode.light
+          //         ? lightColorScheme
+          //         : Theme.of(context).brightness == Brightness.dark
+          //             ? darkColorScheme
+          //             : lightColorScheme,
+        );
+      },
+    ),
+  );
 }
 
 class ThemeValue extends ChangeNotifier implements ValueListenable<ThemeValue> {
-  ThemeValue({
-    ThemeMode themeMode = ThemeMode.system,
-    Color? color,
-    bool withCustomColors = false,
-    bool useDynamicColors = false,
-    String? fontFamily,
-  })  : _themeMode = themeMode,
-        _color = color,
-        _withCustomColors = withCustomColors,
-        _useDynamicColors = useDynamicColors,
-        _fontFamily = fontFamily;
+  ThemeValue({ThemeMode themeMode = ThemeMode.system, Color? color, bool withCustomColors = false, bool useDynamicColors = false, String? fontFamily}) : _themeMode = themeMode, _color = color, _withCustomColors = withCustomColors, _useDynamicColors = useDynamicColors, _fontFamily = fontFamily;
 
   ThemeMode _themeMode = ThemeMode.system;
   Color? _color;
@@ -170,7 +125,7 @@ class ThemeValue extends ChangeNotifier implements ValueListenable<ThemeValue> {
     if (color == null) {
       await sharedPreferences.remove(keyColor);
     } else {
-      await sharedPreferences.setInt(keyColor, color!.value);
+      await sharedPreferences.setInt(keyColor, color!.toARGB32());
     }
 
     await sharedPreferences.setBool(keyWithCustomColors, withCustomColors);
@@ -202,13 +157,8 @@ class ThemeValue extends ChangeNotifier implements ValueListenable<ThemeValue> {
       return;
     }
 
-    _imageProviderLightColorScheme = await ColorScheme.fromImageProvider(
-      provider: value,
-    ).then((value) => value.harmonized());
-    _imageProviderDarkColorScheme = await ColorScheme.fromImageProvider(
-      provider: value,
-      brightness: Brightness.dark,
-    ).then((value) => value.harmonized());
+    _imageProviderLightColorScheme = await ColorScheme.fromImageProvider(provider: value).then((value) => value.harmonized());
+    _imageProviderDarkColorScheme = await ColorScheme.fromImageProvider(provider: value, brightness: Brightness.dark).then((value) => value.harmonized());
     notifyListeners();
   }
 
@@ -236,18 +186,7 @@ class ThemeValue extends ChangeNotifier implements ValueListenable<ThemeValue> {
     notifyListeners();
   }
 
-  ThemeValue copyWith({
-    ThemeMode? themeMode,
-    Color? color,
-    bool? withCustomColors,
-    bool? useDynamicColors,
-  }) =>
-      ThemeValue(
-        themeMode: themeMode ?? this.themeMode,
-        color: color ?? this.color,
-        withCustomColors: withCustomColors ?? this.withCustomColors,
-        useDynamicColors: useDynamicColors ?? this.useDynamicColors,
-      );
+  ThemeValue copyWith({ThemeMode? themeMode, Color? color, bool? withCustomColors, bool? useDynamicColors}) => ThemeValue(themeMode: themeMode ?? this.themeMode, color: color ?? this.color, withCustomColors: withCustomColors ?? this.withCustomColors, useDynamicColors: useDynamicColors ?? this.useDynamicColors);
 
   @override
   String toString() => 'ThemeValue($_themeMode, $_color, $_useDynamicColors, $_withCustomColors, $_fontFamily)';
@@ -255,17 +194,13 @@ class ThemeValue extends ChangeNotifier implements ValueListenable<ThemeValue> {
 
 @immutable
 class CustomColors extends ThemeExtension<CustomColors> {
-  const CustomColors({
-    required this.danger,
-  });
+  const CustomColors({required this.danger});
 
   final Color? danger;
 
   @override
   CustomColors copyWith({Color? danger}) {
-    return CustomColors(
-      danger: danger ?? this.danger,
-    );
+    return CustomColors(danger: danger ?? this.danger);
   }
 
   @override
@@ -273,9 +208,7 @@ class CustomColors extends ThemeExtension<CustomColors> {
     if (other is! CustomColors) {
       return this;
     }
-    return CustomColors(
-      danger: Color.lerp(danger, other.danger, t),
-    );
+    return CustomColors(danger: Color.lerp(danger, other.danger, t));
   }
 
   CustomColors harmonized(ColorScheme dynamic) => copyWith(danger: danger!.harmonizeWith(dynamic.primary));

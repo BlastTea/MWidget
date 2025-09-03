@@ -77,22 +77,7 @@ class ChooseDialog<T extends Object?> extends StatefulWidget {
   ///   },
   /// )
   /// ```
-  const ChooseDialog({
-    super.key,
-    this.title,
-    this.labelTextSearch,
-    this.hintTextSearch,
-    this.useFullScreenFab = true,
-    this.alwaysFullScreen = false,
-    this.alwaysDialog = false,
-    this.hideSearchBar = false,
-    this.multiple = false,
-    this.onDataEmpty,
-    this.onDataNotFound,
-    required this.data,
-    this.onSnapshotErrorBuilder,
-    this.onSnapshotErrorListener,
-  });
+  const ChooseDialog({super.key, this.title, this.labelTextSearch, this.hintTextSearch, this.useFullScreenFab = true, this.alwaysFullScreen = false, this.alwaysDialog = false, this.hideSearchBar = false, this.multiple = false, this.onDataEmpty, this.onDataNotFound, required this.data, this.onSnapshotErrorBuilder, this.onSnapshotErrorListener});
 
   final Widget? title;
   final String? labelTextSearch;
@@ -168,108 +153,92 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
 
   List<ChooseData<T>> get _chooseData => _textControllerSearch.text.trim().isEmpty ? _originalData : _searchedData;
 
-  void _setIsSelected(index, bool value) => setState(() => _chooseData[index].isSelected = value);
+  void _setIsSelected(int index, bool value) => setState(() => _chooseData[index].isSelected = value);
 
   @override
   Widget build(BuildContext context) => AdaptiveFullScreenDialog(
-        alwaysFullScreen: widget.alwaysFullScreen,
-        alwaysDialog: widget.alwaysDialog,
-        fullScreenFab: widget.multiple && widget.useFullScreenFab
-            ? FloatingActionButton(
-                onPressed: () => Get.back<Iterable<T?>>(result: _originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
-                child: const Icon(Icons.done),
-              )
-            : null,
-        title: widget.title,
-        body: _body,
-        dialogBody: SizedBox(
-          width: kCompactSize,
-          height: kCompactSize,
-          child: _body,
-        ),
-        actions: widget.multiple && !widget.useFullScreenFab
-            ? [
-                TextButton(
-                  onPressed: () => Get.back<Iterable<T?>>(result: _originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
-                  child: Text('Ok'.tr),
-                ),
-              ]
-            : null,
-        dialogActions: widget.multiple
-            ? [
-                TextButton(
-                  onPressed: () => Get.back(),
-                  child: Text('Cancel'.tr),
-                ),
-                TextButton(
-                  onPressed: () => Get.back<Iterable<T?>>(result: _originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
-                  child: Text('Ok'.tr),
-                ),
-              ]
-            : null,
-      );
+    alwaysFullScreen: widget.alwaysFullScreen,
+    alwaysDialog: widget.alwaysDialog,
+    fullScreenFab: widget.multiple && widget.useFullScreenFab
+        ? FloatingActionButton(
+            onPressed: () => Get.back<Iterable<T?>>(result: _originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
+            child: const Icon(Icons.done),
+          )
+        : null,
+    title: widget.title,
+    body: _body,
+    dialogBody: SizedBox(width: kCompactSize, height: kCompactSize, child: _body),
+    actions: widget.multiple && !widget.useFullScreenFab
+        ? [
+            TextButton(
+              onPressed: () => Get.back<Iterable<T?>>(result: _originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
+              child: Text('Ok'.tr),
+            ),
+          ]
+        : null,
+    dialogActions: widget.multiple
+        ? [
+            TextButton(onPressed: () => Get.back(), child: Text('Cancel'.tr)),
+            TextButton(
+              onPressed: () => Get.back<Iterable<T?>>(result: _originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
+              child: Text('Ok'.tr),
+            ),
+          ]
+        : null,
+  );
 
   Widget get _body => FutureBuilder(
-        future: _completer.future,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              children: [
-                if (!widget.hideSearchBar)
-                  Padding(
-                    padding: widget.alwaysFullScreen || MediaQuery.sizeOf(context).width < kCompactSize ? const EdgeInsets.all(16.0) : const EdgeInsets.only(bottom: 16.0),
-                    child: TextField(
-                      controller: _textControllerSearch,
-                      decoration: InputDecoration(
-                        labelText: widget.labelTextSearch,
-                        hintText: widget.hintTextSearch,
-                      ),
-                      onChanged: _handleOnChanged,
-                    ),
-                  ),
-                Expanded(
-                  child: _chooseData.isEmpty
-                      ? _textControllerSearch.text.trim().isEmpty
-                          ? DefaultTextStyle(
-                              style: Theme.of(context).textTheme.bodyLarge!,
-                              child: Center(
-                                child: widget.onDataEmpty?.call(_retry) ?? Text('No data'.tr),
-                              ),
-                            )
-                          : DefaultTextStyle(
-                              style: Theme.of(context).textTheme.bodyLarge!,
-                              child: Center(
-                                child: widget.onDataNotFound ?? Text('Data not found'.tr),
-                              ),
-                            )
-                      : ListView.builder(
-                          itemBuilder: (context, index) => ListTile(
-                            leading: widget.multiple ? Checkbox(value: _chooseData[index].isSelected, onChanged: (value) => _setIsSelected(index, value!)) : _chooseData[index].leading ?? (_chooseData.any((element) => element.isSelected) ? Radio(value: _chooseData[index].searchValue, groupValue: _chooseData.trySingleWhere((element) => element.isSelected)?.searchValue, onChanged: (value) => Get.back<T>(result: _chooseData[index].value)) : null),
-                            title: _chooseData[index].title,
-                            subtitle: _chooseData[index].subtitle,
-                            isThreeLine: _chooseData[index].isThreeLine,
-                            selected: false,
-                            trailing: _chooseData[index].trailing,
-                            onTap: () => !widget.multiple ? Get.back<T>(result: _chooseData[index].value) : _setIsSelected(index, !_chooseData[index].isSelected),
-                          ),
-                          itemCount: _chooseData.length,
-                        ),
+    future: _completer.future,
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        return Column(
+          children: [
+            if (!widget.hideSearchBar)
+              Padding(
+                padding: widget.alwaysFullScreen || MediaQuery.sizeOf(context).width < kCompactSize ? const EdgeInsets.all(16.0) : const EdgeInsets.only(bottom: 16.0),
+                child: TextField(
+                  controller: _textControllerSearch,
+                  decoration: InputDecoration(labelText: widget.labelTextSearch, hintText: widget.hintTextSearch),
+                  onChanged: _handleOnChanged,
                 ),
-              ],
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: widget.onSnapshotErrorBuilder?.call(snapshot.error, _retry) ??
-                  Text(
-                    'Error',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-            );
-          }
+              ),
+            Expanded(
+              child: _chooseData.isEmpty
+                  ? _textControllerSearch.text.trim().isEmpty
+                        ? DefaultTextStyle(
+                            style: Theme.of(context).textTheme.bodyLarge!,
+                            child: Center(child: widget.onDataEmpty?.call(_retry) ?? Text('No data'.tr)),
+                          )
+                        : DefaultTextStyle(
+                            style: Theme.of(context).textTheme.bodyLarge!,
+                            child: Center(child: widget.onDataNotFound ?? Text('Data not found'.tr)),
+                          )
+                  : RadioGroup(
+                      groupValue: _chooseData.trySingleWhere((element) => element.isSelected)?.searchValue,
+                      onChanged: (value) => Get.back<T>(result: value as T),
+                      child: ListView.builder(
+                        itemBuilder: (context, index) => ListTile(
+                          leading: widget.multiple ? Checkbox(value: _chooseData[index].isSelected, onChanged: (value) => _setIsSelected(index, value!)) : _chooseData[index].leading ?? (_chooseData.any((element) => element.isSelected) ? Radio(value: _chooseData[index].searchValue) : null),
+                          title: _chooseData[index].title,
+                          subtitle: _chooseData[index].subtitle,
+                          isThreeLine: _chooseData[index].isThreeLine,
+                          selected: false,
+                          trailing: _chooseData[index].trailing,
+                          onTap: () => !widget.multiple ? Get.back<T>(result: _chooseData[index].value) : _setIsSelected(index, !_chooseData[index].isSelected),
+                        ),
+                        itemCount: _chooseData.length,
+                      ),
+                    ),
+            ),
+          ],
+        );
+      } else if (snapshot.hasError) {
+        return Center(child: widget.onSnapshotErrorBuilder?.call(snapshot.error, _retry) ?? Text('Error', style: Theme.of(context).textTheme.bodyLarge));
+      }
 
-          return const Center(child: CircularProgressIndicator());
-        },
-      );
+      return const Center(child: CircularProgressIndicator());
+    },
+  );
 }
 
 /// Represents data for an item in the `ChooseDialog` widget.
@@ -297,16 +266,7 @@ class ChooseData<T extends Object?> {
   /// The [isThreeLine] parameter sets whether the item displays three lines (default is `false`).
   ///
   /// The [isSelected] parameter indicates whether the item is selected (only applicable in multiple selection mode).
-  ChooseData({
-    this.value,
-    this.searchValue,
-    this.leading,
-    this.title,
-    this.subtitle,
-    this.trailing,
-    this.isThreeLine = false,
-    this.isSelected = false,
-  });
+  ChooseData({this.value, this.searchValue, this.leading, this.title, this.subtitle, this.trailing, this.isThreeLine = false, this.isSelected = false});
 
   final T? value;
   final String? searchValue;
