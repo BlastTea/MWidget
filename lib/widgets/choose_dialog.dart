@@ -168,111 +168,126 @@ class _ChooseDialogState<T extends Object?> extends State<ChooseDialog<T>> {
 
   List<ChooseData<T>> get _chooseData => _textControllerSearch.text.trim().isEmpty ? _originalData : _searchedData;
 
-  void _setIsSelected(index, bool value) => setState(() => _chooseData[index].isSelected = value);
+  void _setIsSelected(int index, bool value) => setState(() => _chooseData[index].isSelected = value);
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder(
-        valueListenable: Language.getInstance().languageNotifier,
-        builder: (context, language, child) => AdaptiveFullScreenDialog(
-          alwaysFullScreen: widget.alwaysFullScreen,
-          alwaysDialog: widget.alwaysDialog,
-          fullScreenFab: widget.multiple && widget.useFullScreenFab
-              ? FloatingActionButton(
-                  onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
-                  child: const Icon(Icons.done),
-                )
-              : null,
-          title: widget.title,
-          body: _body,
-          dialogBody: SizedBox(
-            width: kCompactSize,
-            height: kCompactSize,
-            child: _body,
-          ),
-          actions: widget.multiple && !widget.useFullScreenFab
-              ? [
-                  TextButton(
-                    onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
-                    child: Text(language['Ok']!),
-                  ),
-                ]
-              : null,
-          dialogActions: widget.multiple
-              ? [
-                  TextButton(
-                    onPressed: () => NavigationHelper.back(),
-                    child: Text(language['Cancel']!),
-                  ),
-                  TextButton(
-                    onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
-                    child: Text(language['Ok']!),
-                  ),
-                ]
-              : null,
-        ),
-      );
+    valueListenable: Language.getInstance().languageNotifier,
+    builder: (context, language, child) => AdaptiveFullScreenDialog(
+      alwaysFullScreen: widget.alwaysFullScreen,
+      alwaysDialog: widget.alwaysDialog,
+      fullScreenFab: widget.multiple && widget.useFullScreenFab
+          ? FloatingActionButton(
+              onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
+              child: const Icon(Icons.done),
+            )
+          : null,
+      title: widget.title,
+      body: _body,
+      dialogBody: SizedBox(
+        width: kCompactSize,
+        height: kCompactSize,
+        child: _body,
+      ),
+      actions: widget.multiple && !widget.useFullScreenFab
+          ? [
+              TextButton(
+                onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
+                child: Text(language['Ok']!),
+              ),
+            ]
+          : null,
+      dialogActions: widget.multiple
+          ? [
+              TextButton(
+                onPressed: () => NavigationHelper.back(),
+                child: Text(language['Cancel']!),
+              ),
+              TextButton(
+                onPressed: () => NavigationHelper.back<Iterable<T?>>(_originalData.where((element) => element.isSelected).map((e) => e.value).toList()),
+                child: Text(language['Ok']!),
+              ),
+            ]
+          : null,
+    ),
+  );
 
   Widget get _body => FutureBuilder(
-        future: _completer.future,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              children: [
-                if (!widget.hideSearchBar)
-                  Padding(
-                    padding: widget.alwaysFullScreen || MediaQuery.sizeOf(context).width < kCompactSize ? const EdgeInsets.all(16.0) : const EdgeInsets.only(bottom: 16.0),
-                    child: TextField(
-                      controller: _textControllerSearch,
-                      decoration: InputDecoration(
-                        labelText: widget.labelTextSearch,
-                        hintText: widget.hintTextSearch,
-                      ),
-                      onChanged: _handleOnChanged,
-                    ),
+    future: _completer.future,
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        return Column(
+          children: [
+            if (!widget.hideSearchBar)
+              Padding(
+                padding: widget.alwaysFullScreen || MediaQuery.sizeOf(context).width < kCompactSize ? const EdgeInsets.all(16.0) : const EdgeInsets.only(bottom: 16.0),
+                child: TextField(
+                  controller: _textControllerSearch,
+                  decoration: InputDecoration(
+                    labelText: widget.labelTextSearch,
+                    hintText: widget.hintTextSearch,
                   ),
-                Expanded(
-                  child: _chooseData.isEmpty
-                      ? _textControllerSearch.text.trim().isEmpty
-                          ? DefaultTextStyle(
-                              style: Theme.of(context).textTheme.bodyLarge!,
-                              child: Center(
-                                child: widget.onDataEmpty?.call(_retry) ?? Text(Language.getInstance().getValue('No data')!),
-                              ),
-                            )
-                          : DefaultTextStyle(
-                              style: Theme.of(context).textTheme.bodyLarge!,
-                              child: Center(
-                                child: widget.onDataNotFound ?? Text(Language.getInstance().getValue('Data not found')!),
-                              ),
-                            )
-                      : ListView.builder(
-                          itemBuilder: (context, index) => ListTile(
-                            leading: widget.multiple ? Checkbox(value: _chooseData[index].isSelected, onChanged: (value) => _setIsSelected(index, value!)) : _chooseData[index].leading ?? (_chooseData.any((element) => element.isSelected) ? Radio(value: _chooseData[index].searchValue, groupValue: _chooseData.trySingleWhere((element) => element.isSelected)?.searchValue, onChanged: (value) => NavigationHelper.back<T>(_chooseData[index].value)) : null),
-                            title: _chooseData[index].title,
-                            subtitle: _chooseData[index].subtitle,
-                            isThreeLine: _chooseData[index].isThreeLine,
-                            selected: false,
-                            trailing: _chooseData[index].trailing,
-                            onTap: () => !widget.multiple ? NavigationHelper.back<T>(_chooseData[index].value) : _setIsSelected(index, !_chooseData[index].isSelected),
-                          ),
-                          itemCount: _chooseData.length,
-                        ),
+                  onChanged: _handleOnChanged,
                 ),
-              ],
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: widget.onSnapshotErrorBuilder?.call(snapshot.error, _retry) ??
-                  Text(
-                    'Error',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-            );
-          }
+              ),
+            Expanded(
+              child: _chooseData.isEmpty
+                  ? _textControllerSearch.text.trim().isEmpty
+                        ? DefaultTextStyle(
+                            style: Theme.of(context).textTheme.bodyLarge!,
+                            child: Center(
+                              child: widget.onDataEmpty?.call(_retry) ?? Text(Language.getInstance().getValue('No data')!),
+                            ),
+                          )
+                        : DefaultTextStyle(
+                            style: Theme.of(context).textTheme.bodyLarge!,
+                            child: Center(
+                              child: widget.onDataNotFound ?? Text(Language.getInstance().getValue('Data not found')!),
+                            ),
+                          )
+                  : RadioGroup(
+                      groupValue: _chooseData.trySingleWhere((element) => element.isSelected)?.searchValue,
+                      onChanged: (value) => NavigationHelper.back<T>(value as T),
+                      child: ListView.builder(
+                        itemBuilder: (context, index) => ListTile(
+                          leading: widget.multiple
+                              ? Checkbox(
+                                  value: _chooseData[index].isSelected,
+                                  onChanged: (value) => _setIsSelected(index, value!),
+                                )
+                              : _chooseData[index].leading ??
+                                    (_chooseData.any((element) => element.isSelected)
+                                        ? Radio(
+                                            value: _chooseData[index].searchValue,
+                                          )
+                                        : null),
+                          title: _chooseData[index].title,
+                          subtitle: _chooseData[index].subtitle,
+                          isThreeLine: _chooseData[index].isThreeLine,
+                          selected: false,
+                          trailing: _chooseData[index].trailing,
+                          onTap: () => !widget.multiple ? NavigationHelper.back<T>(_chooseData[index].value) : _setIsSelected(index, !_chooseData[index].isSelected),
+                        ),
+                        itemCount: _chooseData.length,
+                      ),
+                    ),
+            ),
+          ],
+        );
+      } else if (snapshot.hasError) {
+        return Center(
+          child:
+              widget.onSnapshotErrorBuilder?.call(snapshot.error, _retry) ??
+              Text(
+                'Error',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+        );
+      }
 
-          return const Center(child: CircularProgressIndicator());
-        },
-      );
+      return const Center(child: CircularProgressIndicator());
+    },
+  );
 }
 
 /// Represents data for an item in the `ChooseDialog` widget.

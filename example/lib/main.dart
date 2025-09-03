@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:cached_network_image/cached_network_image.dart' as cached;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:m_widget/m_widget.dart';
@@ -9,9 +7,7 @@ import 'package:m_widget/m_widget.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await MWidget.initialize(
-    defaultLanguage: LanguageType.indonesiaIndonesian,
-  );
+  await MWidget.initialize(defaultLanguage: LanguageType.indonesiaIndonesian);
 
   runApp(const MyApp());
 }
@@ -21,23 +17,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MWidgetDynamicColorBuilder(
-        builder: (context, theme, darkTheme, themeMode, colorScheme, darkColorScheme) => MaterialApp(
-          navigatorKey: navigatorKey,
-          scaffoldMessengerKey: scaffoldMessengerKey,
-          title: 'MWidget',
-          theme: theme.copyWith(
-            filledButtonTheme: FilledButtonThemeData(
-              style: FilledButton.styleFrom(
-                minimumSize: const Size.fromHeight(56.0),
-                textStyle: kTextTheme.titleLarge!.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ),
+    builder: (context, theme, darkTheme, themeMode, colorScheme, darkColorScheme) => MaterialApp(
+      navigatorKey: navigatorKey,
+      scaffoldMessengerKey: scaffoldMessengerKey,
+      title: 'MWidget',
+      theme: theme.copyWith(
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            minimumSize: const Size.fromHeight(56.0),
+            textStyle: kTextTheme.titleLarge!.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          darkTheme: darkTheme,
-          themeMode: themeMode,
-          home: const MyHomePage(),
         ),
-      );
+      ),
+      darkTheme: darkTheme,
+      themeMode: themeMode,
+      home: const MyHomePage(),
+    ),
+  );
 }
 
 class MyHomePage extends StatefulWidget {
@@ -85,44 +81,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () => NavigationHelper.to(
                       AdaptiveDialogRoute(
                         builder: (context) => ChooseDialog(
-                          data: () => [
-                            'Sapi',
-                            'Kerbau',
-                            'Kucing',
-                            'Harimau',
-                          ]
-                              .map(
-                                (e) => ChooseData(
-                                  value: e,
-                                  searchValue: e,
-                                  title: Text(e),
-                                ),
-                              )
-                              .toList(),
+                          data: () => ['Sapi', 'Kerbau', 'Kucing', 'Harimau'].map((e) => ChooseData(value: e, searchValue: e, title: Text(e))).toList(),
                         ),
                       ),
                     ),
                     icon: const Icon(Icons.access_time),
                   ),
                   IconButton(
-                    onPressed: () => ImageContainer.handleChangeImage(
-                      showDelete: false,
-                      allowPickImageFromGallery: true,
-                      forceUsingSheet: true,
-                    ).then((value) async {
+                    onPressed: () => ImageContainer.handleChangeImage(showDelete: false, allowPickImageFromGallery: true, forceUsingSheet: true).then((value) async {
                       imageData = await value.image?.readAsBytes();
                       setState(() {});
                     }),
                     icon: const Icon(Icons.photo_camera),
                   ),
                   IconButton(
-                    onPressed: () => NavigationHelper.showModalBottomSheet(
-                      builder: (context) => SheetImageSource(
-                        showGallery: false,
-                        showDelete: false,
-                        title: Text(Language.getInstance().getValue('Change logo')!),
-                      ),
-                    ),
+                    onPressed: () => NavigationHelper.showModalBottomSheet(builder: (context) => SheetImageSource(showGallery: false, showDelete: false, title: Text(Language.getInstance().getValue('Change logo')!))),
                     icon: const Icon(Icons.question_mark),
                   ),
                 ],
@@ -133,63 +106,25 @@ class _MyHomePageState extends State<MyHomePage> {
                   ListView(
                     padding: responsivePadding(MediaQuery.sizeOf(context)),
                     children: [
-                      TimerProgressIndicator(
-                        controller: timerController,
-                        progressNotifier: ValueNotifier(0.35),
-                        messageNotifier: ValueNotifier('Hey'),
-                      ),
+                      TimerProgressIndicator(controller: timerController, progressNotifier: ValueNotifier(0.35), messageNotifier: ValueNotifier('Hey')),
                       DropdownField(
                         controller: _textControllerDropdownField,
-                        items: FieldItem.values
-                            .map(
-                              (e) => PopupMenuItem(
-                                value: e,
-                                child: Text(e.value),
-                              ),
-                            )
-                            .toList(),
+                        items: FieldItem.values.map((e) => PopupMenuItem(value: e, child: Text(e.value))).toList(),
                         readOnly: true,
                         onSelected: (value) => _textControllerDropdownField.text = value?.value ?? '?',
                       ),
-                      TextField(
-                        controller: _textControllerThousandFormat,
-                      ),
-                      FilledButton(
-                        onPressed: () => showErrorDialog('Hello', primaryFilledButton: true),
-                        child: const Text('Hello'),
-                      ),
-                      ListTile(
-                        title: const Text('test'),
-                        selectedTileColor: Theme.of(context).colorScheme.secondaryContainer,
-                        selected: true,
-                        onTap: () {},
-                      ),
+                      TextField(controller: _textControllerThousandFormat),
+                      FilledButton(onPressed: () => showErrorDialog('Hello', primaryFilledButton: true), child: const Text('Hello')),
+                      ListTile(title: const Text('test'), selectedTileColor: Theme.of(context).colorScheme.secondaryContainer, selected: true, onTap: () {}),
                       const SizedBox(height: 16.0),
-                      DateRangeField(
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime.now().add(const Duration(days: 30)),
-                        value: currentDateRange,
-                        onDateChanged: (value) => setState(() => value != null ? currentDateRange = value : null),
-                      ),
+                      DateRangeField(firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 30)), value: currentDateRange, onDateChanged: (value) => setState(() => value != null ? currentDateRange = value : null)),
                       const SizedBox(height: 16.0),
-                      ButtonEdit(
-                        onCancelDisabledPressed: () => debugPrint('onCancelDisabledPressed'),
-                      ),
+                      ButtonEdit(onCancelDisabledPressed: () => debugPrint('onCancelDisabledPressed')),
                       const SizedBox(height: 16.0),
                       DropdownField(
                         controller: _textController,
-                        items: ['Hello', 'World']
-                            .map(
-                              (e) => PopupMenuItem(
-                                value: e,
-                                child: Text(e),
-                              ),
-                            )
-                            .toList(),
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Dropdown field',
-                        ),
+                        items: ['Hello', 'World'].map((e) => PopupMenuItem(value: e, child: Text(e))).toList(),
+                        decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'Dropdown field'),
                       ),
                       const SizedBox(height: 16.0),
                       ImageContainer.hero(
@@ -224,9 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         containerBackgroundColor: Colors.red,
                         // cachedNetworkImageError: (e) => const AssetImage('assets/purple-image.jpg'),
                         // dialogFit: BoxFit.contain,
-                        extendedAppBar: AppBar(
-                          title: const Text('Detail image'),
-                        ),
+                        extendedAppBar: AppBar(title: const Text('Detail image')),
                         // useDynamicColor: true,
                         // skipDialog: true,
                         child: const Center(child: Text('Gambar kosong bro!')),
@@ -242,16 +175,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         dialogIconSize: 96.0,
                         containerBackgroundColor: Theme.of(context).colorScheme.onSurface,
                         dialogBackgroundColor: Colors.blue,
-                        extendedAppBar: AppBar(
-                          title: const Text('Hello'),
-                        ),
+                        extendedAppBar: AppBar(title: const Text('Hello')),
                       ),
                       const SizedBox(height: 16.0),
                       ConstrainedBox(
-                        constraints: const BoxConstraints.tightFor(
-                          width: double.infinity,
-                          height: 200.0,
-                        ),
+                        constraints: const BoxConstraints.tightFor(width: double.infinity, height: 200.0),
                         child: TextField(
                           focusNode: _submitFocusNode,
                           expands: true,
@@ -263,35 +191,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                      NumberPicker(
-                        controller: _controller,
-                        onChanged: (value) => debugPrint('onChanged $value'),
-                      ),
+                      NumberPicker(controller: _controller, onChanged: (value) => debugPrint('onChanged $value')),
                       const SizedBox(height: 16.0),
-                      NumberPicker(
-                        controller: _controller,
-                      ),
+                      NumberPicker(controller: _controller),
                       const SizedBox(height: 16.0),
-                      NumberPicker(
-                        controller: _controller,
-                      ),
+                      NumberPicker(controller: _controller),
                       const SizedBox(height: 16.0),
-                      NumberPicker(
-                        controller: _controller,
-                      ),
+                      NumberPicker(controller: _controller),
                       const SizedBox(height: 16.0),
-                      NumberPicker(
-                        controller: _controller,
-                      ),
+                      NumberPicker(controller: _controller),
                       const SizedBox(height: 16.0),
                       FilledButton(
-                        onPressed: () => NavigationHelper.to(
-                          AdaptiveDialogRoute(
-                            builder: (context) => ChooseDialog(
-                              data: () => [],
-                            ),
-                          ),
-                        ),
+                        onPressed: () => NavigationHelper.to(AdaptiveDialogRoute(builder: (context) => ChooseDialog(data: () => []))),
                         child: const Text('Show Choose Dialog'),
                       ),
                       const SizedBox(height: 90),
@@ -300,10 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   // Second Tab
                   ListView(
                     children: [
-                      TimerProgressIndicator(
-                        controller: timerController,
-                        progressNotifier: ValueNotifier(0.35),
-                      ),
+                      TimerProgressIndicator(controller: timerController, progressNotifier: ValueNotifier(0.35)),
                       const SizedBox(height: 90),
                     ],
                   ),
@@ -400,13 +308,7 @@ class _MyHomePageState extends State<MyHomePage> {
             builder: (context, scrollController, animation, children) => DraggableScrollableBody(
               themeMode: MWidget.themeValue.themeMode,
               color: Theme.of(context).colorScheme.secondaryContainer,
-              borderRadius: BorderRadius.lerp(
-                BorderRadius.zero,
-                const BorderRadius.vertical(
-                  top: Radius.circular(kShapeExtraLarge),
-                ),
-                animation.value,
-              ),
+              borderRadius: BorderRadius.lerp(BorderRadius.zero, const BorderRadius.vertical(top: Radius.circular(kShapeExtraLarge)), animation.value),
               child: Material(
                 color: Colors.transparent,
                 child: ScrollConfiguration(
@@ -421,10 +323,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               width: 32.0,
                               height: 4.0,
                               margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
-                                borderRadius: BorderRadius.circular(2.0),
-                              ),
+                              decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.4), borderRadius: BorderRadius.circular(2.0)),
                             ),
                           ),
                           ...children?.where((element) => element.tag == 'top').map((e) => e.child) ?? [],

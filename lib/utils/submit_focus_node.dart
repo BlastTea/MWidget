@@ -22,23 +22,23 @@ class SubmitFocusNode extends FocusNode {
   /// - [descendantsAreTraversable] determines whether the focus node's descendants are traversable.
   SubmitFocusNode({
     super.debugLabel,
-    KeyEventResult Function(FocusNode, RawKeyEvent)? onKey,
+    KeyEventResult Function(FocusNode, KeyEvent)? onKey,
     VoidCallback? onEnterPressed,
     super.skipTraversal = false,
     super.canRequestFocus = true,
     super.descendantsAreFocusable = true,
     super.descendantsAreTraversable = true,
   }) : super(
-          onKey: (focusNode, event) {
-            if (!event.isShiftPressed && event.logicalKey.keyLabel == 'Enter') {
-              if (event is RawKeyDownEvent) {
-                onEnterPressed?.call();
-              }
-              return KeyEventResult.handled;
-            }
+         onKeyEvent: (focusNode, event) {
+           if (!(event.physicalKey == PhysicalKeyboardKey.shiftLeft || event.physicalKey == PhysicalKeyboardKey.shiftRight) && event.logicalKey.keyLabel == 'Enter') {
+             if (event is KeyDownEvent) {
+               onEnterPressed?.call();
+             }
+             return KeyEventResult.handled;
+           }
 
-            // Delegate handling to the provided onKey callback if available.
-            return onKey?.call(focusNode, event) ?? KeyEventResult.ignored;
-          },
-        );
+           // Delegate handling to the provided onKey callback if available.
+           return onKey?.call(focusNode, event) ?? KeyEventResult.ignored;
+         },
+       );
 }

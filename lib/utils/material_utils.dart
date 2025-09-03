@@ -12,13 +12,13 @@ List<BoxShadow> kElevation1Light = [
   BoxShadow(
     offset: const Offset(0, 1),
     blurRadius: 2,
-    color: Colors.black.withOpacity(0.3),
+    color: Colors.black.withValues(alpha: 0.3),
   ),
   BoxShadow(
     offset: const Offset(0, 1),
     blurRadius: 3,
     spreadRadius: 1,
-    color: Colors.black.withOpacity(0.15),
+    color: Colors.black.withValues(alpha: 0.15),
   ),
 ];
 
@@ -27,14 +27,14 @@ List<BoxShadow> kElevation2Light = [
     offset: const Offset(0, 1),
     blurRadius: 2,
     spreadRadius: 0,
-    color: Colors.black.withOpacity(0.3),
+    color: Colors.black.withValues(alpha: 0.3),
   ),
   BoxShadow(
     offset: const Offset(0, 2),
     blurRadius: 6,
     spreadRadius: 2,
-    color: Colors.black.withOpacity(0.15),
-  )
+    color: Colors.black.withValues(alpha: 0.15),
+  ),
 ];
 
 List<BoxShadow> kElevation3Light = [
@@ -42,13 +42,13 @@ List<BoxShadow> kElevation3Light = [
     offset: const Offset(0, 4),
     blurRadius: 8,
     spreadRadius: 3,
-    color: Colors.black.withOpacity(0.15),
+    color: Colors.black.withValues(alpha: 0.15),
   ),
   BoxShadow(
     offset: const Offset(0, 1),
     blurRadius: 3,
     spreadRadius: 0,
-    color: Colors.black.withOpacity(0.3),
+    color: Colors.black.withValues(alpha: 0.3),
   ),
 ];
 
@@ -57,12 +57,12 @@ List<BoxShadow> kElevation4Light = [
     offset: const Offset(0, 6),
     blurRadius: 10,
     spreadRadius: 4,
-    color: Colors.black.withOpacity(0.15),
+    color: Colors.black.withValues(alpha: 0.15),
   ),
   BoxShadow(
     offset: const Offset(0, 2),
     blurRadius: 3,
-    color: Colors.black.withOpacity(0.3),
+    color: Colors.black.withValues(alpha: 0.3),
   ),
 ];
 
@@ -71,12 +71,12 @@ List<BoxShadow> kElevation5Light = [
     offset: const Offset(0, 8),
     blurRadius: 12,
     spreadRadius: 6,
-    color: Colors.black.withOpacity(0.15),
+    color: Colors.black.withValues(alpha: 0.15),
   ),
   BoxShadow(
     offset: const Offset(0, 4),
     blurRadius: 4,
-    color: Colors.black.withOpacity(0.3),
+    color: Colors.black.withValues(alpha: 0.3),
   ),
 ];
 
@@ -85,12 +85,12 @@ List<BoxShadow> kElevation1Dark = [
     offset: const Offset(0, 1),
     blurRadius: 3,
     spreadRadius: 1,
-    color: Colors.black.withOpacity(0.15),
+    color: Colors.black.withValues(alpha: 0.15),
   ),
   BoxShadow(
     offset: const Offset(0, 1),
     blurRadius: 2,
-    color: Colors.black.withOpacity(0.3),
+    color: Colors.black.withValues(alpha: 0.3),
   ),
 ];
 
@@ -99,12 +99,12 @@ List<BoxShadow> kElevation2Dark = [
     offset: const Offset(0, 2),
     blurRadius: 6,
     spreadRadius: 2,
-    color: Colors.black.withOpacity(0.15),
+    color: Colors.black.withValues(alpha: 0.15),
   ),
   BoxShadow(
     offset: const Offset(0, 1),
     blurRadius: 2,
-    color: Colors.black.withOpacity(0.3),
+    color: Colors.black.withValues(alpha: 0.3),
   ),
 ];
 
@@ -113,12 +113,12 @@ List<BoxShadow> kElevation3Dark = [
     offset: const Offset(0, 4),
     blurRadius: 8,
     spreadRadius: 3,
-    color: Colors.black.withOpacity(0.15),
+    color: Colors.black.withValues(alpha: 0.15),
   ),
   BoxShadow(
     offset: const Offset(0, 1),
     blurRadius: 3,
-    color: Colors.black.withOpacity(0.3),
+    color: Colors.black.withValues(alpha: 0.3),
   ),
 ];
 
@@ -127,12 +127,12 @@ List<BoxShadow> kElevation4Dark = [
     offset: const Offset(0, 6),
     blurRadius: 10,
     spreadRadius: 4,
-    color: Colors.black.withOpacity(0.15),
+    color: Colors.black.withValues(alpha: 0.15),
   ),
   BoxShadow(
     offset: const Offset(0, 2),
     blurRadius: 3,
-    color: Colors.black.withOpacity(0.3),
+    color: Colors.black.withValues(alpha: 0.3),
   ),
 ];
 
@@ -141,12 +141,12 @@ List<BoxShadow> kElevation5Dark = [
     offset: const Offset(0, 8),
     blurRadius: 12,
     spreadRadius: 6,
-    color: Colors.black.withOpacity(0.15),
+    color: Colors.black.withValues(alpha: 0.15),
   ),
   BoxShadow(
     offset: const Offset(0, 4),
     blurRadius: 4,
-    color: Colors.black.withOpacity(0.3),
+    color: Colors.black.withValues(alpha: 0.3),
   ),
 ];
 

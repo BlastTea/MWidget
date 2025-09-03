@@ -75,16 +75,16 @@ class ImageContainer extends StatefulWidget {
     this.allowPickImageFromGallery = true,
     this.cachedNetworkImageError,
     this.child,
-  })  : _isHero = false,
-        extendedAppBar = null,
-        useDynamicColor = false,
-        disuseDynamicColor = false,
-        dialogBackgroundColor = null,
-        dialogGradient = null,
-        dialogFit = null,
-        skipDialog = false,
-        dialogIconSize = null,
-        dialogIconColor = null;
+  }) : _isHero = false,
+       extendedAppBar = null,
+       useDynamicColor = false,
+       disuseDynamicColor = false,
+       dialogBackgroundColor = null,
+       dialogGradient = null,
+       dialogFit = null,
+       skipDialog = false,
+       dialogIconSize = null,
+       dialogIconColor = null;
 
   /// Creates an `ImageContainer` widget with a hero animation and support for full-screen mode.
   ///
@@ -137,12 +137,12 @@ class ImageContainer extends StatefulWidget {
     this.skipDialog = false,
     this.cachedNetworkImageError,
     this.child,
-  })  : assert((containerGradient == null && dialogGradient == null) || (containerGradient != null && dialogGradient != null)),
-        assert((containerIconColor == null && dialogIconColor == null) || (containerIconColor != null && dialogIconColor != null)),
-        assert((skipDialog && extendedAppBar != null) || (!skipDialog)),
-        onImageChanged = null,
-        _isHero = true,
-        allowPickImageFromGallery = false;
+  }) : assert((containerGradient == null && dialogGradient == null) || (containerGradient != null && dialogGradient != null)),
+       assert((containerIconColor == null && dialogIconColor == null) || (containerIconColor != null && dialogIconColor != null)),
+       assert((skipDialog && extendedAppBar != null) || (!skipDialog)),
+       onImageChanged = null,
+       _isHero = true,
+       allowPickImageFromGallery = false;
 
   /// A unique identifier for hero animations when transitioning between images.
   final Object tag;
@@ -260,9 +260,15 @@ class ImageContainer extends StatefulWidget {
     ImagePicker picker = ImagePicker();
     switch (imageSourceResult) {
       case ImageSourceResult.gallery:
-        return ChangeImageResult(image: await picker.pickImage(source: ImageSource.gallery), imagePicker: picker);
+        return ChangeImageResult(
+          image: await picker.pickImage(source: ImageSource.gallery),
+          imagePicker: picker,
+        );
       case ImageSourceResult.camera:
-        return ChangeImageResult(image: await picker.pickImage(source: ImageSource.camera), imagePicker: picker);
+        return ChangeImageResult(
+          image: await picker.pickImage(source: ImageSource.camera),
+          imagePicker: picker,
+        );
       case ImageSourceResult.delete:
         return ChangeImageResult(isDelete: true);
       default:
@@ -277,7 +283,6 @@ class ImageContainer extends StatefulWidget {
 class _ImageContainerState extends State<ImageContainer> with SingleTickerProviderStateMixin {
   Key _imageKey = UniqueKey();
 
-  bool _isError = false;
   bool _onHover = false;
 
   static Color? _toBackgroundColor;
@@ -314,7 +319,6 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
           setState(() {
             _image = widget.cachedNetworkImageError?.call(e);
             this.e = e;
-            _isError = true;
           });
         },
         headers: widgetImage.headers,
@@ -329,82 +333,82 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
   }
 
   Future<void> _goToDialog() => NavigationHelper.to(
-        PageRouteBuilder(
-          barrierColor: Colors.black54,
-          barrierDismissible: true,
-          opaque: false,
-          pageBuilder: (context, animation, secondaryAnimation) => Align(
-            child: ConstrainedBox(
-              constraints: BoxConstraints.tightFor(
-                width: responsiveDialogWidth(MediaQuery.sizeOf(context)),
-                height: responsiveDialogWidth(MediaQuery.sizeOf(context)),
-              ),
-              child: Hero(
-                createRectTween: (begin, end) => RectTween(begin: begin, end: end),
-                flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => AnimatedBuilder(
-                  animation: animation,
-                  builder: (context, child) {
-                    _toGradient = widget.dialogGradient;
-                    _toBackgroundColor = widget.dialogBackgroundColor ?? Theme.of(context).colorScheme.surface;
-                    _toBorderRadius = BorderRadius.circular(kShapeExtraLarge);
-                    _toIconSize = widget.dialogIconSize ?? 24.0;
-                    _toIconColor = widget.dialogIconColor;
-                    _toFit = widget.dialogFit;
-                    return _container(
-                      context: context,
-                      width: responsiveDialogWidth(MediaQuery.sizeOf(context)),
-                      height: responsiveDialogWidth(MediaQuery.sizeOf(context)),
-                      borderRadius: BorderRadiusGeometry.lerp(widget.borderRadius ?? BorderRadius.circular(kShapeLarge), BorderRadius.circular(kShapeExtraLarge), animation.value),
-                      gradient: Gradient.lerp(widget.containerGradient, widget.dialogGradient, animation.value),
-                      image: image != null
-                          ? DecorationImage.lerp(
-                              DecorationImage(image: image!, fit: widget.containerFit ?? BoxFit.cover),
-                              DecorationImage(image: image!, fit: widget.dialogFit ?? BoxFit.cover),
-                              animation.value,
-                            )
-                          : null,
-                      color: Color.lerp(widget.containerBackgroundColor ?? Colors.transparent, widget.dialogBackgroundColor ?? Theme.of(context).colorScheme.surface, animation.value),
-                      child: _icon(
-                        context: context,
-                        iconSize: Tween(begin: widget.containerIconSize ?? 24.0, end: widget.dialogIconSize ?? 24.0).animate(animation).value,
-                        iconColor: Color.lerp(widget.containerIconColor, widget.dialogIconColor, animation.value),
-                      ),
-                    );
-                  },
-                ),
-                tag: widget.tag,
-                child: _container(
+    PageRouteBuilder(
+      barrierColor: Colors.black54,
+      barrierDismissible: true,
+      opaque: false,
+      pageBuilder: (context, animation, secondaryAnimation) => Align(
+        child: ConstrainedBox(
+          constraints: BoxConstraints.tightFor(
+            width: responsiveDialogWidth(MediaQuery.sizeOf(context)),
+            height: responsiveDialogWidth(MediaQuery.sizeOf(context)),
+          ),
+          child: Hero(
+            createRectTween: (begin, end) => RectTween(begin: begin, end: end),
+            flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => AnimatedBuilder(
+              animation: animation,
+              builder: (context, child) {
+                _toGradient = widget.dialogGradient;
+                _toBackgroundColor = widget.dialogBackgroundColor ?? Theme.of(context).colorScheme.surface;
+                _toBorderRadius = BorderRadius.circular(kShapeExtraLarge);
+                _toIconSize = widget.dialogIconSize ?? 24.0;
+                _toIconColor = widget.dialogIconColor;
+                _toFit = widget.dialogFit;
+                return _container(
+                  context: context,
                   width: responsiveDialogWidth(MediaQuery.sizeOf(context)),
                   height: responsiveDialogWidth(MediaQuery.sizeOf(context)),
-                  context: context,
-                  borderRadius: BorderRadius.circular(kShapeExtraLarge),
-                  gradient: widget.dialogGradient,
+                  borderRadius: BorderRadiusGeometry.lerp(widget.borderRadius ?? BorderRadius.circular(kShapeLarge), BorderRadius.circular(kShapeExtraLarge), animation.value),
+                  gradient: Gradient.lerp(widget.containerGradient, widget.dialogGradient, animation.value),
                   image: image != null
-                      ? DecorationImage(
-                          image: image!,
-                          fit: widget.dialogFit ?? BoxFit.cover,
+                      ? DecorationImage.lerp(
+                          DecorationImage(image: image!, fit: widget.containerFit ?? BoxFit.cover),
+                          DecorationImage(image: image!, fit: widget.dialogFit ?? BoxFit.cover),
+                          animation.value,
                         )
                       : null,
-                  color: widget.dialogBackgroundColor ?? Theme.of(context).colorScheme.surface,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(kShapeExtraLarge),
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(kShapeExtraLarge),
-                      onTap: widget.extendedAppBar != null ? () => _goToFullScreen() : null,
-                      child: _icon(
-                        context: context,
-                        iconSize: widget.dialogIconSize,
-                        iconColor: widget.dialogIconColor,
-                      ),
-                    ),
+                  color: Color.lerp(widget.containerBackgroundColor ?? Colors.transparent, widget.dialogBackgroundColor ?? Theme.of(context).colorScheme.surface, animation.value),
+                  child: _icon(
+                    context: context,
+                    iconSize: Tween(begin: widget.containerIconSize ?? 24.0, end: widget.dialogIconSize ?? 24.0).animate(animation).value,
+                    iconColor: Color.lerp(widget.containerIconColor, widget.dialogIconColor, animation.value),
+                  ),
+                );
+              },
+            ),
+            tag: widget.tag,
+            child: _container(
+              width: responsiveDialogWidth(MediaQuery.sizeOf(context)),
+              height: responsiveDialogWidth(MediaQuery.sizeOf(context)),
+              context: context,
+              borderRadius: BorderRadius.circular(kShapeExtraLarge),
+              gradient: widget.dialogGradient,
+              image: image != null
+                  ? DecorationImage(
+                      image: image!,
+                      fit: widget.dialogFit ?? BoxFit.cover,
+                    )
+                  : null,
+              color: widget.dialogBackgroundColor ?? Theme.of(context).colorScheme.surface,
+              child: Material(
+                borderRadius: BorderRadius.circular(kShapeExtraLarge),
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(kShapeExtraLarge),
+                  onTap: widget.extendedAppBar != null ? () => _goToFullScreen() : null,
+                  child: _icon(
+                    context: context,
+                    iconSize: widget.dialogIconSize,
+                    iconColor: widget.dialogIconColor,
                   ),
                 ),
               ),
             ),
           ),
         ),
-      );
+      ),
+    ),
+  );
 
   Future<void>? _goToFullScreen({bool replaceCurrentScreen = true}) {
     if (widget.useDynamicColor) MWidget.themeValue.fromImageProvider(image);
@@ -511,104 +515,104 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) => ConstrainedBox(
-        constraints: BoxConstraints.tightFor(
-          width: widget.width,
-          height: widget.height,
-        ),
-        child: MouseRegion(
-          onEnter: (event) => setState(() => _onHover = true),
-          onExit: (event) => setState(() => _onHover = false),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Hero(
-                createRectTween: (begin, end) => RectTween(begin: begin, end: end),
-                flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => AnimatedBuilder(
-                  animation: animation,
-                  builder: (context, child) => _container(
-                    context: context,
-                    width: widget.width,
-                    height: widget.height,
-                    gradient: Gradient.lerp(widget.containerGradient, _toGradient, animation.value),
-                    image: image != null
-                        ? DecorationImage.lerp(
-                            DecorationImage(
-                              image: image!,
-                              fit: widget.containerFit ?? BoxFit.cover,
-                            ),
-                            DecorationImage(
-                              image: image!,
-                              fit: _toFit ?? BoxFit.cover,
-                            ),
-                            animation.value,
-                          )
-                        : null,
-                    borderRadius: BorderRadiusGeometry.lerp(widget.borderRadius ?? BorderRadius.circular(kShapeLarge), _toBorderRadius, animation.value),
-                    color: Color.lerp(_toBackgroundColor ?? Theme.of(context).colorScheme.surface, Colors.transparent, animation.value),
-                    child: _icon(
-                      context: context,
-                      iconSize: Tween(begin: widget.containerIconSize ?? 24.0, end: _toIconSize).animate(animation).value,
-                      iconColor: Color.lerp(widget.containerIconColor, _toIconColor, animation.value),
-                    ),
-                  ),
-                ),
-                tag: widget.tag,
-                child: _container(
-                  context: context,
-                  width: widget.width,
-                  height: widget.height,
-                  borderRadius: widget.borderRadius,
-                  gradient: widget.containerGradient,
-                  margin: widget.margin,
-                  image: image != null
-                      ? DecorationImage(
+    constraints: BoxConstraints.tightFor(
+      width: widget.width,
+      height: widget.height,
+    ),
+    child: MouseRegion(
+      onEnter: (event) => setState(() => _onHover = true),
+      onExit: (event) => setState(() => _onHover = false),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Hero(
+            createRectTween: (begin, end) => RectTween(begin: begin, end: end),
+            flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) => AnimatedBuilder(
+              animation: animation,
+              builder: (context, child) => _container(
+                context: context,
+                width: widget.width,
+                height: widget.height,
+                gradient: Gradient.lerp(widget.containerGradient, _toGradient, animation.value),
+                image: image != null
+                    ? DecorationImage.lerp(
+                        DecorationImage(
                           image: image!,
                           fit: widget.containerFit ?? BoxFit.cover,
-                        )
-                      : null,
-                  child: Material(
-                    borderRadius: widget.borderRadius ?? BorderRadius.circular(kShapeLarge),
-                    color: image == null ? (widget.containerBackgroundColor ?? Colors.transparent) : Colors.transparent,
-                    child: InkWell(
-                      borderRadius: widget.borderRadius as BorderRadius? ?? BorderRadius.circular(kShapeLarge),
-                      onTap: () async {
-                        if (widget._isHero && widget.skipDialog) return _goToFullScreen(replaceCurrentScreen: false);
+                        ),
+                        DecorationImage(
+                          image: image!,
+                          fit: _toFit ?? BoxFit.cover,
+                        ),
+                        animation.value,
+                      )
+                    : null,
+                borderRadius: BorderRadiusGeometry.lerp(widget.borderRadius ?? BorderRadius.circular(kShapeLarge), _toBorderRadius, animation.value),
+                color: Color.lerp(_toBackgroundColor ?? Theme.of(context).colorScheme.surface, Colors.transparent, animation.value),
+                child: _icon(
+                  context: context,
+                  iconSize: Tween(begin: widget.containerIconSize ?? 24.0, end: _toIconSize).animate(animation).value,
+                  iconColor: Color.lerp(widget.containerIconColor, _toIconColor, animation.value),
+                ),
+              ),
+            ),
+            tag: widget.tag,
+            child: _container(
+              context: context,
+              width: widget.width,
+              height: widget.height,
+              borderRadius: widget.borderRadius,
+              gradient: widget.containerGradient,
+              margin: widget.margin,
+              image: image != null
+                  ? DecorationImage(
+                      image: image!,
+                      fit: widget.containerFit ?? BoxFit.cover,
+                    )
+                  : null,
+              child: Material(
+                borderRadius: widget.borderRadius ?? BorderRadius.circular(kShapeLarge),
+                color: image == null ? (widget.containerBackgroundColor ?? Colors.transparent) : Colors.transparent,
+                child: InkWell(
+                  borderRadius: widget.borderRadius as BorderRadius? ?? BorderRadius.circular(kShapeLarge),
+                  onTap: () async {
+                    if (widget._isHero && widget.skipDialog) return _goToFullScreen(replaceCurrentScreen: false);
 
-                        if (widget._isHero) return _goToDialog();
+                    if (widget._isHero) return _goToDialog();
 
-                        if (!(widget.enabled?.call() ?? true)) return;
+                    if (!(widget.enabled?.call() ?? true)) return;
 
-                        widget.onImageChanged?.call(
-                          await ImageContainer.handleChangeImage(
-                            showDelete: image != null,
-                            sheetTitleText: widget.sheetTitleText,
-                            allowPickImageFromGallery: widget.allowPickImageFromGallery,
-                          ),
-                        );
-                      },
-                      child: _icon(
-                        context: context,
-                        iconSize: widget.containerIconSize,
-                        iconColor: widget.containerIconColor,
+                    widget.onImageChanged?.call(
+                      await ImageContainer.handleChangeImage(
+                        showDelete: image != null,
+                        sheetTitleText: widget.sheetTitleText,
+                        allowPickImageFromGallery: widget.allowPickImageFromGallery,
                       ),
-                    ),
+                    );
+                  },
+                  child: _icon(
+                    context: context,
+                    iconSize: widget.containerIconSize,
+                    iconColor: widget.containerIconColor,
                   ),
                 ),
               ),
-              if (_onHover && image != null && !widget._isHero)
-                Positioned(
-                  top: 16.0,
-                  right: 16.0,
-                  child: FloatingActionButton.small(
-                    backgroundColor: Theme.of(context).colorScheme.onError,
-                    onPressed: () => widget.onImageChanged?.call(ChangeImageResult(isDelete: true)),
-                    child: const Icon(Icons.delete),
-                  ),
-                ),
-            ],
+            ),
           ),
-        ),
-      );
+          if (_onHover && image != null && !widget._isHero)
+            Positioned(
+              top: 16.0,
+              right: 16.0,
+              child: FloatingActionButton.small(
+                backgroundColor: Theme.of(context).colorScheme.onError,
+                onPressed: () => widget.onImageChanged?.call(ChangeImageResult(isDelete: true)),
+                child: const Icon(Icons.delete),
+              ),
+            ),
+        ],
+      ),
+    ),
+  );
 
   Widget _container({
     required BuildContext context,
@@ -620,45 +624,44 @@ class _ImageContainerState extends State<ImageContainer> with SingleTickerProvid
     DecorationImage? image,
     Color? color,
     required Widget? child,
-  }) =>
-      Stack(
-        key: _imageKey,
-        fit: StackFit.expand,
-        children: [
-          Container(
-            width: width,
-            height: height,
-            margin: margin,
-            decoration: BoxDecoration(
-              border: widget.border,
-              color: image == null ? color : null,
-              borderRadius: borderRadius ?? BorderRadius.circular(kShapeLarge),
-              image: image,
-              // image: widget.child == null ? image : null,
-            ),
-          ),
-          Container(
-            width: width,
-            height: height,
-            margin: margin,
-            decoration: BoxDecoration(
-              border: widget.border,
-              gradient: gradient,
-              borderRadius: borderRadius ?? BorderRadius.circular(kShapeLarge),
-            ),
-            child: child,
-          ),
-        ],
-      );
+  }) => Stack(
+    key: _imageKey,
+    fit: StackFit.expand,
+    children: [
+      Container(
+        width: width,
+        height: height,
+        margin: margin,
+        decoration: BoxDecoration(
+          border: widget.border,
+          color: image == null ? color : null,
+          borderRadius: borderRadius ?? BorderRadius.circular(kShapeLarge),
+          image: image,
+          // image: widget.child == null ? image : null,
+        ),
+      ),
+      Container(
+        width: width,
+        height: height,
+        margin: margin,
+        decoration: BoxDecoration(
+          border: widget.border,
+          gradient: gradient,
+          borderRadius: borderRadius ?? BorderRadius.circular(kShapeLarge),
+        ),
+        child: child,
+      ),
+    ],
+  );
 
   Widget? _icon({required BuildContext context, double? iconSize, Color? iconColor}) => (image != null
       ? null
       : widget.child ??
-          Icon(
-            widget.icon ?? Icons.business,
-            size: iconSize ?? 24.0,
-            color: iconColor,
-          ));
+            Icon(
+              widget.icon ?? Icons.business,
+              size: iconSize ?? 24.0,
+              color: iconColor,
+            ));
 }
 
 /// Represents the result of changing the image in the `ImageContainer`.
