@@ -47,89 +47,97 @@ class TextEditingControllerThousandFormat extends TextEditingController {
     this.invertThousandSeparator,
   }) {
     bool ignoreChanges = false;
-    _isFirstTime = true;
 
     addListener(() {
       if (ignoreChanges) return;
 
-      if (text.trim().isEmpty) {
+      final raw = text;
+
+      if (raw.trim().isEmpty) {
         value = const TextEditingValue(
           text: '',
-          selection: TextSelection.collapsed(
-            offset: ''.length,
-            affinity: TextAffinity.upstream,
-          ),
+          selection: TextSelection.collapsed(offset: 0, affinity: TextAffinity.upstream),
           composing: TextRange.empty,
         );
+        _previousText = '';
         return;
       }
 
-      String decimalSeparator = (invertThousandSeparator ?? (navigatorKey.currentContext != null ? MWidgetTheme.of(navigatorKey.currentContext!)?.invertThousandSeparator : null) ?? false) ? ',' : '.';
+      final thou = _thousandSeparator;
+      final dec = _decimalSeparator;
 
       String prefix = '';
-      String numString = text.replaceAll(_thousandSeparator, '');
-      String formattedString = '';
-      String decimalPart = '';
-      String afterDot = '';
+      String t = raw;
 
-      if (numString[0] == '-' && includeNegative) {
+      if (includeNegative && t.startsWith('-')) {
         prefix = '-';
+        t = t.substring(1);
       }
 
-      if (numString.contains(decimalSeparator)) {
-        int dotIndex = numString.indexOf(decimalSeparator);
-        decimalPart = numString.substring(dotIndex);
+      t = t.replaceAll('-', '');
 
-        if (decimalPart.length > 1) {
-          afterDot = decimalPart.substring(1);
-          numString = numString.substring(0, dotIndex);
-        } else {
-          decimalPart = decimalSeparator;
+      t = t.replaceAll(thou, '');
+
+      if (includeDouble && (fractionalDigits ?? 1) > 0) {
+        t = t.replaceAll(RegExp('[^0-9$dec]'), '');
+      } else {
+        t = t.replaceAll(RegExp('[^0-9]'), '');
+      }
+
+      String intPart = t;
+      String fracPart = '';
+      bool hasDec = false;
+
+      if (includeDouble && (fractionalDigits ?? 1) > 0) {
+        final firstDec = t.indexOf(dec);
+        if (firstDec != -1) {
+          hasDec = true;
+          intPart = t.substring(0, firstDec);
+          fracPart = t.substring(firstDec + 1);
+
+          if (fracPart.contains(dec)) {
+            fracPart = fracPart.replaceAll(dec, '');
+          }
+
+          fracPart = fracPart.replaceAll(RegExp(r'[^0-9]'), '');
+
+          if (fractionalDigits != null && fracPart.length > fractionalDigits!) {
+            fracPart = fracPart.substring(0, fractionalDigits!);
+          }
         }
       }
 
-      int? numStringInt = numString.extractNumber();
+      intPart = intPart.replaceAll(RegExp(r'[^0-9]'), '');
 
-      if (numStringInt != null) {
-        formattedString = numStringInt.toThousandFormat(includeDecimalPart: false, fractionalDigits: fractionalDigits, invertThousandSeparator: invertThousandSeparator);
+      final formattedInt = _formatIntWithThousand(intPart, thou);
+
+      String formatted = prefix + formattedInt;
+      if (hasDec) {
+        formatted += dec + fracPart;
       }
 
-      if (numString[0] == '-' && numStringInt == null) {
-        formattedString = prefix;
+      if (formatted.isEmpty && prefix == '-') {
+        formatted = '-';
       }
 
-      if (decimalPart.count(decimalPart) == 1 && afterDot.isEmpty && includeDouble) {
-        formattedString += decimalPart;
-      } else if (afterDot.isNotEmpty) {
-        formattedString += '$decimalPart${afterDot.extractNumberString() ?? ''}';
-      }
-
-      if (formattedString.contains(decimalPart) && _isFirstTime && afterDot.extractNumber() == 0) {
-        formattedString = formattedString.substring(0, formattedString.indexOf(decimalPart));
-      }
-
-      if (_previousText != formattedString || text != formattedString || text.contains(decimalPart)) {
+      if (_previousText != formatted || text != formatted) {
         ignoreChanges = true;
-
-        final newSelection = TextSelection.collapsed(
-          offset: formattedString.length,
-          affinity: TextAffinity.upstream,
-        );
-
         value = TextEditingValue(
-          text: formattedString,
-          selection: newSelection,
+          text: formatted,
+          selection: TextSelection.collapsed(offset: formatted.length, affinity: TextAffinity.upstream),
           composing: TextRange.empty,
         );
-
-        _previousText = formattedString;
+        _previousText = formatted;
         ignoreChanges = false;
       }
-      _isFirstTime = false;
     });
 
     if (number != null) {
-      text = number.toThousandFormat(includeDecimalPart: false, fractionalDigits: fractionalDigits, invertThousandSeparator: invertThousandSeparator);
+      text = number.toThousandFormat(
+        includeDecimalPart: includeDouble,
+        fractionalDigits: fractionalDigits,
+        invertThousandSeparator: invertThousandSeparator,
+      );
     }
   }
 
@@ -143,18 +151,29 @@ class TextEditingControllerThousandFormat extends TextEditingController {
 
   final bool? invertThousandSeparator;
 
-  bool _isFirstTime = false;
-
   String _previousText = '';
-
-  @override
-  set text(String newText) {
-    _isFirstTime = true;
-    super.text = newText;
-  }
 
   String get _thousandSeparator => (invertThousandSeparator ?? (navigatorKey.currentContext != null ? MWidgetTheme.of(navigatorKey.currentContext!)?.invertThousandSeparator : null) ?? false) ? '.' : ',';
 
-  // TODO: Also implements for floating points or double
-  num? get number => text.replaceAll(_thousandSeparator, '').extractNumber();
+  String get _decimalSeparator => (invertThousandSeparator ?? (navigatorKey.currentContext != null ? MWidgetTheme.of(navigatorKey.currentContext!)?.invertThousandSeparator : null) ?? false) ? ',' : '.';
+
+  String _formatIntWithThousand(String digits, String sep) {
+    if (digits.isEmpty) return '';
+    final buf = StringBuffer();
+    int count = 0;
+    for (int i = digits.length - 1; i >= 0; i--) {
+      buf.write(digits[i]);
+      count++;
+      if (count % 3 == 0 && i != 0) buf.write(sep);
+    }
+    return buf.toString().split('').reversed.join();
+  }
+
+  num? get number {
+    final thou = _thousandSeparator;
+    final dec = _decimalSeparator;
+    final raw = text.replaceAll(thou, '').replaceAll(dec, '.').trim();
+    if (raw.isEmpty || raw == '-') return null;
+    return num.tryParse(raw);
+  }
 }
