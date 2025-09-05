@@ -10,18 +10,12 @@ void main() async {
 
   await MWidget.initialize(
     defaultLocale: const Locale('id', 'ID'),
-    defaultTheme: ThemeValue(
-      themeMode: ThemeMode.light,
-    ),
+    defaultTheme: ThemeValue(themeMode: ThemeMode.light),
   );
 
   Language.addData({
-    'en_US': {
-      'Hello World': 'Hello World',
-    },
-    'id_ID': {
-      'Hello World': 'Halo Dunia',
-    }
+    'en_US': {'Hello World': 'Hello World'},
+    'id_ID': {'Hello World': 'Halo Dunia'},
   });
 
   runApp(const MyApp());
@@ -32,23 +26,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MWidgetDynamicColorBuilder(
-        builder: (context, theme, darkTheme, themeMode, colorScheme, darkColorScheme) => GetMaterialApp(
-          title: 'MWidget',
-          theme: theme.copyWith(
-            filledButtonTheme: FilledButtonThemeData(
-              style: FilledButton.styleFrom(
-                minimumSize: const Size.fromHeight(56.0),
-                textStyle: kTextTheme.titleLarge!.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ),
+    builder: (context, theme, darkTheme, themeMode, colorScheme, darkColorScheme) => GetMaterialApp(
+      title: 'MWidget',
+      theme: theme.copyWith(
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            minimumSize: const Size.fromHeight(56.0),
+            textStyle: kTextTheme.titleLarge!.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          darkTheme: darkTheme,
-          themeMode: themeMode,
-          locale: MWidget.locale,
-          translations: Language(),
-          home: const MyHomePage(),
         ),
-      );
+      ),
+      darkTheme: darkTheme,
+      themeMode: themeMode,
+      locale: MWidget.locale,
+      translations: Language(),
+      home: const MyHomePage(),
+    ),
+  );
 }
 
 class MyHomePage extends StatefulWidget {
@@ -61,7 +55,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _textController = TextEditingController();
   final TextEditingController _textControllerDropdownField = TextEditingController();
-  final TextEditingControllerThousandFormat _textControllerThousandFormat = TextEditingControllerThousandFormat(invertThousandSeparator: true);
+  final TextEditingControllerThousandFormat _textControllerThousandFormat = TextEditingControllerThousandFormat(invertThousandSeparator: true, includeDouble: true, fractionalDigits: 2);
 
   final double imageHeight = 400.0;
 
@@ -97,20 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         .push(
                           AdaptiveDialogRoute(
                             builder: (context) => ChooseDialog(
-                              data: () => [
-                                'Sapi',
-                                'Kerbau',
-                                'Kucing',
-                                'Harimau',
-                              ]
-                                  .map(
-                                    (e) => ChooseData(
-                                      value: e,
-                                      searchValue: e,
-                                      title: Text(e),
-                                    ),
-                                  )
-                                  .toList(),
+                              data: () => ['Sapi', 'Kerbau', 'Kucing', 'Harimau'].map((e) => ChooseData(value: e, searchValue: e, title: Text(e))).toList(),
                             ),
                           ),
                         )
@@ -118,11 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     icon: const Icon(Icons.access_time),
                   ),
                   IconButton(
-                    onPressed: () => ImageContainer.handleChangeImage(
-                      showDelete: false,
-                      allowPickImageFromGallery: true,
-                      forceUsingSheet: true,
-                    ).then((value) async {
+                    onPressed: () => ImageContainer.handleChangeImage(showDelete: false, allowPickImageFromGallery: true, forceUsingSheet: true).then((value) async {
                       imageData = await value.image?.readAsBytes();
                       setState(() {});
                     }),
@@ -131,11 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   IconButton(
                     onPressed: () => showModalBottomSheet(
                       context: Get.context!,
-                      builder: (context) => SheetImageSource(
-                        showGallery: false,
-                        showDelete: false,
-                        title: Text('Change logo'.tr),
-                      ),
+                      builder: (context) => SheetImageSource(showGallery: false, showDelete: false, title: Text('Change logo'.tr)),
                     ),
                     icon: const Icon(Icons.question_mark),
                   ),
@@ -148,63 +121,29 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: responsivePadding(MediaQuery.sizeOf(context)),
                     children: [
                       Text('Hello World'.tr),
-                      TimerProgressIndicator(
-                        controller: timerController,
-                        progressNotifier: ValueNotifier(0.35),
-                        messageNotifier: ValueNotifier('Hey'),
-                      ),
+                      TimerProgressIndicator(controller: timerController, progressNotifier: ValueNotifier(0.35), messageNotifier: ValueNotifier('Hey')),
                       DropdownField(
                         controller: _textControllerDropdownField,
-                        items: FieldItem.values
-                            .map(
-                              (e) => PopupMenuItem(
-                                value: e,
-                                child: Text(e.value),
-                              ),
-                            )
-                            .toList(),
+                        items: FieldItem.values.map((e) => PopupMenuItem(value: e, child: Text(e.value))).toList(),
                         readOnly: true,
                         onSelected: (value) => _textControllerDropdownField.text = value?.value ?? '?',
                       ),
                       TextField(
                         controller: _textControllerThousandFormat,
+                        decoration: InputDecoration(labelText: 'Thousand Format'),
+                        keyboardType: TextInputType.number,
                       ),
-                      FilledButton(
-                        onPressed: () => showErrorDialog('Hello', primaryFilledButton: true),
-                        child: const Text('Hello'),
-                      ),
-                      ListTile(
-                        title: const Text('test'),
-                        selectedTileColor: Theme.of(context).colorScheme.secondaryContainer,
-                        selected: true,
-                        onTap: () {},
-                      ),
+                      FilledButton(onPressed: () => showErrorDialog('Hello', primaryFilledButton: true), child: const Text('Hello')),
+                      ListTile(title: const Text('test'), selectedTileColor: Theme.of(context).colorScheme.secondaryContainer, selected: true, onTap: () {}),
                       const SizedBox(height: 16.0),
-                      DateRangeField(
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime.now().add(const Duration(days: 30)),
-                        value: currentDateRange,
-                        onDateChanged: (value) => setState(() => value != null ? currentDateRange = value : null),
-                      ),
+                      DateRangeField(firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 30)), value: currentDateRange, onDateChanged: (value) => setState(() => value != null ? currentDateRange = value : null)),
                       const SizedBox(height: 16.0),
-                      ButtonEdit(
-                        onCancelDisabledPressed: () => debugPrint('onCancelDisabledPressed'),
-                      ),
+                      ButtonEdit(onCancelDisabledPressed: () => debugPrint('onCancelDisabledPressed')),
                       const SizedBox(height: 16.0),
                       DropdownField(
                         controller: _textController,
-                        items: ['Hello', 'World']
-                            .map(
-                              (e) => PopupMenuItem(
-                                value: e,
-                                child: Text(e),
-                              ),
-                            )
-                            .toList(),
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Dropdown field',
-                        ),
+                        items: ['Hello', 'World'].map((e) => PopupMenuItem(value: e, child: Text(e))).toList(),
+                        decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'Dropdown field'),
                       ),
                       const SizedBox(height: 16.0),
                       ImageContainer.hero(
@@ -239,9 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         containerBackgroundColor: Colors.red,
                         // cachedNetworkImageError: (e) => const AssetImage('assets/purple-image.jpg'),
                         // dialogFit: BoxFit.contain,
-                        extendedAppBar: AppBar(
-                          title: const Text('Detail image'),
-                        ),
+                        extendedAppBar: AppBar(title: const Text('Detail image')),
                         // useDynamicColor: true,
                         // skipDialog: true,
                         child: const Center(child: Text('Gambar kosong bro!')),
@@ -257,16 +194,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         dialogIconSize: 96.0,
                         containerBackgroundColor: Theme.of(context).colorScheme.onSurface,
                         dialogBackgroundColor: Colors.blue,
-                        extendedAppBar: AppBar(
-                          title: const Text('Hello'),
-                        ),
+                        extendedAppBar: AppBar(title: const Text('Hello')),
                       ),
                       const SizedBox(height: 16.0),
                       ConstrainedBox(
-                        constraints: const BoxConstraints.tightFor(
-                          width: double.infinity,
-                          height: 200.0,
-                        ),
+                        constraints: const BoxConstraints.tightFor(width: double.infinity, height: 200.0),
                         child: TextField(
                           focusNode: _submitFocusNode,
                           expands: true,
@@ -278,35 +210,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                      NumberPicker(
-                        controller: _controller,
-                        onChanged: (value) => debugPrint('onChanged $value'),
-                      ),
+                      NumberPicker(controller: _controller, onChanged: (value) => debugPrint('onChanged $value')),
                       const SizedBox(height: 16.0),
-                      NumberPicker(
-                        controller: _controller,
-                      ),
+                      NumberPicker(controller: _controller),
                       const SizedBox(height: 16.0),
-                      NumberPicker(
-                        controller: _controller,
-                      ),
+                      NumberPicker(controller: _controller),
                       const SizedBox(height: 16.0),
-                      NumberPicker(
-                        controller: _controller,
-                      ),
+                      NumberPicker(controller: _controller),
                       const SizedBox(height: 16.0),
-                      NumberPicker(
-                        controller: _controller,
-                      ),
+                      NumberPicker(controller: _controller),
                       const SizedBox(height: 16.0),
                       FilledButton(
-                        onPressed: () => navigator!.push(
-                          AdaptiveDialogRoute(
-                            builder: (context) => ChooseDialog(
-                              data: () => [],
-                            ),
-                          ),
-                        ),
+                        onPressed: () => navigator!.push(AdaptiveDialogRoute(builder: (context) => ChooseDialog(data: () => []))),
                         child: const Text('Show Choose Dialog'),
                       ),
                       const SizedBox(height: 90),
@@ -315,10 +230,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   // Second Tab
                   ListView(
                     children: [
-                      TimerProgressIndicator(
-                        controller: timerController,
-                        progressNotifier: ValueNotifier(0.35),
-                      ),
+                      TimerProgressIndicator(controller: timerController, progressNotifier: ValueNotifier(0.35)),
                       const SizedBox(height: 90),
                     ],
                   ),
@@ -415,13 +327,7 @@ class _MyHomePageState extends State<MyHomePage> {
             builder: (context, scrollController, animation, children) => DraggableScrollableBody(
               themeMode: MWidget.themeValue.themeMode,
               color: Theme.of(context).colorScheme.secondaryContainer,
-              borderRadius: BorderRadius.lerp(
-                BorderRadius.zero,
-                const BorderRadius.vertical(
-                  top: Radius.circular(kShapeExtraLarge),
-                ),
-                animation.value,
-              ),
+              borderRadius: BorderRadius.lerp(BorderRadius.zero, const BorderRadius.vertical(top: Radius.circular(kShapeExtraLarge)), animation.value),
               child: Material(
                 color: Colors.transparent,
                 child: ScrollConfiguration(
@@ -436,10 +342,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               width: 32.0,
                               height: 4.0,
                               margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-                                borderRadius: BorderRadius.circular(2.0),
-                              ),
+                              decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.4), borderRadius: BorderRadius.circular(2.0)),
                             ),
                           ),
                           ...children?.where((element) => element.tag == 'top').map((e) => e.child) ?? [],
