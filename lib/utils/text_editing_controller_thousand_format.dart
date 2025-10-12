@@ -43,8 +43,8 @@ class TextEditingControllerThousandFormat extends TextEditingController {
   /// ```
   TextEditingControllerThousandFormat({
     num? number,
-    this.min,
-    this.max,
+    num? min,
+    num? max,
     this.includeNegative = false,
     this.includeDouble = false,
     this.fractionalDigits,
@@ -53,23 +53,16 @@ class TextEditingControllerThousandFormat extends TextEditingController {
          min == null || max == null || min <= max,
          'min cannot be greater than max',
        ) {
-    bool ignoreChanges = false;
+    _minValue = min;
+    _maxValue = max;
 
     addListener(() {
-      if (ignoreChanges) return;
+      if (_ignoreListener) return;
 
       final raw = text;
 
       if (raw.trim().isEmpty) {
-        value = const TextEditingValue(
-          text: '',
-          selection: TextSelection.collapsed(
-            offset: 0,
-            affinity: TextAffinity.upstream,
-          ),
-          composing: TextRange.empty,
-        );
-        _previousText = '';
+        _setFormattedText('');
         return;
       }
 
@@ -152,28 +145,18 @@ class TextEditingControllerThousandFormat extends TextEditingController {
         formatted = '-';
       }
 
-      if (_previousText != formatted || text != formatted) {
-        ignoreChanges = true;
-        value = TextEditingValue(
-          text: formatted,
-          selection: TextSelection.collapsed(
-            offset: formatted.length,
-            affinity: TextAffinity.upstream,
-          ),
-          composing: TextRange.empty,
-        );
-        _previousText = formatted;
-        ignoreChanges = false;
-      }
+      _setFormattedText(formatted);
     });
 
     final boundedInitialNumber = _applyBounds(number);
 
     if (boundedInitialNumber != null) {
-      text = boundedInitialNumber.toThousandFormat(
-        includeDecimalPart: includeDouble,
-        fractionalDigits: fractionalDigits,
-        invertThousandSeparator: invertThousandSeparator,
+      _setFormattedText(
+        boundedInitialNumber.toThousandFormat(
+          includeDecimalPart: includeDouble,
+          fractionalDigits: fractionalDigits,
+          invertThousandSeparator: invertThousandSeparator,
+        ),
       );
     }
   }
@@ -185,31 +168,115 @@ class TextEditingControllerThousandFormat extends TextEditingController {
   final bool includeDouble;
 
   /// Minimum allowed value. If `null`, no lower bound is applied.
-  final num? min;
+  num? get min => _minValue;
+  set min(num? value) {
+    assert(
+      value == null || _maxValue == null || value <= _maxValue!,
+      'min cannot be greater than max',
+    );
+    if (_minValue == value) return;
+    _minValue = value;
+    _enforceBoundsOnText();
+  }
 
   /// Maximum allowed value. If `null`, no upper bound is applied.
-  final num? max;
+  num? get max => _maxValue;
+  set max(num? value) {
+    assert(
+      value == null || _minValue == null || value >= _minValue!,
+      'max cannot be smaller than min',
+    );
+    if (_maxValue == value) return;
+    _maxValue = value;
+    _enforceBoundsOnText();
+  }
 
   final int? fractionalDigits;
 
   final bool? invertThousandSeparator;
 
   String _previousText = '';
+  bool _ignoreListener = false;
 
-  String get _thousandSeparator => (invertThousandSeparator ?? (Get.context != null ? MWidgetTheme.of(Get.context!)?.invertThousandSeparator : null) ?? false) ? '.' : ',';
+  num? _minValue;
+  num? _maxValue;
 
-  String get _decimalSeparator => (invertThousandSeparator ?? (Get.context != null ? MWidgetTheme.of(Get.context!)?.invertThousandSeparator : null) ?? false) ? ',' : '.';
+  String get _thousandSeparator =>
+      (invertThousandSeparator ??
+          (Get.context != null
+              ? MWidgetTheme.of(Get.context!)?.invertThousandSeparator
+              : null) ??
+          false)
+      ? '.'
+      : ',';
+
+  String get _decimalSeparator =>
+      (invertThousandSeparator ??
+          (Get.context != null
+              ? MWidgetTheme.of(Get.context!)?.invertThousandSeparator
+              : null) ??
+          false)
+      ? ','
+      : '.';
+
+  void _setFormattedText(String formatted) {
+    if (_previousText == formatted && text == formatted) {
+      _previousText = formatted;
+      return;
+    }
+    _ignoreListener = true;
+    value = TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(
+        offset: formatted.length,
+        affinity: TextAffinity.upstream,
+      ),
+      composing: TextRange.empty,
+    );
+    _previousText = formatted;
+    _ignoreListener = false;
+  }
+
+  num? _parseText() {
+    final thou = _thousandSeparator;
+    final dec = _decimalSeparator;
+    final raw = text.replaceAll(thou, '').replaceAll(dec, '.').trim();
+    if (raw.isEmpty || raw == '-') return null;
+    return num.tryParse(raw);
+  }
+
+  void _enforceBoundsOnText() {
+    final parsed = _parseText();
+    final bounded = _applyBounds(parsed);
+
+    if (bounded == null) {
+      if (parsed != null) {
+        _setFormattedText('');
+      }
+      return;
+    }
+
+    if (parsed != null && bounded == parsed) return;
+
+    _setFormattedText(
+      bounded.toThousandFormat(
+        includeDecimalPart: includeDouble,
+        fractionalDigits: fractionalDigits,
+        invertThousandSeparator: invertThousandSeparator,
+      ),
+    );
+  }
 
   num? _applyBounds(num? value) {
     if (value == null) return null;
 
     num result = value;
-    if (min != null && result < min!) {
-      result = min!;
+    if (_minValue != null && result < _minValue!) {
+      result = _minValue!;
     }
 
-    if (max != null && result > max!) {
-      result = max!;
+    if (_maxValue != null && result > _maxValue!) {
+      result = _maxValue!;
     }
 
     return result;
@@ -227,11 +294,5 @@ class TextEditingControllerThousandFormat extends TextEditingController {
     return buf.toString().split('').reversed.join();
   }
 
-  num? get number {
-    final thou = _thousandSeparator;
-    final dec = _decimalSeparator;
-    final raw = text.replaceAll(thou, '').replaceAll(dec, '.').trim();
-    if (raw.isEmpty || raw == '-') return null;
-    return _applyBounds(num.tryParse(raw));
-  }
+  num? get number => _applyBounds(_parseText());
 }
