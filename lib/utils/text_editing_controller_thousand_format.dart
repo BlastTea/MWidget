@@ -30,6 +30,8 @@ class TextEditingControllerThousandFormat extends TextEditingController {
   /// By default, [includeNegative] is set to `false` and [includeDouble] is set to `false`.
   /// - [includeNegative]: If set to `true`, negative numbers will include a negative sign at the beginning.
   /// - [includeDouble]: If set to `true`, numbers with decimal parts will display the decimal point and digits after it.
+  /// - [min]: If provided, values smaller than this will be clamped to [min].
+  /// - [max]: If provided, values larger than this will be clamped to [max].
   ///
   /// Example usage:
   /// ```dart
@@ -41,11 +43,16 @@ class TextEditingControllerThousandFormat extends TextEditingController {
   /// ```
   TextEditingControllerThousandFormat({
     num? number,
+    this.min,
+    this.max,
     this.includeNegative = false,
     this.includeDouble = false,
     this.fractionalDigits,
     this.invertThousandSeparator,
-  }) {
+  }) : assert(
+         min == null || max == null || min <= max,
+         'min cannot be greater than max',
+       ) {
     bool ignoreChanges = false;
 
     addListener(() {
@@ -56,7 +63,10 @@ class TextEditingControllerThousandFormat extends TextEditingController {
       if (raw.trim().isEmpty) {
         value = const TextEditingValue(
           text: '',
-          selection: TextSelection.collapsed(offset: 0, affinity: TextAffinity.upstream),
+          selection: TextSelection.collapsed(
+            offset: 0,
+            affinity: TextAffinity.upstream,
+          ),
           composing: TextRange.empty,
         );
         _previousText = '';
@@ -109,11 +119,33 @@ class TextEditingControllerThousandFormat extends TextEditingController {
 
       intPart = intPart.replaceAll(RegExp(r'[^0-9]'), '');
 
+      num? numericValue;
+      if (intPart.isNotEmpty || fracPart.isNotEmpty) {
+        final parseBuffer = StringBuffer(prefix);
+        parseBuffer.write(intPart.isEmpty ? '0' : intPart);
+        if (hasDec) {
+          parseBuffer.write('.');
+          parseBuffer.write(fracPart);
+        }
+        numericValue = num.tryParse(parseBuffer.toString());
+      }
+
       final formattedInt = _formatIntWithThousand(intPart, thou);
 
       String formatted = prefix + formattedInt;
       if (hasDec) {
         formatted += dec + fracPart;
+      }
+
+      if (numericValue != null) {
+        final boundedValue = _applyBounds(numericValue);
+        if (boundedValue != null && boundedValue != numericValue) {
+          formatted = boundedValue.toThousandFormat(
+            includeDecimalPart: includeDouble,
+            fractionalDigits: fractionalDigits,
+            invertThousandSeparator: invertThousandSeparator,
+          );
+        }
       }
 
       if (formatted.isEmpty && prefix == '-') {
@@ -124,7 +156,10 @@ class TextEditingControllerThousandFormat extends TextEditingController {
         ignoreChanges = true;
         value = TextEditingValue(
           text: formatted,
-          selection: TextSelection.collapsed(offset: formatted.length, affinity: TextAffinity.upstream),
+          selection: TextSelection.collapsed(
+            offset: formatted.length,
+            affinity: TextAffinity.upstream,
+          ),
           composing: TextRange.empty,
         );
         _previousText = formatted;
@@ -132,8 +167,10 @@ class TextEditingControllerThousandFormat extends TextEditingController {
       }
     });
 
-    if (number != null) {
-      text = number.toThousandFormat(
+    final boundedInitialNumber = _applyBounds(number);
+
+    if (boundedInitialNumber != null) {
+      text = boundedInitialNumber.toThousandFormat(
         includeDecimalPart: includeDouble,
         fractionalDigits: fractionalDigits,
         invertThousandSeparator: invertThousandSeparator,
@@ -147,6 +184,12 @@ class TextEditingControllerThousandFormat extends TextEditingController {
   /// If `true`, numbers with decimal parts will display the decimal point and digits after it.
   final bool includeDouble;
 
+  /// Minimum allowed value. If `null`, no lower bound is applied.
+  final num? min;
+
+  /// Maximum allowed value. If `null`, no upper bound is applied.
+  final num? max;
+
   final int? fractionalDigits;
 
   final bool? invertThousandSeparator;
@@ -156,6 +199,21 @@ class TextEditingControllerThousandFormat extends TextEditingController {
   String get _thousandSeparator => (invertThousandSeparator ?? (Get.context != null ? MWidgetTheme.of(Get.context!)?.invertThousandSeparator : null) ?? false) ? '.' : ',';
 
   String get _decimalSeparator => (invertThousandSeparator ?? (Get.context != null ? MWidgetTheme.of(Get.context!)?.invertThousandSeparator : null) ?? false) ? ',' : '.';
+
+  num? _applyBounds(num? value) {
+    if (value == null) return null;
+
+    num result = value;
+    if (min != null && result < min!) {
+      result = min!;
+    }
+
+    if (max != null && result > max!) {
+      result = max!;
+    }
+
+    return result;
+  }
 
   String _formatIntWithThousand(String digits, String sep) {
     if (digits.isEmpty) return '';
@@ -174,6 +232,6 @@ class TextEditingControllerThousandFormat extends TextEditingController {
     final dec = _decimalSeparator;
     final raw = text.replaceAll(thou, '').replaceAll(dec, '.').trim();
     if (raw.isEmpty || raw == '-') return null;
-    return num.tryParse(raw);
+    return _applyBounds(num.tryParse(raw));
   }
 }
