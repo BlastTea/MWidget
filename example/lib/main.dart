@@ -55,7 +55,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _textController = TextEditingController();
   final TextEditingController _textControllerDropdownField = TextEditingController();
-  final TextEditingControllerThousandFormat _textControllerThousandFormat = TextEditingControllerThousandFormat(invertThousandSeparator: true, includeDouble: true, fractionalDigits: 2);
+  final FocusNode _thousandFocusNode = FocusNode();
+  late final TextEditingControllerThousandFormat _textControllerThousandFormat = TextEditingControllerThousandFormat(
+    invertThousandSeparator: true,
+    min: 3600,
+    max: 10000,
+    focusNode: _thousandFocusNode,
+  );
 
   final double imageHeight = 400.0;
 
@@ -68,6 +74,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Uint8List? imageData;
 
   TimerController timerController = TimerController(duration: const Duration(seconds: 1));
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    _textControllerDropdownField.dispose();
+    _textControllerThousandFormat.dispose();
+    _thousandFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       TextField(
                         controller: _textControllerThousandFormat,
+                        focusNode: _thousandFocusNode,
                         decoration: InputDecoration(labelText: 'Thousand Format'),
                         keyboardType: TextInputType.number,
                       ),

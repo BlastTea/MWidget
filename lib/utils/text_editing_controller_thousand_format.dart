@@ -49,12 +49,14 @@ class TextEditingControllerThousandFormat extends TextEditingController {
     this.includeDouble = false,
     this.fractionalDigits,
     this.invertThousandSeparator,
+    FocusNode? focusNode,
   }) : assert(
          min == null || max == null || min <= max,
          'min cannot be greater than max',
        ) {
     _minValue = min;
     _maxValue = max;
+    _focusNode = focusNode;
 
     addListener(() {
       if (_ignoreListener) return;
@@ -133,11 +135,13 @@ class TextEditingControllerThousandFormat extends TextEditingController {
       if (numericValue != null) {
         final boundedValue = _applyBounds(numericValue);
         if (boundedValue != null && boundedValue != numericValue) {
-          formatted = boundedValue.toThousandFormat(
-            includeDecimalPart: includeDouble,
-            fractionalDigits: fractionalDigits,
-            invertThousandSeparator: invertThousandSeparator,
-          );
+          if (_maxValue != null && numericValue > _maxValue!) {
+            formatted = boundedValue.toThousandFormat(
+              includeDecimalPart: includeDouble,
+              fractionalDigits: fractionalDigits,
+              invertThousandSeparator: invertThousandSeparator,
+            );
+          }
         }
       }
 
@@ -147,6 +151,15 @@ class TextEditingControllerThousandFormat extends TextEditingController {
 
       _setFormattedText(formatted);
     });
+
+    if (_focusNode != null) {
+      _focusNodeListener = () {
+        if (!_focusNode!.hasFocus) {
+          _enforceBoundsOnText();
+        }
+      };
+      _focusNode!.addListener(_focusNodeListener!);
+    }
 
     final boundedInitialNumber = _applyBounds(number);
 
@@ -195,29 +208,17 @@ class TextEditingControllerThousandFormat extends TextEditingController {
 
   final bool? invertThousandSeparator;
 
+  FocusNode? _focusNode;
+  VoidCallback? _focusNodeListener;
   String _previousText = '';
   bool _ignoreListener = false;
 
   num? _minValue;
   num? _maxValue;
 
-  String get _thousandSeparator =>
-      (invertThousandSeparator ??
-          (Get.context != null
-              ? MWidgetTheme.of(Get.context!)?.invertThousandSeparator
-              : null) ??
-          false)
-      ? '.'
-      : ',';
+  String get _thousandSeparator => (invertThousandSeparator ?? (Get.context != null ? MWidgetTheme.of(Get.context!)?.invertThousandSeparator : null) ?? false) ? '.' : ',';
 
-  String get _decimalSeparator =>
-      (invertThousandSeparator ??
-          (Get.context != null
-              ? MWidgetTheme.of(Get.context!)?.invertThousandSeparator
-              : null) ??
-          false)
-      ? ','
-      : '.';
+  String get _decimalSeparator => (invertThousandSeparator ?? (Get.context != null ? MWidgetTheme.of(Get.context!)?.invertThousandSeparator : null) ?? false) ? ',' : '.';
 
   void _setFormattedText(String formatted) {
     if (_previousText == formatted && text == formatted) {
@@ -295,4 +296,12 @@ class TextEditingControllerThousandFormat extends TextEditingController {
   }
 
   num? get number => _applyBounds(_parseText());
+
+  @override
+  void dispose() {
+    if (_focusNodeListener != null) {
+      _focusNode?.removeListener(_focusNodeListener!);
+    }
+    super.dispose();
+  }
 }
