@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:m_widget/m_widget.dart';
+import 'package:win32/win32.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +47,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _textController = TextEditingController();
   final TextEditingController _textControllerDropdownField = TextEditingController();
-  final TextEditingControllerThousandFormat _textControllerThousandFormat = TextEditingControllerThousandFormat(invertThousandSeparator: true);
+  final FocusNode _thousandFocusNode = FocusNode();
+  late final TextEditingControllerThousandFormat _textControllerThousandFormat = TextEditingControllerThousandFormat(invertThousandSeparator: true, min: 3600, max: 10000, focusNode: _thousandFocusNode);
 
   final double imageHeight = 400.0;
 
@@ -59,6 +61,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Uint8List? imageData;
 
   TimerController timerController = TimerController(duration: const Duration(seconds: 1));
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    _textControllerDropdownField.dispose();
+    _textControllerThousandFormat.dispose();
+    _thousandFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +124,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         readOnly: true,
                         onSelected: (value) => _textControllerDropdownField.text = value?.value ?? '?',
                       ),
-                      TextField(controller: _textControllerThousandFormat),
+                      TextField(
+                        controller: _textControllerThousandFormat,
+                        focusNode: _thousandFocusNode,
+                        decoration: InputDecoration(labelText: 'Thousand Format'),
+                        keyboardType: TextInputType.number,
+                      ),
                       FilledButton(onPressed: () => showErrorDialog('Hello', primaryFilledButton: true), child: const Text('Hello')),
                       ListTile(title: const Text('test'), selectedTileColor: Theme.of(context).colorScheme.secondaryContainer, selected: true, onTap: () {}),
                       const SizedBox(height: 16.0),
