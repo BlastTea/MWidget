@@ -119,7 +119,7 @@ import 'pakcage:m_widget/m_widget.dart';
   ### Usage
   ```dart
   final controller = TextEditingControllerSeparatorFormat(
-    separator: '-',
+    separators: const ['-'],
     groupLengths: const [4],
     allowedPattern: RegExp(r'[0-9]'),
   );

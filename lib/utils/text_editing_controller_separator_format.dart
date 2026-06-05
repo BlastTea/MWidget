@@ -6,7 +6,7 @@ part of 'utils.dart';
 /// Example:
 /// ```dart
 /// final controller = TextEditingControllerSeparatorFormat(
-///   separator: '-',
+///   separators: const <String>['-'],
 ///   groupLengths: const <int>[4],
 ///   allowedPattern: RegExp(r'[0-9]'),
 /// );
@@ -18,10 +18,14 @@ part of 'utils.dart';
 class TextEditingControllerSeparatorFormat extends TextEditingController {
   TextEditingControllerSeparatorFormat({
     String? text,
-    this.separator = '-',
+    this.separators = const <String>['-'],
     this.groupLengths = const <int>[4],
     this.allowedPattern,
-  }) : assert(separator.isNotEmpty, 'separator cannot be empty'),
+  }) : assert(separators.isNotEmpty, 'separators cannot be empty'),
+       assert(
+         separators.every((separator) => separator.isNotEmpty),
+         'separators must contain non-empty values',
+       ),
        assert(groupLengths.isNotEmpty, 'groupLengths cannot be empty'),
        assert(
          groupLengths.every((length) => length > 0),
@@ -34,8 +38,11 @@ class TextEditingControllerSeparatorFormat extends TextEditingController {
     }
   }
 
-  /// The separator inserted between groups.
-  final String separator;
+  /// The separators inserted between groups.
+  ///
+  /// Each item is applied from left to right per group boundary.
+  /// If boundaries exceed the list length, the last separator is repeated.
+  final List<String> separators;
 
   /// Group lengths applied from left to right.
   ///
@@ -124,7 +131,8 @@ class TextEditingControllerSeparatorFormat extends TextEditingController {
     int rawCount = 0;
     int index = 0;
     while (index < formattedText.length) {
-      if (formattedText.startsWith(separator, index)) {
+      final separator = _matchedSeparator(formattedText, index);
+      if (separator != null) {
         index += separator.length;
         continue;
       }
@@ -145,12 +153,10 @@ class TextEditingControllerSeparatorFormat extends TextEditingController {
       return '';
     }
 
-    final buffer = StringBuffer();
-    for (final rune in value.runes) {
-      buffer.write(String.fromCharCode(rune));
+    var raw = value;
+    for (final separator in _orderedSeparators) {
+      raw = raw.replaceAll(separator, '');
     }
-
-    var raw = buffer.toString().replaceAll(separator, '');
     if (allowedPattern == null) {
       return raw;
     }
@@ -179,7 +185,7 @@ class TextEditingControllerSeparatorFormat extends TextEditingController {
       final end = min(start + groupLength, raw.length);
 
       if (buffer.isNotEmpty) {
-        buffer.write(separator);
+        buffer.write(_separatorForBoundary(groupIndex - 1));
       }
 
       buffer.write(raw.substring(start, end));
@@ -188,6 +194,27 @@ class TextEditingControllerSeparatorFormat extends TextEditingController {
     }
 
     return buffer.toString();
+  }
+
+  String _separatorForBoundary(int boundaryIndex) {
+    return separators[min(boundaryIndex, separators.length - 1)];
+  }
+
+  List<String> get _orderedSeparators {
+    final uniqueSeparators = separators.toSet().toList(growable: false);
+    uniqueSeparators.sort(
+      (left, right) => right.length.compareTo(left.length),
+    );
+    return uniqueSeparators;
+  }
+
+  String? _matchedSeparator(String text, int index) {
+    for (final separator in _orderedSeparators) {
+      if (text.startsWith(separator, index)) {
+        return separator;
+      }
+    }
+    return null;
   }
 
   void _setFormattedValue(
