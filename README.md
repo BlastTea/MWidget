@@ -110,9 +110,27 @@ import 'pakcage:m_widget/m_widget.dart';
   ### Usage
   ```dart
   final TextEditingControllerThousandFormat _textController = TextEditingController();
-    TextField(
+  TextField(
     controller: _textController,
   );
+  ```
+- ## TextEditingControllerSeparatorFormat
+  Extends TextEditingController and inserts a separator every few characters while keeping the raw text unformatted.
+  ### Usage
+  ```dart
+  final controller = TextEditingControllerSeparatorFormat(
+    separator: '-',
+    groupLengths: const [4],
+    allowedPattern: RegExp(r'[0-9]'),
+  );
+
+  TextField(
+    controller: controller,
+  );
+
+  controller.text = '1234567890';
+  print(controller.text); // 1234-5678-90
+  print(controller.rawText); // 1234567890
   ```
 - ## NavigationHelper
   Go to another page without context.

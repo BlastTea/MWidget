@@ -13,6 +13,7 @@ part 'material_utils.dart';
 part 'firestore_auto_id_generator.dart';
 part 'custom_scroll_behavior.dart';
 part 'adaptive_dialog_route.dart';
+part 'text_editing_controller_separator_format.dart';
 part 'text_editing_controller_thousand_format.dart';
 part 'submit_focus_node.dart';
 part 'dialog_utils.dart';
@@ -106,10 +107,10 @@ Color selectedTileColor({Animation<double>? animation}) => animation != null ? C
 ///
 /// The [scrollController] parameter is the ScrollController to be animated.
 Future<void> animateScrollController({required double offset, required ScrollController scrollController}) => scrollController.animateTo(
-      offset,
-      duration: Durations.medium2,
-      curve: Curves.fastOutSlowIn,
-    );
+  offset,
+  duration: Durations.medium2,
+  curve: Curves.fastOutSlowIn,
+);
 
 /// Animates the given [controller] of a DraggableScrollableSheet to a specified [size].
 ///
@@ -117,10 +118,10 @@ Future<void> animateScrollController({required double offset, required ScrollCon
 ///
 /// The [controller] parameter is the DraggableScrollableController to be animated.
 Future<void> animateDraggableScrollableController({required double size, required DraggableScrollableController controller}) => controller.animateTo(
-      size,
-      duration: Durations.short2,
-      curve: Curves.fastOutSlowIn,
-    );
+  size,
+  duration: Durations.short2,
+  curve: Curves.fastOutSlowIn,
+);
 
 /// Animates the given [pageController] to a specified [page].
 ///
@@ -128,10 +129,10 @@ Future<void> animateDraggableScrollableController({required double size, require
 ///
 /// The [pageController] parameter is the PageController to be animated.
 Future<void> animatePageController({required int page, required PageController pageController}) => pageController.animateToPage(
-      page,
-      duration: Durations.short2,
-      curve: Curves.fastOutSlowIn,
-    );
+  page,
+  duration: Durations.short2,
+  curve: Curves.fastOutSlowIn,
+);
 
 String jsonToCorrectStringFormat(String jsonString) {
   String words = jsonString;
