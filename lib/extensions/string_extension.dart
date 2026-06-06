@@ -19,6 +19,82 @@ extension StringExtension on String {
     return result;
   }
 
+  /// Formats a string by inserting separators between groups of characters.
+  ///
+  /// Existing separators from [separators] are removed before formatting.
+  /// Group lengths and separators are applied from left to right. If the text
+  /// is longer than [groupLengths], the last group length is repeated. If the
+  /// number of group boundaries exceeds [separators], the last separator is
+  /// repeated.
+  ///
+  /// Example:
+  /// ```dart
+  /// '1234567890'.separate(
+  ///   separators: const <String>['-'],
+  ///   groupLengths: const <int>[4],
+  /// ); // 1234-5678-90
+  /// ```
+  String separate({
+    required List<String> separators,
+    required List<int> groupLengths,
+  }) {
+    if (separators.isEmpty) {
+      throw ArgumentError.value(separators, 'separators', 'cannot be empty');
+    }
+    if (separators.any((separator) => separator.isEmpty)) {
+      throw ArgumentError.value(
+        separators,
+        'separators',
+        'must contain non-empty values',
+      );
+    }
+    if (groupLengths.isEmpty) {
+      throw ArgumentError.value(
+        groupLengths,
+        'groupLengths',
+        'cannot be empty',
+      );
+    }
+    if (groupLengths.any((length) => length <= 0)) {
+      throw ArgumentError.value(
+        groupLengths,
+        'groupLengths',
+        'must contain positive values',
+      );
+    }
+
+    final orderedSeparators = separators.toSet().toList(growable: false)..sort((left, right) => right.length.compareTo(left.length));
+
+    var raw = this;
+    for (final separator in orderedSeparators) {
+      raw = raw.replaceAll(separator, '');
+    }
+
+    if (raw.isEmpty) {
+      return '';
+    }
+
+    final buffer = StringBuffer();
+    int start = 0;
+    int groupIndex = 0;
+
+    while (start < raw.length) {
+      final groupLength = groupLengths[groupIndex < groupLengths.length ? groupIndex : groupLengths.length - 1];
+      final end = start + groupLength < raw.length ? start + groupLength : raw.length;
+
+      if (buffer.isNotEmpty) {
+        final separatorIndex = groupIndex - 1 < separators.length ? groupIndex - 1 : separators.length - 1;
+        buffer.write(separators[separatorIndex]);
+      }
+
+      buffer.write(raw.substring(start, end));
+      start = end;
+      groupIndex += 1;
+    }
+
+    return buffer.toString();
+  }
+
   /// Extracts the leading number from the string and returns it as a [String].
   ///
   /// If a number is found at the beginning of the string, it is extracted and returned as a [String].
@@ -142,7 +218,10 @@ extension StringExtension on String {
   /// final snakeCase = input.toSnakeCase();
   /// print(snakeCase); // Output: 'hello_world'
   /// ```
-  String toSnakeCase() => replaceAllMapped(RegExp(r'(?<=[a-z])[A-Z]'), (match) => '_${match.group(0)!.toLowerCase()}').toLowerCase();
+  String toSnakeCase() => replaceAllMapped(
+    RegExp(r'(?<=[a-z])[A-Z]'),
+    (match) => '_${match.group(0)!.toLowerCase()}',
+  ).toLowerCase();
 
   /// Converts the string to kebab-case.
   ///
@@ -155,7 +234,10 @@ extension StringExtension on String {
   /// final kebabCase = input.toKebabCase();
   /// print(kebabCase); // Output: 'hello-world'
   /// ```
-  String toKebabCase() => replaceAllMapped(RegExp(r'(?<=[a-z])[A-Z]'), (match) => '-${match.group(0)!.toLowerCase()}').toLowerCase();
+  String toKebabCase() => replaceAllMapped(
+    RegExp(r'(?<=[a-z])[A-Z]'),
+    (match) => '-${match.group(0)!.toLowerCase()}',
+  ).toLowerCase();
 
   /// Converts the string to flatcase.
   ///
@@ -264,7 +346,9 @@ extension StringExtension on String {
     List<int> charCodes = codeUnits;
 
     for (int i = 0; i < charCodes.length - 1; i++) {
-      if (i + 2 < charCodes.length && (charCodes[i + 1] == charCodes[i] + 1) && (charCodes[i + 2] == charCodes[i] + 2)) return true;
+      if (i + 2 < charCodes.length && (charCodes[i + 1] == charCodes[i] + 1) && (charCodes[i + 2] == charCodes[i] + 2)) {
+        return true;
+      }
     }
 
     return false;
